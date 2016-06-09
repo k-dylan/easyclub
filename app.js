@@ -18,12 +18,13 @@ const users = require('./routes/users');
 app.use(convert(bodyparser));
 app.use(convert(json()));
 app.use(convert(logger()));
+
 // 本地调试状态
 if(config.debug) {
   app.use(require('./middlewares/stylus')(__dirname + '/public'));
   const livereload = require('livereload');
   let server = livereload.createServer({
-    exts: ['jade'] 
+    exts: ['jade','styl'] 
   });
   server.watch([
     __dirname + '/public',
@@ -32,6 +33,11 @@ if(config.debug) {
 }
 
 app.use(convert(require('koa-static')(__dirname + '/public')));
+
+app.use(async (ctx, next) => {
+  ctx.state.loader = loader;
+  await next();
+})
 
 app.use(views(__dirname + '/views', {
   extension: 'jade'
