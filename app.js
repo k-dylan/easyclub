@@ -9,15 +9,18 @@ const onerror = require('koa-onerror');
 const bodyparser = require('koa-bodyparser')();
 const logger = require('koa-logger');
 const loader = require('loader');
+const mongoose = require('koa-mongoose');
+const session = require('koa-session');
 
 const config = require('./config');
 const index = require('./routes/index');
-const users = require('./routes/users');
+const user = require('./routes/user');
 
-// middlewares
-app.use(convert(bodyparser));
-app.use(convert(json()));
+app.keys = ['easyclub'];
+
+// logger
 app.use(convert(logger()));
+
 
 // 本地调试状态
 if(config.debug) {
@@ -30,12 +33,23 @@ if(config.debug) {
     __dirname + '/public',
     __dirname + '/views'
   ]);
-}
+};
 
+// middlewares
 app.use(convert(require('koa-static')(__dirname + '/public')));
+app.use(convert(bodyparser));
+app.use(convert(json()));
+app.use(convert(session(app)));
+
 
 app.use(async (ctx, next) => {
-  ctx.state.loader = loader;
+ 
+  ctx.state = {
+    loader: loader, 
+    sitename: config.sitename,
+    // 用户登录状态
+    username: ctx.session.username || false
+  };
   await next();
 })
 
@@ -43,16 +57,16 @@ app.use(views(__dirname + '/views', {
   extension: 'jade'
 }));
 
-// logger
-app.use(async (ctx, next) => {
-  const start = new Date();
-  await next();
-  const ms = new Date() - start;
-  console.log(`${ctx.method} ${ctx.url} - ${ms}ms`);
-});
+// 数据库
+app.use(convert(mongoose(Object.assign({
+  server: {
+    poolSize: 5
+  },
+  schemas: __dirname + '/models'
+}, config.mongodb))));
 
 router.use('/', index.routes(), index.allowedMethods());
-router.use('/users', users.routes(), users.allowedMethods());
+router.use('/user', user.routes(), user.allowedMethods());
 
 app.use(router.routes(), router.allowedMethods());
 

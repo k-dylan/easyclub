@@ -2,8 +2,22 @@ doctype html
 html(lang="zh_CN")
   head
     meta(charset="utf-8")
-    title= title
-    != loader().css('/stylesheets/index.styl').done(null,null,false)
+    meta(http-equiv="X-UA-Compatible" content="IE=edge")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    title= title + ' - ' + sitename
+    != loader().css('/stylesheets/common.styl').css('/stylesheets/index.styl').done(null,null,false)
   body
-    block content
+    header#header
+      .wp
+        a.logo(href="/") <b>Easy</b> Club
+        ul.user-nav
+          - if (username)
+            li: a(href="/user")= username
+          - else
+            li: a(href="/user/register") 注册
+            li: a(href="/user/login") 登录
+    .wp
+      block content
+    != loader().js('/javascripts/lib/jquery.min.js').done(null,null,false)
+    block script
   

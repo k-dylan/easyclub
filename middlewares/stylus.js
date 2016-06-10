@@ -6,6 +6,7 @@
 const stylus = require('stylus');
 const fs = require('fs-promise');
 const path = require('path');
+const nib = require('nib');
 
 
 module.exports = (root, opts) => {
@@ -22,12 +23,14 @@ module.exports = (root, opts) => {
           ctx.body = 'Connot find ' + ctx.url;
           return;
         }
-        let result = require('stylus').render(content);
+        let result = stylus(content).use(nib()).render();
         ctx.set('Content-Type', 'text/css; charset=UTF-8');
         ctx.body = result;
       } else {
         await next();
-      }
-    } 
+      } 
+    } else {
+      await next();
+    }
   }
 }

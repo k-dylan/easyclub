@@ -1,0 +1,89 @@
+@import 'nib/normalize'
+
+normalize-css()
+
+$bg_color = $f0f0f0;
+$main_color = #2196F3;
+
+body 
+  background-color #f0f0f0
+  margin 0
+  font 16px/1.5 "Helvetica Neue",Helvetica,Arial,"Microsoft Yahei",sans-serif
+  
+a
+  color #555
+  &:link
+    text-decoration none 
+  &:hover
+    color $main_color
+
+.wp
+  width 1200px
+  margin 0 auto
+  &-left
+    display inline-block
+    width 70%
+
+//  顶部
+#header
+  background-color #fff
+  height 50px  
+  color #fff
+  .logo
+    font-size 1.5em
+    line-height @height
+    b
+      color $main_color
+  .user-nav
+    float right
+    li
+      display inline-block
+      &:after 
+        content '|'
+        color #000
+        padding 0 .5em
+      &:last-child:after
+        display none
+        
+// panel
+.panel
+  border 1px solid #ddd
+  background-color #fff
+  box-shadow 0px 1px 1px 0px rgba(0,0,0,.3)
+  margin-top 10px
+  border-radius 5px
+  &-hd
+    background-color #f5f5f5
+    border-radius 5px 5px 0 0 
+    height 50px
+    line-height @height
+    color $main_color
+    font-size 1.3em
+    padding-left 1em
+  &-bd
+    padding 1em
+    
+    
+.form 
+  .control-group
+    margin-bottom 1em
+  &-control
+    border 1px solid #ddd
+    border-radius 3px
+    padding 5px 8px
+    box-shadow inset 0 1px 1px rgba(0,0,0,0.075)
+    &:focus
+      border-color rgba($main_color, .8)
+      box-shadow 0 1px 1px 0 rgba($main_color, .5)
+      outline 0
+    
+.btn 
+  border 1px solid #ddd
+  border-radius 4px
+  padding 3px 12px
+  background-color #fff
+  &:hover
+    background-color #ddd
+
+  
+  
