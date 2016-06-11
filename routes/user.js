@@ -13,6 +13,12 @@ router.get('/register', async (ctx, next) => {
 router.post('/register', async (ctx, next) => {
   let body = ctx.request.body;
   
+  if(!body.username || !body.password || !body.email)
+    return ctx.body = {
+      status: 1,
+      message: '参数有误!'
+    };
+  
   let User = ctx.model('user');
   // 验证用户名是否重复
   let user = await User.findOneQ({

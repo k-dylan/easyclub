@@ -1,3 +1,5 @@
+
+'use strict'
 const Koa = require('koa');
 const app = new Koa();
 const router = require('koa-router')();
@@ -43,8 +45,8 @@ app.use(convert(session(app)));
 
 
 app.use(async (ctx, next) => {
-  ctx.state = {
-    loader: loader, 
+  ctx.state = {   
+    loader: loader,   
     sitename: config.sitename,
     // 用户登录状态
     username: ctx.session.username || false

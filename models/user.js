@@ -5,9 +5,9 @@ const mongoose = require('mongoose');
 const crypto = require('crypto');
 
 var UserSchema = new mongoose.Schema({
-  username: { type: String },
-  password: { type: String },
-  email: { type: String },
+  username: { type: String, required: true},
+  password: { type: String, required: true},
+  email: { type: String, required: true },
   avatar: { type: String },
   topic_count: { type: Number, default: 0 },
   reply_count: { type: Number, default: 0 },
