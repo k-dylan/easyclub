@@ -43,7 +43,6 @@ app.use(convert(session(app)));
 
 
 app.use(async (ctx, next) => {
- 
   ctx.state = {
     loader: loader, 
     sitename: config.sitename,
