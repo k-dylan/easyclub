@@ -1,0 +1,73 @@
+extends ../layout
+
+block content
+  .wp-left
+    .panel.topic
+      .panel-hd 发表话题
+      .panel-bd
+        form.form(action="/topic/create" method="post")
+          .control-group
+            select#tag.form-control(name="tag")
+              option(value="0") 选择板块
+              each tag in tags
+                option(value=tag)= tag
+            input#title.form-control(type="text" name="title" placeholder="请输入标题" )
+          .control-group
+            textarea#editor.form-control(name="content" placeholder="文章支持 Markdown 语法, 请注意标记代码")
+          .btn-group
+            button.btn(type="submit") 发表
+
+block script
+  include ../includes/editor
+  script.
+    $(function() {
+      var editor = new Editor();
+      editor.render();
+      
+      
+      var $title = $('#title'),
+          $tag = $('#tag'),
+          $content = $('#editor'),
+          $btn = $('.btn');
+      $('form').submit(function (event) {
+        event.preventDefault();
+        if($tag.val() == 0){
+          alert('必须选择一个板块！')
+          return;
+        }
+        var title = $.trim($title.val());
+        if(title.length == 0) {
+          alert('标题不能为空')
+          return ;
+        }
+        if(title.length < 10) {
+          alert('标题不能少于10个字符');
+          return ;
+        }
+        if($content.val().length == 0 ) {
+          alert('内容不能为空');
+          return ;
+        }
+        
+        $btn.attr('disabled', true);
+        $.ajax({
+          url: '/topic',
+          type: 'POST',
+          dataType: 'json',
+          data: {
+            title: title,
+            tag: $tag.val(),
+            content: $content.val()
+          },
+          complete: function () {
+            $btn.attr('disabled', false);
+          },
+          success: function (data) {
+            if(data.status != 0)
+              error.text(data.message).show();
+            else 
+              location.href = '/topic/' + data.topic_id;
+          }
+        });
+      });
+    });

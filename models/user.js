@@ -14,21 +14,35 @@ var UserSchema = new mongoose.Schema({
   create_time: { type: Date, default: Date.now }
 });
 
+UserSchema.index({username: 1}, {unique: true});
+
 /**
  * password写入时加密
  */
 UserSchema.path('password').set(function (v) {
   return crypto.createHash('md5').update(v).digest('base64');
 });
+
 /**
  * 验证用户名密码是否正确
  */
-UserSchema.statics.checkPassword = async function (username, password) {
+UserSchema.statics.check_password = async function (username, password) {
   let user = await this.findOneQ({
     username: username,
     password: crypto.createHash('md5').update(password).digest('base64')
   });
   return user;
+}
+
+
+/**
+ * 增加减少用户文章数量
+ */
+UserSchema.statics.update_topic_count = async function (user_id, num) {
+  let result = await this.update({_id: user_id}, {'$inc': {
+    'topic_count': num
+  }});
+  return result;
 }
 
 

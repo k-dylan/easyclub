@@ -6,6 +6,8 @@ const config = {
   debug: true,
   // 网站名称
   sitename: 'EasyClub',
+  // 板块列表
+  tags: ['原创', '转载', '提问', '站务'],
   // 数据库连接
   mongodb: {
         username: '',

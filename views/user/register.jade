@@ -56,17 +56,26 @@ block script
           return false;
         }
         btn.attr('disabled', true);
-        $.post('/user/register', {
-          password: pass,
-          username: user,
-          email: emailStr
-        }, function (data) {
-          btn.attr('disabled', false);
-          if(data.status != 0)
-            error.text(data.message).show();
-          else 
-            location.href = '/user/login';
-        }, 'json')
+        btn.attr('disabled', true);
+        $.ajax({
+          url: '/user/register',
+          type: 'POST',
+          dataType: 'json',
+          data:  {
+            password: pass,
+            username: user,
+            email: emailStr
+          },
+          complete: function () {
+            btn.attr('disabled', false);
+          },
+          success: function (data) {
+            if(data.status != 0)
+              error.text(data.message).show();
+            else 
+              location.href = '/user/login';
+          }
+        });
       });
     });
     

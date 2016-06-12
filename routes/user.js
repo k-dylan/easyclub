@@ -1,4 +1,4 @@
-var router = require('koa-router')();
+const router = require('koa-router')();
 /**
  * 注册页面
  */
@@ -63,7 +63,7 @@ router.get('/login', async (ctx, next) => {
 router.post('/login', async (ctx, next) => {
   let body = ctx.request.body;
   let User = ctx.model('user');
-  let user = await User.checkPassword(body.username, body.password);
+  let user = await User.check_password(body.username, body.password);
   
   if(!user) {
     return ctx.body = {
@@ -73,6 +73,7 @@ router.post('/login', async (ctx, next) => {
   }
   // 用户名密码正确
   ctx.session.username = user.username;
+  ctx.session.username_id = user._id;
   
   return ctx.body = {
     status: 0

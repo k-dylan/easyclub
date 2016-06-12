@@ -17,6 +17,7 @@ const session = require('koa-session');
 const config = require('./config');
 const index = require('./routes/index');
 const user = require('./routes/user');
+const topic = require('./routes/topic');
 
 app.keys = ['easyclub'];
 
@@ -49,7 +50,8 @@ app.use(async (ctx, next) => {
     loader: loader,   
     sitename: config.sitename,
     // 用户登录状态
-    username: ctx.session.username || false
+    username: ctx.session.username || false,
+    username_id: ctx.session.username_id
   };
   await next();
 })
@@ -68,6 +70,7 @@ app.use(convert(mongoose(Object.assign({
 
 router.use('/', index.routes(), index.allowedMethods());
 router.use('/user', user.routes(), user.allowedMethods());
+router.use('/topic', topic.routes(), topic.allowedMethods());
 
 app.use(router.routes(), router.allowedMethods());
 

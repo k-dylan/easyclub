@@ -5,7 +5,7 @@ html(lang="zh_CN")
     meta(http-equiv="X-UA-Compatible" content="IE=edge")
     meta(name="viewport" content="width=device-width, initial-scale=1")
     title= title + ' - ' + sitename
-    != loader().css('/stylesheets/common.styl').css('/stylesheets/index.styl').done(null,null,false)
+    != loader('/stylesheets/min/common.min.css').css('/stylesheets/common.styl').css('/stylesheets/index.styl').css('/stylesheets/editor.css').done(null,null,false)
   body
     header#header
       .wp
@@ -13,11 +13,12 @@ html(lang="zh_CN")
         ul.user-nav
           - if (username)
             li: a(href="/user")= username
+            li: a(href="/user/logout") 退出
           - else
             li: a(href="/user/register") 注册
             li: a(href="/user/login") 登录
     .wp
       block content
-    != loader().js('/javascripts/lib/jquery.min.js').done(null,null,false)
+    script(src="/javascripts/lib/jquery.min.js")
     block script
   

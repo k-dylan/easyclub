@@ -1,6 +1,23 @@
 extends layout
 
 block content
-  h1= message
-  h2= error.status
-  pre #{error.stack}
+  .panel.error-box
+    .panel-hd.error-title= title
+    .panel-bd
+      p= message
+      - if(jump)
+        a.jump(href=jump) 页面将在<span id="second"></span>秒后跳转
+      
+block script
+  - if(jump)
+    script.
+      var second = 3;
+      var $second = $('#second').text(second);
+      var timeId = setInterval(function () {
+        --second;
+        if(second <= 0) {
+          location.href = '#{jump}'
+        }else {
+          $second.text(second);
+        }
+      }, 1000);
