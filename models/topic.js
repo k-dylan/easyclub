@@ -16,10 +16,30 @@ var TopicSchema = new Schema({
   last_reply_at: {type: Date, default: Date.now},
   tab: {type: String},
   create_time: { type: Date, default: Date.now },
+  update_time: { type: Date, default: Date.now },
   deleted: {type: Boolean, default: false}
 });
 
 TopicSchema.index({create_time: -1});
 TopicSchema.index({author_id: 1, create_time: -1});
+
+
+TopicSchema.statics.reply = async function (topic_id,reply_id) {
+  console.log(reply_id)
+  let result = await this.updateQ({
+    _id: topic_id
+  }, {
+    '$inc': {'reply_count': 1},
+    '$set': {
+      last_reply: reply_id,
+      last_reply_at: Date.now()
+    }
+  });
+  return result;
+}
+
+TopicSchema.statics.get_topic = async function (topic_id) {
+  
+}
 
 module.exports = TopicSchema;

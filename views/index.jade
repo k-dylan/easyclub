@@ -1,5 +1,11 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  .wp-left
+    h1= title
+    p Welcome to #{title}
+  .wp-right
+    - if(username)
+      .panel
+        .panel-bd
+          a.btn(href="/topic/create") 发表话题

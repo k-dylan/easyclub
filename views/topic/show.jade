@@ -1,0 +1,84 @@
+extends ../layout
+
+block css
+  link(rel="stylesheet", href="http://apps.bdimg.com/libs/highlight.js/9.1.0/styles/github.min.css")
+
+block content
+  .wp-left
+    .panel.content
+      .content-hd
+        h2= topic.title 
+        .info by: <a href="/user/#{username_id}" class="author">#{username}</a> • at: 
+          span.date= topic.create_time.toLocaleDateString()
+          
+      .panel-bd
+        p.content!= md.render(topic.content)
+    - if(replys.length)
+      .panel
+        .panel-hd #{replys.length}回复
+        .panel-bd 
+          ul.reply-list
+            each reply in replys
+              li
+                h5
+                  a(href="/user/#{reply.author._id}" target="_blank")= reply.author.username 
+                  span.date= " • at: " + reply.create_time.toLocaleDateString()
+                p= reply.content
+                 
+                  
+    - if (username)
+      .panel.reply
+        .panel-hd 添加回复
+        .panel-bd
+          form(action="/topic/#{topic._id}/reply" method="post")
+            textarea#editor(name="content" placeholder="回复支持 Markdown 语法, 请注意标记代码" rows="3")
+            button.btn(type="submit") 回复
+
+
+block script
+  script(src="http://apps.bdimg.com/libs/highlight.js/9.1.0/highlight.min.js")
+  include ../includes/editor
+  script.
+    $(function () {
+      hljs.initHighlightingOnLoad();
+      
+      var editor = new Editor({
+        el: $('#editor')[0], 
+        status: false
+      });
+      editor.render(); 
+      
+      var $btn = $('.btn');
+      //  回复
+      $('form').submit(function (event) {
+        event.preventDefault();
+        var content = editor.codemirror.getValue();
+        if(content.length == 0 ) {
+          alert('请输入回复内容');
+          editor.codemirror.focus();
+          return ;
+        };
+        
+        $btn.text('回复中……');
+        
+        $.ajax({
+          url: '/topic/#{topic._id}/reply',
+          data: {
+            content: content
+          },
+          type: 'POST',
+          dataType: 'json',
+          complete: function () {
+            $btn.text('回复');
+          },
+          success: function (data) {
+            if(data.status != 0)
+              error.text(data.message).show();
+            else 
+              location.href = '/topic/' + data.topic_id;
+          }
+        })
+        
+        
+      })
+    })

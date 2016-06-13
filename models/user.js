@@ -45,6 +45,16 @@ UserSchema.statics.update_topic_count = async function (user_id, num) {
   return result;
 }
 
+/**
+ * 增加减少用户回复数量
+ */
+UserSchema.statics.update_reply_count = async function (user_id, num) {
+  let result = await this.update({_id: user_id}, {'$inc': {
+    'reply_count': num
+  }});
+  return result;
+}
+
 
 
 

@@ -1,4 +1,4 @@
-@import 'nib/normalize'
+@import 'nib'
 
 normalize-css()
 
@@ -21,8 +21,11 @@ a
   width 1200px
   margin 0 auto
   &-left
-    display inline-block
+    float left
     width 70%
+  &-right
+    overflow hidden
+    margin-left .5em
 
 //  顶部
 #header
@@ -55,13 +58,13 @@ a
   &-hd
     background-color #f5f5f5
     border-radius 5px 5px 0 0 
-    height 50px
+    height 40px
     line-height @height
-    color $main_color
-    font-size 1.3em
+    font-size 1.1em
     padding-left 1em
   &-bd
     padding 1em
+    border-radius bottom 5px
     
     
 .form 
