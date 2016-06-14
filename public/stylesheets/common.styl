@@ -17,15 +17,29 @@ a
   &:hover
     color $main_color
 
+ul 
+  list-style none
+  margin 0
+  padding-left 0
+  
+h1
+h2
+h3
+h4
+h5
+h6 
+  margin 0
+
 .wp
   width 1200px
-  margin 0 auto
+  margin 10px auto
   &-left
-    float left
-    width 70%
+    margin-right 310px
   &-right
-    overflow hidden
-    margin-left .5em
+    float right
+    width 300px
+  
+ 
 
 //  顶部
 #header
@@ -39,6 +53,8 @@ a
       color $main_color
   .user-nav
     float right
+    margin 0
+    line-height @height
     li
       display inline-block
       &:after 
@@ -47,13 +63,19 @@ a
         padding 0 .5em
       &:last-child:after
         display none
-        
+// 底部
+#footer
+  margin-top 1em
+  p 
+    margin 0 
+    color #999
+    font-size .9em        
 // panel
 .panel
   border 1px solid #ddd
   background-color #fff
   box-shadow 0px 1px 1px 0px rgba(0,0,0,.3)
-  margin-top 10px
+  margin-bottom 10px
   border-radius 5px
   &-hd
     background-color #f5f5f5

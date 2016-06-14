@@ -1,11 +1,33 @@
 extends layout
 
 block content
-  .wp-left
-    h1= title
-    p Welcome to #{title}
   .wp-right
     - if(username)
       .panel
         .panel-bd
           a.btn(href="/topic/create") 发表话题
+  .wp-left
+    .panel.index
+      .panel-hd 
+        div.nav
+          a(
+            href="/"
+            class= !current_tag ? 'active': ''
+            ) 全部
+          each tag in tags
+            a(
+              href="/?tag=#{tag}" 
+              class= current_tag === tag ? 'active': ''
+              )= tag
+             
+      .panel-bd
+        ul.list
+          each topic in topics
+            li
+              h4: a(href="/topic/#{topic._id}")= topic.title
+              .info
+                span.tag: a(href="/?tag=#{topic.tag}")= topic.tag
+                span.author= topic.author.username
+                span.date= topic.create_time.toLocaleDateString()
+              
+                  

@@ -14,7 +14,7 @@ var TopicSchema = new Schema({
   visit_count: { type: Number, default: 0},
   last_reply: { type: ObjectId},
   last_reply_at: {type: Date, default: Date.now},
-  tab: {type: String},
+  tag: {type: String},
   create_time: { type: Date, default: Date.now },
   update_time: { type: Date, default: Date.now },
   deleted: {type: Boolean, default: false}

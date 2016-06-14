@@ -31,7 +31,7 @@ block content
         .panel-hd 添加回复
         .panel-bd
           form(action="/topic/#{topic._id}/reply" method="post")
-            textarea#editor(name="content" placeholder="回复支持 Markdown 语法, 请注意标记代码" rows="3")
+            textarea#editor(name="content" placeholder="回复支持 Markdown 语法, 请注意标记代码")
             button.btn(type="submit") 回复
 
 
@@ -44,7 +44,8 @@ block script
       
       var editor = new Editor({
         el: $('#editor')[0], 
-        status: false
+        status: false,
+        autofocus: false
       });
       editor.render(); 
       
