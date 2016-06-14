@@ -60,7 +60,7 @@ router.get('/:topic_id', async (ctx, next) => {
   let topic_id = ctx.params.topic_id;
   let Topic = ctx.model('topic');
   
-  let topic = await Topic.findOneQ({_id: topic_id});
+  let topic = await Topic.get_topic(topic_id);
   
   if(topic.deleted) {
     return await ctx.render('error', {

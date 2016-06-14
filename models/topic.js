@@ -23,9 +23,10 @@ var TopicSchema = new Schema({
 TopicSchema.index({create_time: -1});
 TopicSchema.index({author_id: 1, create_time: -1});
 
-
+/**
+ * 回复主题
+ */
 TopicSchema.statics.reply = async function (topic_id,reply_id) {
-  console.log(reply_id)
   let result = await this.updateQ({
     _id: topic_id
   }, {
@@ -38,8 +39,15 @@ TopicSchema.statics.reply = async function (topic_id,reply_id) {
   return result;
 }
 
+/**
+ * 获取主题信息
+ * 并更新浏览数
+ */
 TopicSchema.statics.get_topic = async function (topic_id) {
-  
+  let result = await this.findByIdAndUpdateQ(topic_id, {
+    '$inc': {'visit_count': 1}
+  });
+  return result;
 }
 
 module.exports = TopicSchema;

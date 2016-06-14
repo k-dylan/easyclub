@@ -24,6 +24,7 @@ block content
         ul.list
           each topic in topics
             li
+              .count #{topic.reply_count} / #{topic.visit_count}
               h4: a(href="/topic/#{topic._id}")= topic.title
               .info
                 span.tag: a(href="/?tag=#{topic.tag}")= topic.tag
