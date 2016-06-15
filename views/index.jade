@@ -2,10 +2,7 @@ extends layout
 
 block content
   .wp-right
-    - if(username)
-      .panel
-        .panel-bd
-          a.btn(href="/topic/create") 发表话题
+    include ./sidebar/create_topic
   .wp-left
     .panel.index
       .panel-hd 
