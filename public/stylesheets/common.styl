@@ -30,14 +30,26 @@ h5
 h6 
   margin 0
 
+
 .wp
-  width 1200px
-  margin 10px auto
+  max-width 1200px
+  margin 0 auto
+  padding 10px 
   &-left
     margin-right 310px
   &-right
     float right
     width 300px
+  @media screen and (max-width:960px)
+    &-right
+      width 200px
+    &-left 
+      margin-right 210px
+  @media screen and (max-width:700px)
+    &-right
+      display none
+    &-left 
+      margin-right auto
   
  
 
@@ -46,6 +58,8 @@ h6
   background-color #fff
   height 50px  
   color #fff
+  .wp
+    padding 0
   .logo
     font-size 1.5em
     line-height @height
