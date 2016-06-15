@@ -143,5 +143,23 @@ h6
   &-title
     color #d00
   
-  
-  
+// 分页
+.page
+  margin-top 1em
+  padding-left 1em
+  li
+    display inline-block
+    border 1px solid #ddd
+    border-right none
+    &>a 
+    &>span
+      display block
+      padding 0 .5em
+    &>span
+      color $main_color
+    &:first-child
+      border-radius left 3px
+    &:last-child
+      border-right 1px solid #ddd
+      border-radius right 3px 
+      

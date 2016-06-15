@@ -7,15 +7,9 @@ block content
     .panel.index
       .panel-hd 
         div.nav
-          a(
-            href="/"
-            class= !current_tag ? 'active': ''
-            ) 全部
+          a(href="/" class= current_tag === 'all' ? 'active': '') 全部
           each tag in tags
-            a(
-              href="/?tag=#{tag}" 
-              class= current_tag === tag ? 'active': ''
-              )= tag
+            a(href="/?tag=#{tag}" class= current_tag === tag ? 'active': '')= tag
              
       .panel-bd
         ul.list
@@ -27,5 +21,15 @@ block content
                 span.tag: a(href="/?tag=#{topic.tag}")= topic.tag
                 span.author= topic.author.username
                 span.date= topic.create_time.toLocaleDateString()
+        .page
+          ul
+            li: a(href="/?tag=#{current_tag}&page=#{page.current - 1}") 上一页
+            - for (var i = page.start; i <= page.end; i++)
+              - if (page.current == i)
+                li: span= i
+              - else
+                li: a(href="/?tag=#{current_tag}&page=#{i}")= i
+            li: a(href="/?tag=#{current_tag}&page=#{page.current + 1}") 下一页
+            
               
                   
