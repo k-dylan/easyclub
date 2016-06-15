@@ -3,6 +3,7 @@
 const router = require('koa-router')();
 const config = require('../config');
 const markdown = require('markdown-it');
+const Promise = require('promise');
 
 /**
  * 发表主题页面
@@ -82,12 +83,13 @@ router.get('/:topic_id', async (ctx, next) => {
   // 读取回复的用户
   let User = ctx.model('user');
   
-  for(let i = 0, len = replys.length; i < len; i++) {
-    replys[i].author = await User.findOneQ({
-      _id: replys[i].author_id
+  replys = await Promise.all(replys.map( async (reply) => {
+    reply.author = await User.findOneQ({
+      _id: reply.author_id
     });
-  }
-  
+    return reply;
+  }));
+
   // 读取主题作者
   topic.author = await User.findOneQ({
     _id: topic.author_id
@@ -125,7 +127,7 @@ router.post('/:topic_id/reply', check_login_middle, async (ctx, next) => {
   });
   
   let result = await reply.saveQ();
-  console.log(result);
+
   if(result) {
     // 更新回复数
     let User = ctx.model('user');

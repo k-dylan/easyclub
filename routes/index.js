@@ -1,5 +1,6 @@
 const router = require('koa-router')();
 const config = require('../config');
+const Promise = require('promise');
 
 router.get('/', async function (ctx, next) {
   
@@ -18,11 +19,14 @@ router.get('/', async function (ctx, next) {
   
   //  读取用户信息
   let User = ctx.model("user");
-  for(let topic of topics) {
+  
+  topics = await Promise.all(topics.map( async (topic) => {
     topic.author = await User.findOneQ({
       _id: topic.author_id
     });
-  }
+    return topic;
+  }));
+
   
   await ctx.render('index', {
     title: '首页',
