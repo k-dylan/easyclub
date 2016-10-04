@@ -24,13 +24,13 @@ block content
                 span.date= topic.create_time.toLocaleDateString()
         .page
           ul
-            li: a(href="/?tag=#{current_tag}&page=#{page.current - 1}") 上一页
+            li: a(href=page.start < page.current ? "/?tag=#{current_tag}&page=#{page.current - 1}" : 'javascript:;') 上一页
             - for (var i = page.start; i <= page.end; i++)
               - if (page.current == i)
                 li: span= i
               - else
                 li: a(href="/?tag=#{current_tag}&page=#{i}")= i
-            li: a(href="/?tag=#{current_tag}&page=#{page.current + 1}") 下一页
+            li: a(href= page.end > page.current ? "/?tag=#{current_tag}&page=#{page.current + 1}" : 'javascript:;') 下一页
             
               
                   

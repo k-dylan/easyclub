@@ -28,6 +28,8 @@ h5
 h6 
   margin 0
 
+p 
+  margin 0
 
 .wp
   max-width 1200px
@@ -55,7 +57,7 @@ h6
 
 //  顶部
 #header
-  background-color #fff
+  background-color #444
   height 50px  
   color #fff
   .wp
@@ -63,6 +65,7 @@ h6
   .logo
     font-size 1.5em
     line-height @height
+    color #fff
     b
       color $main_color
     
@@ -72,9 +75,13 @@ h6
     line-height @height
     li
       display inline-block
+      a
+        color #fff
+        &:hover
+          color $main_color
       &:after 
         content '|'
-        color #000
+        color #fff
         padding 0 .5em
       &:last-child:after
         display none
