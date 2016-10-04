@@ -136,7 +136,17 @@ router.post('/:topic_id/reply', check_login_middle, async (ctx, next) => {
     // 更新主题
     let Topic = ctx.model('topic');
     let res = await Topic.reply(topic_id, result._id);
-    console.log(res);
+    if(res.ok) {
+      return ctx.body = {
+        status: 0,
+        topic_id: topic_id
+      }
+    } else {
+      return ctx.body = {
+        status: 1,
+        message: '回复失败！'
+      }
+    }
   }
 
 });

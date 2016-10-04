@@ -9,7 +9,7 @@ const config = {
   // 板块列表
   tags: ['原创', '转载', '提问', '站务'],
   // 每页主题数量
-  pageSize: 2, 
+  pageSize: 20, 
   // 显示页码数量
   showPageNum: 5,
   // 数据库连接

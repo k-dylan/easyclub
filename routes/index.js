@@ -4,10 +4,10 @@ const Promise = require('promise');
 const Page = require('../common/page');
 
 router.get('/', async function (ctx, next) {
-  
+
   let current_tag = config.tags.indexOf(ctx.query.tag ) > -1
       ? ctx.query.tag : 'all';
-  
+
   // +号让其转换为数字
   let current_page = +ctx.query.page || 1;
 
@@ -28,7 +28,9 @@ router.get('/', async function (ctx, next) {
   
 
   let topics = await Topic.find(query)
-    .sort('create_time').skip(start_item_num)
+    .sort({
+      last_reply_at: -1
+    }).skip(start_item_num)
     .limit(config.pageSize).execQ();
   
   //  读取用户信息
@@ -40,8 +42,8 @@ router.get('/', async function (ctx, next) {
     });
     return topic;
   }));
-
   
+
   await ctx.render('index', {
     title: '首页',
     topics: topics,
