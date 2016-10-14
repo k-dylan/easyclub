@@ -1,21 +1,23 @@
 @import 'nib'
 @import './public/stylesheets/variable.styl'
 
-// 注册页面
-.register
+// 表单
+.form
   .control-label
     display inline-block
     width 200px
     text-align right
-  .form-control
+  .form-control[type="text"]
+  .form-control[type="email"]
+  .form-control[type="password"]
+  textarea.form-control
     width 300px
-  .btn-group
-    padding-left 200px
   .error 
     display none
     color #f00
     padding-left 200px
     padding-bottom 1em
+
 
 // topic
 // 发表话题页面

@@ -1,0 +1,165 @@
+extends ../layout
+
+block content
+  .wp-right
+    //- include ../sidebar/user_info
+  .wp-left
+    .panel
+      .panel-hd 用户中心
+      .panel-bd 
+        #alert.alert.hide
+        form#info.form(action="/user" method="post") 
+          .control-group
+            label.control-label(for="username") 用户名：
+            input.form-control(type="text" id="username" name="usernmae" value=username disabled)
+          .control-group
+            label.control-label(for="email") 邮　箱：
+            input.form-control(type="email" name="email" id="email" value=user.email)
+          .control-group
+            label.control-label(for="home") 个人主页：
+            input.form-control(type="text" name="home" id="home" value=user.home)
+          .control-group
+            label.control-label(for="github") GitHub：
+            input.form-control(type="text" name="github" id="github" value=user.github)
+          .control-group
+            label.control-label(for="signature") 个人签名：
+            textarea.form-control(name="signature" id="signature" value=user.signature)
+          .control-group
+            label.control-label
+            button.btn.btn-primary(type="submit" id="btn") 保存设置
+    .panel
+      .panel-hd 修改密码
+      .panel-bd 
+        #passAlert.alert.hide
+        form#setpass.form(action="/user/setpass" method="post")
+          .control-group
+            label.control-label(for="oldpass") 当前密码：
+            input.form-control(type="password" id="oldpass" name="oldpass")
+            span.control-help.text-error  *
+          .control-group
+            label.control-label(for="newpass") 新密码：
+            input.form-control(type="password" id="newpass" name="newpass")
+            span.control-help.text-error  *
+          .control-group
+            label.control-label(for="newpass2") 重复密码：
+            input.form-control(type="password" id="newpass2" name="newpass2")
+            span.control-help.text-error  *
+          .control-group
+            label.control-label
+            button.btn.btn-primary(type="submit" id="passbtn") 修改密码
+            
+
+
+block script
+  script.
+    $(function () {
+      var $btn = $('#btn');
+      var $alert = $('#alert');
+      
+      // 修改设置
+      $('#info').submit(function (event) {
+        event.preventDefault();
+        var data = $(this).serialize();
+
+        $alert.hide();
+        $btn.attr('disabled', true);
+
+        $.ajax({
+          url: '/user',
+          type: 'POST',
+          dataType: 'json',
+          data: data,
+          complete: function () {
+            $btn.attr('disabled', false);
+          },
+          success: function (data) {
+            if(data.status) {
+              showAlert($alert, data.message, 'error');
+            } else {
+              showAlert($alert, '修改成功！', 'success');
+            }
+          }
+        });
+      });
+
+      var $newpass = $('#newpass');
+      var $oldpass = $('#oldpass');
+      var $newpass2 = $('#newpass2');
+      var $passAlert = $('#passAlert');
+      var $passBtn = $('#passbtn');
+      $('#setpass').submit(function (event) {
+        event.preventDefault();
+
+        if(!$oldpass.val().trim()) {
+          $oldpass.focus();
+          showAlert($passAlert, '当前密码不能为空!', 'error');
+          return false;
+        }
+
+        if(!$newpass.val().trim()) {
+          $newpass.focus();
+          showAlert($passAlert, '新密码不能为空!', 'error');
+          return false;
+        }
+        if(!$newpass2.val().trim()) {
+          $newpass2.focus();
+          showAlert($passAlert, '重复密码不能为空!', 'error');
+          return false;
+        }
+
+        if($newpass.val() != $newpass2.val()){
+          showAlert($passAlert, '两次输入密码不一致', 'error');
+          return false;
+        }
+
+        $passBtn.attr('disabled', true).text('加载中……');
+        // 请求数据
+        $.ajax({
+          url: '/user/setpass',
+          type: 'POST',
+          dataType: 'json',
+          data: {
+            oldpass: $oldpass.val().trim(),
+            newpass: $newpass.val().trim()
+          },
+          complete: function () {
+            $passBtn.attr('disabled', false).text('修改密码');
+          },
+          success: function (data) {
+            if(data.status) {
+              showAlert($passAlert, data.message, 'error');
+            } else {
+              showAlert($passAlert, '修改成功！请重新登录！', 'success');
+              setTimeout(function () {
+                location.href = "/user/login";
+              }, 1000)
+            }
+          }
+        });
+
+
+      })
+
+
+    });
+    /**
+     *  显示错误提醒
+     */
+    function showAlert(id,message,type) {
+      if(!(id instanceof jQuery)) 
+        id = $(id);
+
+      if(type == 'error') {
+          id.removeClass('alert-success')
+                .addClass('alert-error')
+                .text(message).show();
+      } else {
+          id.removeClass('alert-error')
+                .addClass('alert-success')
+                .text(message).show();
+      }
+    }
+
+
+            
+            

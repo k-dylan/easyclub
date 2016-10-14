@@ -19,6 +19,7 @@ const index = require('./routes/index');
 const user = require('./routes/user');
 const topic = require('./routes/topic');
 
+
 app.keys = ['easyclub'];
 
 // logger
@@ -54,7 +55,10 @@ app.use(async (ctx, next) => {
     username_id: ctx.session.username_id
   };
   await next();
-})
+});
+
+// 给ctx对象添加共用函数
+// app.use(require('./middlewares/tools'));
 
 app.use(views(__dirname + '/views', {
   extension: 'jade'

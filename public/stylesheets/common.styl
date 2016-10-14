@@ -53,7 +53,8 @@ p
   
 .small
   font-size .8em
-
+.hide
+  display none
 
 //  顶部
 #header
@@ -114,6 +115,8 @@ p
 .form 
   .control-group
     margin-bottom 1em
+  .control-help
+    vertical-align middle
   &-control
     border 1px solid #ddd
     border-radius 3px
@@ -124,19 +127,35 @@ p
     box-sizing border-box
     &:focus
       border-color rgba($main_color, .8)
-      box-shadow 0 1px 1px 0 rgba($main_color, .5)
+      box-shadow 0 1px 2px 0 rgba($main_color, .5)
       outline 0
     textarea&
       width 100%
-      min-height 100px
-    
+      min-height 80px
+      vertical-align top
+
+
+.text-error
+  color #c40000
+
+html input[disabled]
+  cursor not-allowed
+
 .btn 
   border 1px solid #ddd
   border-radius 4px
   padding 3px 12px
   background-color #fff
+  display inline-block
   &:hover
     background-color #ddd
+  &-primary
+    background-color #08c
+    border-color #08c
+    color #fff
+    &:hover
+      background-color darken(@background-color, 10)
+  
 
 
 .error
@@ -171,3 +190,17 @@ p
       border-right 1px solid #ddd
       border-radius right 3px 
       
+
+// alert 提示框
+.alert
+  border 1px solid #ccc
+  padding 10px 20px
+  margin-bottom 1em
+  &-success
+    border-color #d6e9c6
+    background-color #dff0d8
+    color #468847
+  &-error
+    color #b94a48
+    background-color #f2dede
+    border-color #eed3d7
