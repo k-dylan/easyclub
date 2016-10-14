@@ -52,7 +52,7 @@ app.use(async (ctx, next) => {
     sitename: config.sitename,
     // 用户登录状态
     username: ctx.session.username || false,
-    username_id: ctx.session.username_id
+    user: ctx.session.user
   };
   await next();
 });

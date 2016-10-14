@@ -35,6 +35,7 @@ router.post('/', checkLogin, async (ctx, next) => {
   let result = await user.saveQ();
   
   if(result) {
+    ctx.session.user = user;
     return ctx.body = {
       status: 0
     };
@@ -73,7 +74,7 @@ router.post('/setpass', checkLogin,async (ctx, next) => {
   }
   // 重新登录
   ctx.session.username = null;
-  ctx.session.username_id = null;
+  ctx.session.user = null;
   ctx.body = tools.success('修改成功，请重新登录！');
 
 });
@@ -158,7 +159,7 @@ router.post('/login', async (ctx, next) => {
   }
   // 用户名密码正确
   ctx.session.username = user.username;
-  ctx.session.username_id = user._id;
+  ctx.session.user = user;
   
   return ctx.body = {
     status: 0
@@ -167,7 +168,7 @@ router.post('/login', async (ctx, next) => {
 
 router.get('/logout', (ctx, next) => {
   ctx.session.username = null;
-  ctx.session.username_id = null;
+  ctx.session.user = null;
   ctx.redirect('/');
 })
 
