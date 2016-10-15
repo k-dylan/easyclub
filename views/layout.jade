@@ -13,8 +13,8 @@ html(lang="zh_CN")
         a.logo(href="/") <b>Easy</b> Club 
         ul.user-nav
           - if (username)
-            li 欢迎你：
-              a(href="/user")= username
+            li 欢迎你：#{username}
+            li: a(href="/user/setting") 设置
             li: a(href="/user/logout") 退出
           - else
             li: a(href="/user/register") 注册

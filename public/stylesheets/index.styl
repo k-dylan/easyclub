@@ -1,24 +1,6 @@
 @import 'nib'
 @import './public/stylesheets/variable.styl'
 
-// 表单
-.form
-  .control-label
-    display inline-block
-    width 200px
-    text-align right
-  .form-control[type="text"]
-  .form-control[type="email"]
-  .form-control[type="password"]
-  textarea.form-control
-    width 300px
-  .error 
-    display none
-    color #f00
-    padding-left 200px
-    padding-bottom 1em
-
-
 // topic
 // 发表话题页面
 .topic 
@@ -40,7 +22,7 @@
       font-size .9em
       margin-top .5em
       color #555
-
+  
 // 侧栏用户信息显示
 .user-info 
   clearfix()
@@ -51,6 +33,8 @@
       
 // 回复
 .reply
+  #editor
+    height 210px
   .CodeMirror
     height 160px
   &-list
@@ -60,8 +44,12 @@
     li
       border-bottom 1px solid #eee
       margin-bottom .5em
+      position relative
       &:last-child
         border-bottom none
+      .href
+        position absolute
+        top -10px
       h5
         margin 0
       .date

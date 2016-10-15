@@ -1,13 +1,14 @@
 @import 'nib'
 @import './public/stylesheets/variable.styl'
-
+// 统一浏览器默认样式
 normalize-css() 
 
+// 基本样式
 body 
   background-color #f0f0f0
   margin 0
   font 14px/2 "Helvetica Neue",Helvetica,Arial,"Microsoft Yahei",sans-serif
-  
+
 a
   color #555
   &:link
@@ -26,11 +27,142 @@ h3
 h4
 h5
 h6 
+p
   margin 0
-
-p 
   margin 0
+// input 禁用状态鼠标形状
+html input[disabled]
+  cursor not-allowed
 
+// 通用样式
+.small  // 小号字体
+  font-size .8em
+.hide  // 隐藏
+  display none
+.clearfix  // 清除浮动
+  clear both
+  overflow hidden
+.text  // 字体颜色
+  &-error  
+    color #c40000
+  &-main
+    color $main_color
+.w-auto // 还原默认宽度
+  width auto!important
+
+// 组件
+// alert 提示框
+.alert
+  border 1px solid #ccc
+  padding 10px 20px
+  margin-bottom 1em
+  &-success
+    border-color #d6e9c6
+    background-color #dff0d8
+    color #468847
+  &-error
+    color #b94a48
+    background-color #f2dede
+    border-color #eed3d7
+
+// panel 面板
+.panel
+  border 1px solid #ddd
+  background-color #fff
+  box-shadow 0px 1px 1px 0px rgba(#ddd,.3)
+  margin-bottom 10px
+  border-radius 5px
+  &-hd
+    background-color #f5f5f5
+    border-radius 5px 5px 0 0 
+    border-bottom 1px solid #ddd
+    height 40px
+    line-height @height
+    font-size 1.1em
+    padding-left 1em
+  &-bd
+    padding 1em
+    border-radius bottom 5px
+  &-danger
+    border-color #ebccd1
+    box-shadow 0px 1px 1px 0px rgba(@border-color,.3)
+    .panel-hd 
+      color #a94442
+      background-color #f2dede
+      border-color @border-color
+
+ 
+// page 分页
+.page
+  margin-top 1em
+  padding-left 1em
+  li
+    display inline-block
+    border 1px solid #ddd
+    border-right none
+    &>a 
+    &>span
+      display block
+      padding 0 .5em
+    &>span
+      color $main_color
+    &:first-child
+      border-radius left 3px
+    &:last-child
+      border-right 1px solid #ddd
+      border-radius right 3px 
+
+// form 表单
+.form 
+  .control-label
+      display inline-block
+  &-group
+    margin-bottom 1em
+  &-help
+    vertical-align middle
+  &-control
+    border 1px solid #ddd
+    border-radius 3px
+    padding 5px 8px
+    height 34px
+    width 100%
+    box-shadow inset 0 1px 1px rgba(0,0,0,0.075)
+    vertical-align middle
+    box-sizing border-box
+    &:focus
+      border-color rgba($main_color, .8)
+      box-shadow 0 1px 2px 0 rgba($main_color, .5)
+      outline 0
+    textarea&
+      min-height 80px
+      vertical-align top
+  // 水平表单
+  @media screen and (min-width:960px)
+    &-horizontal 
+      .control-label
+        width 200px
+        text-align right
+      .form-control
+        width 300px
+
+// btn 按钮
+.btn 
+  border 1px solid #ddd
+  border-radius 4px
+  padding 3px 12px
+  background-color #fff
+  display inline-block
+  &:hover
+    background-color #ddd
+  &-primary
+    background-color #08c
+    border-color #08c
+    color #fff
+    &:hover
+      background-color darken(@background-color, 10)
+
+  
+// 框架布局
 .wp
   max-width 1200px
   margin 0 auto
@@ -50,11 +182,8 @@ p
       display none
     &-left 
       margin-right auto
-  
-.small
-  font-size .8em
-.hide
-  display none
+
+
 
 //  顶部
 #header
@@ -62,7 +191,8 @@ p
   height 50px  
   color #fff
   .wp
-    padding 0
+    padding-top 0
+    padding-bottom 0
   .logo
     font-size 1.5em
     line-height @height
@@ -82,7 +212,7 @@ p
           color $main_color
       &:after 
         content '|'
-        color #fff
+        color darken(@color, 20)
         padding 0 .5em
       &:last-child:after
         display none
@@ -93,71 +223,9 @@ p
     margin 0 
     color #999
     font-size .9em        
-// panel
-.panel
-  border 1px solid #ddd
-  background-color #fff
-  box-shadow 0px 1px 1px 0px rgba(0,0,0,.3)
-  margin-bottom 10px
-  border-radius 5px
-  &-hd
-    background-color #f5f5f5
-    border-radius 5px 5px 0 0 
-    height 40px
-    line-height @height
-    font-size 1.1em
-    padding-left 1em
-  &-bd
-    padding 1em
-    border-radius bottom 5px
+
     
-    
-.form 
-  .control-group
-    margin-bottom 1em
-  .control-help
-    vertical-align middle
-  &-control
-    border 1px solid #ddd
-    border-radius 3px
-    padding 5px 8px
-    height 34px
-    box-shadow inset 0 1px 1px rgba(0,0,0,0.075)
-    vertical-align middle
-    box-sizing border-box
-    &:focus
-      border-color rgba($main_color, .8)
-      box-shadow 0 1px 2px 0 rgba($main_color, .5)
-      outline 0
-    textarea&
-      width 100%
-      min-height 80px
-      vertical-align top
-
-
-.text-error
-  color #c40000
-
-html input[disabled]
-  cursor not-allowed
-
-.btn 
-  border 1px solid #ddd
-  border-radius 4px
-  padding 3px 12px
-  background-color #fff
-  display inline-block
-  &:hover
-    background-color #ddd
-  &-primary
-    background-color #08c
-    border-color #08c
-    color #fff
-    &:hover
-      background-color darken(@background-color, 10)
-  
-
-
+// 错误提示页面
 .error
   &-box 
     width 50%
@@ -167,44 +235,6 @@ html input[disabled]
       color #888
       &:hover 
         color #d00
-  &-title
-    color #d00
-  
-// 分页
-.page
-  margin-top 1em
-  padding-left 1em
-  li
-    display inline-block
-    border 1px solid #ddd
-    border-right none
-    &>a 
-    &>span
-      display block
-      padding 0 .5em
-    &>span
-      color $main_color
-    &:first-child
-      border-radius left 3px
-    &:last-child
-      border-right 1px solid #ddd
-      border-radius right 3px 
+ 
       
 
-// alert 提示框
-.alert
-  border 1px solid #ccc
-  padding 10px 20px
-  margin-bottom 1em
-  &-success
-    border-color #d6e9c6
-    background-color #dff0d8
-    color #468847
-  &-error
-    color #b94a48
-    background-color #f2dede
-    border-color #eed3d7
-
-.clearfix 
-  clear both
-  overflow hidden

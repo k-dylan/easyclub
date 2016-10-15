@@ -22,6 +22,7 @@ block content
           ul.reply-list
             each reply in replys
               li
+                a.href(id=reply._id)
                 h5
                   a(href="/user/#{reply.author._id}" target="_blank")= reply.author.username 
                   span.date= " • at: " + reply.create_time.toLocaleDateString()
@@ -32,6 +33,7 @@ block content
       .panel.reply
         .panel-hd 添加回复
         .panel-bd
+          .alert.alert-error.hide#alert
           form(action="/topic/#{topic._id}/reply" method="post")
             textarea#editor(name="content" placeholder="回复支持 Markdown 语法, 请注意标记代码")
             button.btn(type="submit") 回复
@@ -52,6 +54,7 @@ block script
       editor.render(); 
       
       var $btn = $('.btn');
+      var $alert = $('#alert');
       //  回复
       $('form').submit(function (event) {
         event.preventDefault();
@@ -76,12 +79,10 @@ block script
           },
           success: function (data) {
             if(data.status != 0)
-              error.text(data.message).show();
+              $alert.text(data.message).show();
             else 
-              location.href = '/topic/' + data.topic_id;
+              history.go('/topic/' + data.topic_id + '#' + data.reply_id);
           }
         })
-        
-        
       })
     })

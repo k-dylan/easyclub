@@ -5,18 +5,18 @@ block content
     .panel
       .panel-hd 用户注册
       .panel-bd.register
-        form.form(action="/user/register" method="POST")
-          .control-group
+        form.form.form-horizontal(action="/user/register" method="POST")
+          .form-group
             label.control-label(for="username") 用户名：
             input#username.form-control(type="text" name="username" )
-          .control-group
+          .form-group
             label.control-label(for="password") 密　码：
             input#password.form-control(type="password" name="password" )
-          .control-group
+          .form-group
             label.control-label(for="email") 邮　箱：
             input#email.form-control(type="email" name="email")
           #error.error
-          .control-group
+          .form-group
             label.control-label
             button.btn(type="submit") 注册
             

@@ -26,7 +26,7 @@ router.post('/', check_login_middle, async (ctx, next) => {
       message: '参数有误!'
     };
   
-  let user_id = ctx.state.username_id;
+  let user_id = ctx.state.user._id;
   let Topic = ctx.model('topic');
   
   // 添加文章
@@ -63,11 +63,11 @@ router.get('/:topic_id', async (ctx, next) => {
   
   let topic = await Topic.get_topic(topic_id);
   
-  if(topic.deleted) {
+  if(!topic || topic.deleted) {
     return await ctx.render('error', {
       title: '错误',
       message: '您要查看的文章已删除！',
-      jump: '/'
+      jump: '-1'
     });
   }
   // 转换markdown文档
@@ -118,7 +118,7 @@ router.post('/:topic_id/reply', check_login_middle, async (ctx, next) => {
   
   let Reply = ctx.model('reply');
   
-  let user_id = ctx.state.username_id;
+  let user_id = ctx.state.user._id;
   let topic_id = ctx.params.topic_id;
   let reply = new Reply({
     content: content,
@@ -136,19 +136,20 @@ router.post('/:topic_id/reply', check_login_middle, async (ctx, next) => {
     // 更新主题
     let Topic = ctx.model('topic');
     let res = await Topic.reply(topic_id, result._id);
+
     if(res.ok) {
       return ctx.body = {
         status: 0,
-        topic_id: topic_id
+        topic_id: topic_id,
+        reply_id: result._id
       }
     } else {
       return ctx.body = {
         status: 1,
-        message: '回复失败！'
+        message: '回复失败！请重试！'
       }
     }
   }
-
 });
 
 

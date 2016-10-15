@@ -2,49 +2,49 @@ extends ../layout
 
 block content
   .wp-right
-    //- include ../sidebar/user_info
+    include ../sidebar/user_info
   .wp-left
     .panel
       .panel-hd 用户中心
       .panel-bd 
         #alert.alert.hide
-        form#info.form(action="/user" method="post") 
-          .control-group
+        form#info.form.form-horizontal(action="/user" method="post") 
+          .form-group
             label.control-label(for="username") 用户名：
             input.form-control(type="text" id="username" name="usernmae" value=username disabled)
-          .control-group
+          .form-group
             label.control-label(for="email") 邮　箱：
             input.form-control(type="email" name="email" id="email" value=user.email)
-          .control-group
+          .form-group
             label.control-label(for="home") 个人主页：
             input.form-control(type="text" name="home" id="home" value=user.home)
-          .control-group
+          .form-group
             label.control-label(for="github") GitHub：
             input.form-control(type="text" name="github" id="github" value=user.github)
-          .control-group
+          .form-group
             label.control-label(for="signature") 个人签名：
             textarea.form-control(name="signature" id="signature" value=user.signature)
-          .control-group
+          .form-group
             label.control-label
             button.btn.btn-primary(type="submit" id="btn") 保存设置
     .panel
       .panel-hd 修改密码
       .panel-bd 
         #passAlert.alert.hide
-        form#setpass.form(action="/user/setpass" method="post")
-          .control-group
+        form#setpass.form.form-horizontal(action="/user/setpass" method="post")
+          .form-group
             label.control-label(for="oldpass") 当前密码：
             input.form-control(type="password" id="oldpass" name="oldpass")
             span.control-help.text-error  *
-          .control-group
+          .form-group
             label.control-label(for="newpass") 新密码：
             input.form-control(type="password" id="newpass" name="newpass")
             span.control-help.text-error  *
-          .control-group
+          .form-group
             label.control-label(for="newpass2") 重复密码：
             input.form-control(type="password" id="newpass2" name="newpass2")
             span.control-help.text-error  *
-          .control-group
+          .form-group
             label.control-label
             button.btn.btn-primary(type="submit" id="passbtn") 修改密码
             

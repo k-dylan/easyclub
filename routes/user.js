@@ -2,14 +2,14 @@ const router = require('koa-router')();
 const tools = require('../common/tools');
 
 /**
- * 用户中心首页
+ * 用户设置
  */
-router.get('/', async (ctx, next) => {
+router.get('/setting', async (ctx, next) => {
   let User = ctx.model('user');
   let user = await User.findOneQ({
     username: ctx.state.username
   });
-  await ctx.render('user/index', {
+  await ctx.render('user/setting', {
     title: '用户中心',
     user: user
   });

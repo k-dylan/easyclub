@@ -7,14 +7,14 @@ block content
     .panel.topic
       .panel-hd 发表话题
       .panel-bd
-        form.form(action="/topic/create" method="post")
-          .control-group
-            select#tag.form-control(name="tag")
+        form.form.form-horizontal(action="/topic/create" method="post")
+          .form-group
+            select#tag.form-control.w-auto(name="tag")
               option(value="0") 选择板块
               each tag in tags
                 option(value=tag)= tag
             input#title.form-control(type="text" name="title" placeholder="请输入标题" )
-          .control-group
+          .form-group
             textarea#editor.form-control(name="content" placeholder="文章支持 Markdown 语法, 请注意标记代码")
           .btn-group
             button.btn(type="submit") 发表

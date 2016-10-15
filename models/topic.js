@@ -27,6 +27,10 @@ TopicSchema.index({author_id: 1, create_time: -1});
  * 回复主题
  */
 TopicSchema.statics.reply = async function (topic_id,reply_id) {
+
+  if(topic_id.length != 24) 
+    return false;
+
   let result = await this.updateQ({
     _id: topic_id
   }, {
@@ -44,6 +48,8 @@ TopicSchema.statics.reply = async function (topic_id,reply_id) {
  * 并更新浏览数
  */
 TopicSchema.statics.get_topic = async function (topic_id) {
+  if(topic_id.length != 24) 
+    return false;
   let result = await this.findByIdAndUpdateQ(topic_id, {
     '$inc': {'visit_count': 1}
   });
