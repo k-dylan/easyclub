@@ -26,7 +26,7 @@ block content
                 h5
                   a(href="/user/#{reply.author._id}" target="_blank")= reply.author.username 
                   span.date= " • at: " + reply.create_time.toLocaleDateString()
-                p= reply.content
+                p!= md.render(reply.content)
                  
                   
     - if (username)

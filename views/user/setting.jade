@@ -3,6 +3,7 @@ extends ../layout
 block content
   .wp-right
     include ../sidebar/user_info
+    include ../sidebar/create_topic
   .wp-left
     .panel
       .panel-hd 用户中心
@@ -23,7 +24,7 @@ block content
             input.form-control(type="text" name="github" id="github" value=user.github)
           .form-group
             label.control-label(for="signature") 个人签名：
-            textarea.form-control(name="signature" id="signature" value=user.signature)
+            textarea.form-control(name="signature" id="signature")= user.signature
           .form-group
             label.control-label
             button.btn.btn-primary(type="submit" id="btn") 保存设置

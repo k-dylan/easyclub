@@ -9,7 +9,7 @@ const path = require('path');
 const nib = require('nib');
 
 
-module.exports = (root, opts) => {
+module.exports = function (root, opts) {
   
   return async (ctx, next) => {
     if (ctx.method === 'GET' || ctx.method === 'HEAD') {

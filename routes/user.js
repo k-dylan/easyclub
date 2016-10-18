@@ -1,5 +1,4 @@
 const router = require('koa-router')();
-const tools = require('../common/tools');
 
 /**
  * 用户设置
@@ -36,14 +35,9 @@ router.post('/', checkLogin, async (ctx, next) => {
   
   if(result) {
     ctx.session.user = user;
-    return ctx.body = {
-      status: 0
-    };
+    return ctx.success();
   } else {
-    return ctx.body = {
-      status: 1,
-      message: '修改失败！'
-    }
+    return ctx.error('请求失败');
   }
 });
 /**
@@ -54,7 +48,7 @@ router.post('/setpass', checkLogin,async (ctx, next) => {
   let newpass = ctx.request.body.newpass;
 
   if(!oldpass || !newpass) {
-    return ctx.body = tools.error('请求参数不完整！');
+    return ctx.error('请求参数不完整！');
   }
 
   let User = ctx.model('user');
@@ -63,19 +57,19 @@ router.post('/setpass', checkLogin,async (ctx, next) => {
 
 
   if(!user) {
-    return ctx.body = tools.error('当前密码输入错误，请检查后重试！');
+    return ctx.error('当前密码输入错误，请检查后重试！');
   }
 
   user.password = newpass;
   let result = await user.saveQ();
 
   if(!result) {
-    return ctx.body = tools.error('保存失败，请检查后重试！');
+    return ctx.error('保存失败，请检查后重试！');
   }
   // 重新登录
   ctx.session.username = null;
   ctx.session.user = null;
-  ctx.body = tools.success('修改成功，请重新登录！');
+  ctx.success('修改成功，请重新登录！');
 
 });
 
@@ -96,10 +90,7 @@ router.post('/register', async (ctx, next) => {
   let body = ctx.request.body;
   
   if(!body.username || !body.password || !body.email)
-    return ctx.body = {
-      status: 1,
-      message: '参数有误!'
-    };
+    return ctx.error('您请求的参数不完整!');
   
   let User = ctx.model('user');
   // 验证用户名是否重复
@@ -108,10 +99,7 @@ router.post('/register', async (ctx, next) => {
   });
   
   if(user) {
-    return ctx.body = {
-      status: 1,
-      message: '用户名已注册过啦！'
-    };
+    return ctx.error('用户名已注册过啦！');
   }; 
   // 验证邮箱
   user = await User.findOneQ({
@@ -119,17 +107,12 @@ router.post('/register', async (ctx, next) => {
   });
   
   if(user) {
-    return ctx.body = {
-      status: 1,
-      message: '此邮箱已经注册过啦！'
-    };
+    return ctx.error('此邮箱已经注册过啦！');
   }; 
   
   user = new User(body);
   let result = await user.saveQ();
-  return ctx.body = {
-    status: 0
-  }
+  return ctx.success()
 });
 
 
@@ -152,18 +135,13 @@ router.post('/login', async (ctx, next) => {
   let user = await User.check_password(body.username, body.password);
   
   if(!user) {
-    return ctx.body = {
-      status: 1,
-      message: '没有此用户或密码错误！'
-    }
+    return ctx.error('没有此用户或密码错误！');
   }
   // 用户名密码正确
   ctx.session.username = user.username;
   ctx.session.user = user;
   
-  return ctx.body = {
-    status: 0
-  }
+  return ctx.success();
 });
 
 router.get('/logout', (ctx, next) => {
@@ -174,10 +152,7 @@ router.get('/logout', (ctx, next) => {
 
 async function checkLogin (ctx, next) {
   if(!ctx.state.username) {
-    return ctx.body = {
-      status: 1,
-      message: "您还未登录，请登录后重试！"
-    }
+    return ctx.error("您还未登录，请登录后重试！");
   } else {
     await next();
   }

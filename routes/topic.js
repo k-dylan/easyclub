@@ -21,10 +21,7 @@ router.get('/create', check_login_middle, async (ctx, next) => {
 router.post('/', check_login_middle, async (ctx, next) => {
   let body = ctx.request.body;
   if(!body.title || !body.tag || !body.content)
-    return ctx.body = {
-      status: 1,
-      message: '参数有误!'
-    };
+    return ctx.error('您请求的参数不完整！');
   
   let user_id = ctx.state.user._id;
   let Topic = ctx.model('topic');
@@ -43,15 +40,11 @@ router.post('/', check_login_middle, async (ctx, next) => {
     // 更新用户主题数
     let User = ctx.model('user');
     let res = await User.update_topic_count(user_id, 1);
-    ctx.body = {
-      status: 0,
+    ctx.success({
       topic_id: result._id
-    }
+    });
   } else {
-    ctx.body = {
-      status: 1,
-      message: '出现错误，保存失败！'
-    }
+    ctx.error("出现错误，保存失败！");
   }
 });
 /**
@@ -110,10 +103,7 @@ router.post('/:topic_id/reply', check_login_middle, async (ctx, next) => {
   let content = ctx.request.body.content;
   
   if(!content) {
-    return ctx.body = {
-      status: 1,
-      message: '参数有误!'
-    };
+    return ctx.error('您请求的参数有误，请检查后重试！');
   }
   
   let Reply = ctx.model('reply');
@@ -138,16 +128,12 @@ router.post('/:topic_id/reply', check_login_middle, async (ctx, next) => {
     let res = await Topic.reply(topic_id, result._id);
 
     if(res.ok) {
-      return ctx.body = {
-        status: 0,
+      return ctx.success({
         topic_id: topic_id,
         reply_id: result._id
-      }
+      })
     } else {
-      return ctx.body = {
-        status: 1,
-        message: '回复失败！请重试！'
-      }
+      return ctx.error('回复失败，请重试！');
     }
   }
 });

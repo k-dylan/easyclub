@@ -57,8 +57,8 @@ app.use(async (ctx, next) => {
   await next();
 });
 
-// 给ctx对象添加共用函数
-// app.use(require('./middlewares/tools'));
+
+app.use(require('./middlewares/return_data'));
 
 app.use(views(__dirname + '/views', {
   extension: 'jade'
