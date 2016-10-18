@@ -33,7 +33,7 @@ router.post('/', checkLogin, async (ctx, next) => {
 
   let result = await user.saveQ();
   
-  if(result) {
+  if(!result) {
     ctx.session.user = user;
     return ctx.success();
   } else {

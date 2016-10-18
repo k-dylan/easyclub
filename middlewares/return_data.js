@@ -2,24 +2,25 @@
  * 给ctx对象添加ajax请求返回数据函数中间件
  */
 
-module.exports = async function (ctx, next) {
-  // 成功
-  ctx.success = (msg) => {
+
+function data (ctx,status) {
+  return (msg) => {
     let obj = new Object;
     if(typeof msg == 'object') 
       obj = msg;
     else if(typeof msg == 'string') 
-      obj.msg = msg;
+      obj.message = msg;
     
-    obj.status = 0;
+    obj.status = status;
     return ctx.body = obj;
-  };
+  }
+}
+
+module.exports = async function (ctx, next) {
+  // 成功
+  ctx.success = data(ctx, 0);
   // 失败
-  ctx.error = (msg, status) => {
-    return ctx.body = {
-      status: status || 1,
-      msg: msg
-    }
-  };
+  ctx.error = data(ctx, 1);
+
   await next();
 }
