@@ -30,8 +30,10 @@ h6
 p
   margin 0
   margin 0
+
 // input 禁用状态鼠标形状
 html input[disabled]
+button[disabled]
   cursor not-allowed
 
 // 通用样式
@@ -160,6 +162,11 @@ html input[disabled]
     color #fff
     &:hover
       background-color darken(@background-color, 10)
+      color @color
+    &[disabled] 
+      background-color desaturate(@background-color, 60%)
+      border-color desaturate(@border-color, 60%)
+
 
   
 // 框架布局
