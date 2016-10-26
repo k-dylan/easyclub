@@ -1,0 +1,7 @@
+
+.panel
+  .panel-hd 作者其它主题
+  .panel-bd.user-info
+    ul
+      each item in topic.author_topic_list
+        li: a(href="/topic/"+ item._id)= item.title

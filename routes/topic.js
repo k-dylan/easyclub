@@ -88,12 +88,19 @@ router.get('/:topic_id', async (ctx, next) => {
     _id: topic.author_id
   });
 
+  // 读取作者其它主题
+  topic.author_topic_list = await Topic.find({
+    author_id: topic.author
+  }).sort({
+    create_time: -1
+  }).limit(10).execQ();
+
   await ctx.render('topic/show', {
     title: topic.title,
     topic: topic,
     replys: replys,
     md: md
-  })
+  });
 });
 
 /**
