@@ -93,7 +93,7 @@ router.get('/:topic_id', async (ctx, next) => {
     author_id: topic.author
   }).sort({
     create_time: -1
-  }).limit(10).select('title');
+  }).limit(10).select('title').execQ();
 
 
   await ctx.render('topic/show', {
