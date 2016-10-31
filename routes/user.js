@@ -3,7 +3,7 @@ const router = require('koa-router')();
 /**
  * 用户设置
  */
-router.get('/setting', async (ctx, next) => {
+router.get('/setting', checkLogin, async (ctx, next) => {
   let User = ctx.model('user');
   let user = await User.findOneQ({
     username: ctx.state.username
@@ -43,7 +43,7 @@ router.post('/', checkLogin, async (ctx, next) => {
 /**
  * 修改密码
  */
-router.post('/setpass', checkLogin,async (ctx, next) => {
+router.post('/setpass', checkLogin, async (ctx, next) => {
   let oldpass = ctx.request.body.oldpass;
   let newpass = ctx.request.body.newpass;
 
@@ -109,10 +109,13 @@ router.post('/register', async (ctx, next) => {
   if(user) {
     return ctx.error('此邮箱已经注册过啦！');
   }; 
-  
-  user = new User(body);
+
+  user = new User(body); 
   let result = await user.saveQ();
-  return ctx.success()
+  if(result)
+    return ctx.success();
+  else
+    return ctx.error('注册失败！');
 });
 
 

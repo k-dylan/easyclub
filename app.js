@@ -46,18 +46,6 @@ app.use(convert(json()));
 app.use(convert(session(app)));
 
 
-app.use(async (ctx, next) => {
-  ctx.state = {   
-    loader: loader,   
-    sitename: config.sitename,
-    // 用户登录状态
-    username: ctx.session.username || false,
-    user: ctx.session.user
-  };
-  await next();
-});
-
-
 app.use(require('./middlewares/return_data'));
 
 app.use(views(__dirname + '/views', {
@@ -71,6 +59,31 @@ app.use(convert(mongoose(Object.assign({
   },
   schemas: __dirname + '/models'
 }, config.mongodb))));
+
+
+app.use(async (ctx, next) => {
+
+  if(config.debug && ctx.cookies.get('dev-user')) {
+    // 测试用户使用
+    let testuser = ctx.cookies.get('dev-user');
+    let user = await ctx.model('user').findOneQ({
+      username: testuser
+    });
+    ctx.session.username = testuser;
+    ctx.session.user = user;
+  }
+
+  ctx.state = {   
+    loader: loader,   
+    sitename: config.sitename,
+    // 用户登录状态
+    username: ctx.session.username || false,
+    user: ctx.session.user
+  };
+  await next();
+});
+
+
 
 router.use('/', index.routes(), index.allowedMethods());
 router.use('/user', user.routes(), user.allowedMethods());
