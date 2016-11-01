@@ -1,5 +1,13 @@
 
 const User = require('../db').user;
+const supertest = require('supertest');
+const app = require('../../app');
+const config = require('../../config');
+const should = require('should');
+
+
+exports.request = supertest.agent(app.listen(3000));
+
 
 // 创建一个密码
 var createPass = exports.createPass = () => {
@@ -27,5 +35,25 @@ var deleteUser = exports.deleteUser = async (user) => {
 
 var getUserCookie = exports.getUserCookie = (user) => {
   return 'dev-user=' + user.username + ';';
+}
+/**
+ * 创建一个topic对象
+ */
+var createTopic = exports.createTopic = () => {
+  let key = +new Date();
+  return {
+    title: '测试主题' + key,
+    content: '这里是内容' + key,
+    tag: config.tags[0]
+  }
+}
+
+var shouldError = exports.shouldError = (msg, done) => {
+  return (err, res) => {
+    should.not.exist(err);
+    res.body.status.should.equal(1);
+    res.body.message.should.equal(msg);
+    done();
+  }
 }
 

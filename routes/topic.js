@@ -108,6 +108,12 @@ router.get('/:topic_id', async (ctx, next) => {
  * 回复主题
  */
 router.post('/:topic_id/reply', check_login_middle, async (ctx, next) => {
+
+  let topic_id = ctx.params.topic_id;
+  if(topic_id.length !== 24) {
+    return ctx.error('您请求的参数有误，请检查后重试！');
+  }
+  
   let content = ctx.request.body.content;
   
   if(!content) {
@@ -117,7 +123,7 @@ router.post('/:topic_id/reply', check_login_middle, async (ctx, next) => {
   let Reply = ctx.model('reply');
   
   let user_id = ctx.state.user._id;
-  let topic_id = ctx.params.topic_id;
+  
   let reply = new Reply({
     content: content,
     topic_id: topic_id,

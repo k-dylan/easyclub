@@ -1,14 +1,14 @@
 /**
  * 用户模块测试用例
  */
-const supertest = require('supertest');
 const should = require('should');
-const app = require('../app');
 const User = require('./db').user;
 const support = require('./support/support');
 
 
-var request = supertest.agent(app.listen(3000));
+const request = support.request;
+const shouldError = support.shouldError;
+
 
 describe('User', () => {
 
@@ -35,12 +35,7 @@ describe('User', () => {
           password: user.password,
           email: ''
         })
-        .expect(200, (err, res) => {
-          should.not.exist(err);
-          res.body.status.should.equal(1);
-          res.body.message.should.equal('您请求的参数不完整!');
-          done();
-        })
+        .expect(200, shouldError('您请求的参数不完整!', done));
     })
 
     it('#register', (done) => {
@@ -58,12 +53,7 @@ describe('User', () => {
       request
         .post('/user/register')
         .send(user)
-        .expect(200, (err, res) => {
-          should.not.exist(err);
-          res.body.status.should.equal(1);
-          res.body.message.should.equal('用户名已注册过啦！');
-          done();
-        })
+        .expect(200, shouldError('用户名已注册过啦！', done))
     })
 
     it('#repeat email', (done) => {
@@ -74,12 +64,7 @@ describe('User', () => {
           password: '123123123',
           email: user.email
         })
-        .expect(200, (err, res) => {
-          should.not.exist(err);
-          res.body.status.should.equal(1);
-          res.body.message.should.equal('此邮箱已经注册过啦！');
-          done();
-        })
+        .expect(200, shouldError('此邮箱已经注册过啦！', done))
     })
 
     it('#login page', (done) => {
@@ -99,12 +84,7 @@ describe('User', () => {
           username: user.username,
           password: '123123'
         })
-        .expect(200, (err, res) => {
-          should.not.exist(err);
-          res.body.status.should.equal(1);
-          res.body.message.should.equal('没有此用户或密码错误！');
-          done();
-        })
+        .expect(200, shouldError('没有此用户或密码错误！', done))
     })
 
     it('#login', login(user));
@@ -164,19 +144,14 @@ describe('User', () => {
 
   describe('setting user passord', () => {
 
-    it('#show error when no oldpass or not newpass', (done) => {
+    it('#show error when no oldpass or no newpass', (done) => {
       request
         .post('/user/setpass')
         .send({
           oldpass: '',
           newpass: '121asdf'
         })
-        .expect(200, (err, res) => {
-          should.not.exist(err);
-          res.body.status.should.equal(1);
-          res.body.message.should.equal('请求参数不完整！');
-          done();
-        })
+        .expect(200, shouldError('请求参数不完整！', done))
     })
 
     it('#show error when the error oldpass', (done) => {
@@ -186,12 +161,7 @@ describe('User', () => {
           oldpass: '123123',
           newpass: '121asdf'
         })
-        .expect(200, (err, res) => {
-          should.not.exist(err);
-          res.body.status.should.equal(1);
-          res.body.message.should.equal('当前密码输入错误，请检查后重试！');
-          done();
-        })
+        .expect(200, shouldError('当前密码输入错误，请检查后重试！', done))
     });
 
 
