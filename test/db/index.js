@@ -2,6 +2,7 @@
 const mongoose =  require('mongoose');
 const UserSchema = require('../../models/user');
 const TopicSchema = require('../../models/topic');
+const ReplySchema = require('../../models/reply');
 const config = require('../../config');
 
 
@@ -18,9 +19,11 @@ mongoose.connect(mongodb, {
 
 mongoose.model('User', UserSchema);
 mongoose.model('Topic', TopicSchema);
+mongoose.model('Reply', ReplySchema);
 
 
 module.exports = {
   user: mongoose.model('User'),
-  topic: mongoose.model('Topic')
+  topic: mongoose.model('Topic'),
+  reply: mongoose.model('Reply')
 }

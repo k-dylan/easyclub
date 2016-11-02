@@ -189,7 +189,7 @@ describe('User', () => {
 
   describe('delete test user', () => {
     it('#delete the user', async (done) => {
-      let data = await support.deleteUser(user);
+      let data = await support.removeUser(user);
       data.result.ok.should.equal(1);
       done();
     });

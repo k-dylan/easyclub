@@ -113,15 +113,15 @@ router.post('/:topic_id/reply', check_login_middle, async (ctx, next) => {
   if(topic_id.length !== 24) {
     return ctx.error('您请求的参数有误，请检查后重试！');
   }
-  
+
   let content = ctx.request.body.content;
-  
+
   if(!content) {
     return ctx.error('您请求的参数有误，请检查后重试！');
   }
   
   let Reply = ctx.model('reply');
-  
+
   let user_id = ctx.state.user._id;
   
   let reply = new Reply({
