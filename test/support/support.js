@@ -1,10 +1,13 @@
 
-const User = require('../db').user;
+const db = require('../db');
 const supertest = require('supertest');
 const app = require('../../app');
 const config = require('../../config');
 const should = require('should');
 
+const Topic = db.topic;
+const User = db.user;
+const Reply = db.reply;
 
 exports.request = supertest.agent(app.listen(3000));
 
@@ -24,14 +27,7 @@ var createUser = exports.createUser = () => {
   }
 }
 
-var createAndSaveUser = exports.createAndSaveUser = async () => {
-  let user = new User(createUser());
-  return await user.save();
-}
 
-var deleteUser = exports.deleteUser = async (user) => {
-  return await User.remove({ username: user.username });
-}
 
 var getUserCookie = exports.getUserCookie = (user) => {
   return 'dev-user=' + user.username + ';';
@@ -48,6 +44,10 @@ var createTopic = exports.createTopic = () => {
   }
 }
 
+
+/**
+ * 返回错误信息验证
+ */
 var shouldError = exports.shouldError = (msg, done) => {
   return (err, res) => {
     should.not.exist(err);
@@ -57,3 +57,32 @@ var shouldError = exports.shouldError = (msg, done) => {
   }
 }
 
+
+/**
+ * 创建并保存一个topic对象
+ */
+var createAndsaveTopic = exports.createAndSaveTopic = async (user) => {
+  let topic = new Topic(createTopic());
+  topic.author_id = user._id;
+  // 更新用户主题数量
+  await User.update_topic_count(user._id, 1);
+  
+  return await topic.save();
+}
+
+var createAndSaveUser = exports.createAndSaveUser = async () => {
+  let user = new User(createUser());
+  return await user.save();
+}
+
+var removeUser = exports.removeUser = async (user) => {
+  return await User.remove({ username: user.username });
+}
+
+var removeTopic = exports.removeTopic = async (topic) => {
+  return await Topic.remove({title: topic.title});
+}
+
+var removeReply = exports.removeReply = async (reply) => {
+  return await Reply.remove({_id: reply._id});
+}
