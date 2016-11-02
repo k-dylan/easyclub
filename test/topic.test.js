@@ -97,7 +97,7 @@ describe('Topic', () => {
           // 显示作者其它主题
           res.text.should.containEql(topic2.title);
           // 显示作者主题数量
-          res.text.should.containEql('<a href="/user/'+ user.username +'/topic">2</a>')
+          res.text.should.containEql('<a href="/user/'+ user.username +'/topic">2</a>');
           done();
         })
     });
