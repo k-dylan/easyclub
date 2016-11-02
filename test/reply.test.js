@@ -17,23 +17,20 @@ describe('Reply ', () => {
   };
   let topic = {};
 
-  before(async (done) => {
+  before(async () => {
     authorUser = await support.createAndSaveUser();
     replyUser = await support.createAndSaveUser();
     topic = await support.createAndSaveTopic(authorUser);
     replyCookie = support.getUserCookie(replyUser);
-    done();
   })
 
-  after(async (done) => {
+  after(async () => {
     await Promise.all([
       support.removeUser(authorUser),
       support.removeUser(replyUser),
       support.removeTopic(topic),
       support.removeReply(reply)
     ])
-    
-    done();
   })
 
   describe('Create reply', () => {
@@ -41,6 +38,7 @@ describe('Reply ', () => {
     it('#show error for no login', (done) => {
       request
         .post('/topic/' + topic._id + '/reply')
+        .set('Cookie', '')
         .expect(200, (err, res) => {
           should.not.exist(err);
           res.text.should.containEql('错误');
