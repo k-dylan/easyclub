@@ -2,7 +2,6 @@
  * 回复模块测试用例
  */
 const should = require('should');
-const db = require('./db');
 const support = require('./support/support');
 
 const request = support.request;

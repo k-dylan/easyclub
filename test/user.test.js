@@ -2,7 +2,6 @@
  * 用户模块测试用例
  */
 const should = require('should');
-const User = require('./db').user;
 const support = require('./support/support');
 
 
