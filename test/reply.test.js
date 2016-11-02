@@ -4,8 +4,6 @@
 const should = require('should');
 const db = require('./db');
 const support = require('./support/support');
-const Topic = db.topic;
-const User = db.user;
 
 const request = support.request;
 const shouldError = support.shouldError;
@@ -94,17 +92,5 @@ describe('Reply ', () => {
     });
 
   })
-
-
-  describe('Check the user data', () => {
-    it('#should the reply_count is right', async (done) => {
-      let userData = await User.findOne({
-        username: replyUser.username 
-      });
-      userData.reply_count.should.equal(1);      
-      done();
-    })
-  })
-
 
 })

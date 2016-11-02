@@ -4,8 +4,6 @@
 const should = require('should');
 const db = require('./db');
 const support = require('./support/support');
-const Topic = db.topic;
-const User = db.user;
 
 const request = support.request;
 const shouldError = support.shouldError;
