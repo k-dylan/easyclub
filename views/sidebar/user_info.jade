@@ -6,7 +6,10 @@
       .photo: a(href='/user/#{user.username}')
         img(src=user.avatar || '/images/photo.png', alt=user.username, width="90" height="90")
       .info 
-        h3: a(href="/user/#{user.username}")= user.username
+        h3 
+          a(href="/user/#{user.username}")= user.username
+          - if(user.isAdmin)
+            small.gray  (管理员)
         p 话题：
           a(href="/user/#{user.username}/topic")= user.topic_count
         p 回复：

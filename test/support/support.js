@@ -29,8 +29,10 @@ var createUser = exports.createUser = () => {
 
 
 
-var getUserCookie = exports.getUserCookie = (user) => {
-  return 'dev-user=' + user.username + ';';
+var getUserCookie = exports.getUserCookie = (user, isAdmin) => {
+  let obj = { username: user.username };
+  if(isAdmin) obj.isAdmin = true;
+  return 'dev-user=' + JSON.stringify(obj) + ';';
 }
 /**
  * 创建一个topic对象

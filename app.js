@@ -65,21 +65,30 @@ app.use(async (ctx, next) => {
 
   if(config.debug && ctx.cookies.get('dev-user')) {
     // 测试用户使用
-    let testuser = ctx.cookies.get('dev-user');
+    var testuser = JSON.parse(ctx.cookies.get('dev-user'));
+
     let user = await ctx.model('user').findOneQ({
-      username: testuser
+      username: testuser.username
     });
-    ctx.session.username = testuser;
+    
+    ctx.session.username = testuser.username;
     ctx.session.user = user;
+
+    if(testuser.isAdmin) {
+      ctx.session.user.isAdmin = true;
+    }
   }
 
   ctx.state = {   
     loader: loader,   
     sitename: config.sitename,
-    // 用户登录状态
-    username: ctx.session.username || false,
-    user: ctx.session.user
   };
+
+  if(ctx.session.username) {
+    ctx.state.username = ctx.session.username;
+    let user = ctx.state.user = ctx.session.user;
+  }
+  
   await next();
 });
 
@@ -93,8 +102,8 @@ app.use(router.routes(), router.allowedMethods());
 
 // response
 app.on('error', function(err, ctx){
-  console.log(err)
-  logger.error('server error', err, ctx);
+  console.error(err);
+  // console.error('server error', err, ctx);
 });
 
 

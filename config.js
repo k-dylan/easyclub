@@ -8,6 +8,8 @@ const config = {
   sitename: 'EasyClub',
   // 板块列表
   tags: ['原创', '转载', '提问', '站务'],
+  // 论坛管理员，username
+  admins: ['dylan'],
   // 每页主题数量
   pageSize: 20, 
   // 显示页码数量

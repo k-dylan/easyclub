@@ -1,5 +1,5 @@
 const router = require('koa-router')();
-
+const config = require('../config');
 /**
  * 用户设置
  */
@@ -142,8 +142,11 @@ router.post('/login', async (ctx, next) => {
   }
   // 用户名密码正确
   ctx.session.username = user.username;
-  ctx.session.user = user;
-  
+  ctx.session.user = user.toObject();
+  // 判断是否是管理员帐号
+  if(config.admins.indexOf(user.username) != -1) {
+    ctx.session.user.isAdmin = true;
+  }
   return ctx.success();
 });
 

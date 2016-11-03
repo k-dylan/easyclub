@@ -18,7 +18,7 @@ describe('User', () => {
     it('#register page', (done) => {
       request
         .get('/user/register')
-        .set('Cookie', support.getUserCookie(user))
+        .set('Cookie', '')
         .expect(200, (err, res) => {
           should.not.exist(err);
           res.text.should.containEql('用户注册');
@@ -92,6 +92,19 @@ describe('User', () => {
 
   });
 
+  describe('show admin login', () => {
+    it('#check', (done) => {
+      request
+        .get('/')
+        .set('Cookie', support.getUserCookie(user, true))
+        .expect(200, (err, res) => {
+          should.not.exist(err);
+          res.text.should.containEql('(管理员)');
+          done();
+        })
+    })
+  })
+
   describe('show error when not login', () => {
     it('#request', async (done) => {
 
@@ -109,6 +122,7 @@ describe('User', () => {
 
   describe('setting user', () => {
     it('#setting page', (done) => {
+      console.log('-------');
       request
         .get('/user/setting')
         .expect(200, (err, res) => {
