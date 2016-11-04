@@ -1,12 +1,13 @@
 const router = require('koa-router')();
 const config = require('../config');
+const validator = require('validator');
 /**
  * 用户设置
  */
 router.get('/setting', checkLogin, async (ctx, next) => {
   let User = ctx.model('user');
   let user = await User.findOneQ({
-    username: ctx.state.username
+    username: ctx.state.current_user.username
   });
   await ctx.render('user/setting', {
     title: '用户中心',
@@ -23,7 +24,7 @@ router.post('/', checkLogin, async (ctx, next) => {
   let User = ctx.model('user');
 
   let user = await User.findOneQ({
-    username: ctx.state.username
+    username: ctx.state.current_user.username
   });
 
   user.email = body.email;
@@ -53,8 +54,7 @@ router.post('/setpass', checkLogin, async (ctx, next) => {
 
   let User = ctx.model('user');
 
-  let user = await User.check_password(ctx.state.username, oldpass);
-
+  let user = await User.check_password(ctx.state.current_user.username, oldpass);
 
   if(!user) {
     return ctx.error('当前密码输入错误，请检查后重试！');
@@ -149,15 +149,36 @@ router.post('/login', async (ctx, next) => {
   }
   return ctx.success();
 });
-
+/**
+ * 退出登录
+ */
 router.get('/logout', (ctx, next) => {
   ctx.session.username = null;
   ctx.session.user = null;
   ctx.redirect('/');
 })
 
+router.get('/:username', async (ctx, next) => {
+  let username = validator.trim(ctx.params.username);
+  let User = ctx.model('user');
+  let user = await User.findOneQ({
+    username: username
+  });
+  if(!user) {
+    return ctx.error('没有找到此用户！');
+  }
+
+  
+
+  
+  await ctx.render('user/home', {
+    title: username + '的个人主页',
+    user: user
+  })
+});
+
 async function checkLogin (ctx, next) {
-  if(!ctx.state.username) {
+  if(!ctx.state.current_user) {
     return ctx.error("您还未登录，请登录后重试！");
   } else {
     await next();

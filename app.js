@@ -71,9 +71,8 @@ app.use(async (ctx, next) => {
       username: testuser.username
     });
     
-    ctx.session.username = testuser.username;
     ctx.session.user = user;
-
+    
     if(testuser.isAdmin) {
       ctx.session.user.isAdmin = true;
     }
@@ -84,9 +83,8 @@ app.use(async (ctx, next) => {
     sitename: config.sitename,
   };
 
-  if(ctx.session.username) {
-    ctx.state.username = ctx.session.username;
-    let user = ctx.state.user = ctx.session.user;
+  if(ctx.session.user) {
+    ctx.state.current_user = ctx.session.user;
   }
   
   await next();

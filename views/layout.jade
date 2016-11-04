@@ -12,8 +12,8 @@ html(lang="zh_CN")
       .wp
         a.logo(href="/") <b>Easy</b> Club 
         ul.user-nav
-          - if (username)
-            li 欢迎你：#{username}
+          - if (current_user)
+            li 欢迎你：#{current_user.username}
             li: a(href="/user/setting") 设置
             li: a(href="/user/logout") 退出
           - else

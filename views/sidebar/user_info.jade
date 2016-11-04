@@ -1,18 +1,18 @@
 
-- if(username)
+- if(current_user)
   .panel
     .panel-hd 个人信息
     .panel-bd.user-info
-      .photo: a(href='/user/#{user.username}')
-        img(src=user.avatar || '/images/photo.png', alt=user.username, width="90" height="90")
+      .photo: a(href='/user/#{current_user.username}')
+        img(src=current_user.avatar || '/images/photo.png', alt=current_user.username, width="90" height="90")
       .info 
         h3 
-          a(href="/user/#{user.username}")= user.username
-          - if(user.isAdmin)
+          a(href="/user/#{current_user.username}")= current_user.username
+          - if(current_user.isAdmin)
             small.gray  (管理员)
         p 话题：
-          a(href="/user/#{user.username}/topic")= user.topic_count
+          a(href="/user/#{current_user.username}/topic")= current_user.topic_count
         p 回复：
-          a(href="/user/#{user.username}/reply")= user.reply_count
-      p.clearfix= user.signature
+          a(href="/user/#{current_user.username}/reply")= current_user.reply_count
+      p.clearfix= current_user.signature
         

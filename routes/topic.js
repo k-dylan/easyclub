@@ -23,7 +23,7 @@ router.post('/', check_login_middle, async (ctx, next) => {
   if(!body.title || !body.tag || !body.content)
     return ctx.error('您请求的参数不完整！');
   
-  let user_id = ctx.state.user._id;
+  let user_id = ctx.state.current_user._id;
   let Topic = ctx.model('topic');
   
   // 添加文章
@@ -120,7 +120,7 @@ router.post('/:topic_id/reply', check_login_middle, async (ctx, next) => {
   
   let Reply = ctx.model('reply');
 
-  let user_id = ctx.state.user._id;
+  let user_id = ctx.state.current_user._id;
   
   let reply = new Reply({
     content: content,
@@ -154,7 +154,7 @@ router.post('/:topic_id/reply', check_login_middle, async (ctx, next) => {
 
 async function check_login_middle (ctx, next) {
   // 验证是否登录
-  if(!ctx.state.username) {
+  if(!ctx.state.current_user) {
     return ctx.error('请先登录!',{
       jump: '/user/login'
     });
