@@ -7,7 +7,6 @@ const support = require('./support/support');
 const request = support.request;
 const shouldError = support.shouldError;
 
-
 describe('Reply ', () => {
   let replyUser = {};
   let authorUser = {};
@@ -49,21 +48,21 @@ describe('Reply ', () => {
 
     it('#show error for wrong topic_id', (done) => {
       request 
-        .post('/topic/asdfasdfasf/reply')
+        .ajax('post','/topic/asdfasdfasf/reply')
         .set('Cookie', replyCookie)
         .expect(200, shouldError('您请求的参数有误，请检查后重试！', done));
     });
 
     it('#show error for no content', (done) => {
       request
-        .post('/topic/' + topic._id + '/reply')
+        .ajax('post','/topic/' + topic._id + '/reply')
         .set('Cookie', replyCookie)
         .expect(200, shouldError('您请求的参数有误，请检查后重试！', done));
     });
 
     it('#reply the topic', (done) => {
       request
-        .post('/topic/' + topic._id + '/reply')
+        .ajax('post', '/topic/' + topic._id + '/reply')
         .set('Cookie', replyCookie)
         .send(reply)
         .expect(200, (err, res) => {

@@ -51,7 +51,7 @@ describe('Topic', () => {
 
     it('#show error when no title or no content or no tag', (done) => {
       request
-        .post('/topic')
+        .ajax('post', '/topic')
         .set('Cookie', cookie)
         .send({
           title: '',
@@ -63,7 +63,7 @@ describe('Topic', () => {
 
     it('#create new topic', (done) => {
       request
-        .post('/topic')
+        .ajax('post', '/topic')
         .set('Cookie', cookie)
         .send(topic)
         .expect(200, (err, res) => {

@@ -3,16 +3,32 @@
  */
 
 
+
+/**
+ * 根据请求信息和请求类型返回数据
+ * - ctx {Object} 上下文对象
+ * - status {Int} 0 状态码
+ * return {Function} 
+ */
 function data (ctx,status) {
-  return (msg) => {
-    let obj = new Object;
+  /**
+   * 返回信息函数
+   * - msg {String||Object} 返回信息说明
+   * - obj {Object} 其它需要返回的函数
+   */
+  return async (msg, obj) => {
+    obj = obj || new Object;
     if(typeof msg == 'object') 
       obj = msg;
     else if(typeof msg == 'string') 
       obj.message = msg;
     
     obj.status = status;
-    return ctx.body = obj;
+    if(ctx.headers['x-requested-with'] === 'XMLHttpRequest') {
+      return ctx.body = obj;
+    } else { 
+       return await ctx.render('alert', obj);
+    }
   }
 }
 

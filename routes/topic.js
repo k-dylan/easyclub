@@ -57,9 +57,7 @@ router.get('/:topic_id', async (ctx, next) => {
   let topic = await Topic.get_topic(topic_id);
   
   if(!topic || topic.deleted) {
-    return await ctx.render('error', {
-      title: '错误',
-      message: '您要查看的文章已删除！',
+    return ctx.error('您要查看的文章已删除！',{
       jump: '-1'
     });
   }
@@ -157,9 +155,7 @@ router.post('/:topic_id/reply', check_login_middle, async (ctx, next) => {
 async function check_login_middle (ctx, next) {
   // 验证是否登录
   if(!ctx.state.username) {
-    return await ctx.render('error', {
-      title: '错误',
-      message: '请先登录!',
+    return ctx.error('请先登录!',{
       jump: '/user/login'
     });
   } 

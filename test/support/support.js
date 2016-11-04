@@ -9,8 +9,16 @@ const Topic = db.topic;
 const User = db.user;
 const Reply = db.reply;
 
-exports.request = supertest.agent(app.listen(3000));
+var request = exports.request = supertest.agent(app.listen(3000));
 
+/**
+ * 发送ajax请求
+ * - method {String} 请求类型
+ * - url {String} 请求网址
+ */
+request.ajax = function (method, url) {
+  return this[method](url).set('x-requested-with', 'XMLHttpRequest');
+}
 
 // 创建一个密码
 var createPass = exports.createPass = () => {

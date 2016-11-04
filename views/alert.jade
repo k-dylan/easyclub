@@ -1,8 +1,8 @@
 extends layout
 
 block content
-  .panel.panel-danger.error-box
-    .panel-hd.error-title: h3= title
+  .panel.error-box(class=status ? 'panel-danger' : 'panel-success')
+    .panel-hd.error-title: h3= status ? '错误' : '信息'
     .panel-bd
       p= message
       - if(jump)

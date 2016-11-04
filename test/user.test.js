@@ -28,7 +28,7 @@ describe('User', () => {
 
     it('#should error when no username or password or email', (done) => {
       request
-        .post('/user/register')
+        .ajax('post','/user/register')
         .send({
           username: user.username,
           password: user.password,
@@ -39,7 +39,7 @@ describe('User', () => {
 
     it('#register', (done) => {
       request
-        .post('/user/register')
+        .ajax('post', '/user/register')
         .send(user)
         .expect(200, (err, res) => {
           should.not.exist(err);
@@ -50,14 +50,14 @@ describe('User', () => {
 
     it('#repeat register', (done) => {
       request
-        .post('/user/register')
+        .ajax('post','/user/register')
         .send(user)
         .expect(200, shouldError('用户名已注册过啦！', done))
     })
 
     it('#repeat email', (done) => {
       request
-        .post('/user/register')
+        .ajax('post','/user/register')
         .send({
           username: 'testawelsdasdfv',
           password: '123123123',
@@ -78,7 +78,7 @@ describe('User', () => {
 
     it('#should error when wrong passord', (done) => {
       request
-        .post('/user/login')
+        .ajax('post','/user/login')
         .send({
           username: user.username,
           password: '123123'
@@ -135,7 +135,7 @@ describe('User', () => {
     it('#setting signature', (done) => {
       user.signature = '个性签名,gexingqianming!';
       request
-        .post('/user')
+        .ajax('post','/user')
         .send(user)
         .expect(200, (err, res) => {
           should.not.exist(err);
@@ -159,7 +159,7 @@ describe('User', () => {
 
     it('#show error when no oldpass or no newpass', (done) => {
       request
-        .post('/user/setpass')
+        .ajax('post','/user/setpass')
         .send({
           oldpass: '',
           newpass: '121asdf'
@@ -169,7 +169,7 @@ describe('User', () => {
 
     it('#show error when the error oldpass', (done) => {
       request
-        .post('/user/setpass')
+        .ajax('post','/user/setpass')
         .send({
           oldpass: '123123',
           newpass: '121asdf'
@@ -181,7 +181,7 @@ describe('User', () => {
     it('#setting password', (done) => {
       let newPass = support.createPass();
       request
-        .post('/user/setpass')
+        .ajax('post','/user/setpass')
         .send({
           oldpass: user.password,
           newpass: newPass
@@ -212,7 +212,7 @@ describe('User', () => {
 function login(user) {
   return (done) => {
     request
-      .post('/user/login')
+      .ajax('post','/user/login')
       .send({
         username: user.username,
         password: user.password
@@ -239,7 +239,7 @@ function verify(user) {
 
 function verifyNotLogin (method, url) {
   return new Promise((resolve, reject) => {
-    request[method](url)
+    request.ajax(method, url)
       .set('Cookie','')
       .expect(200, (err, res) => {
         if(err) reject(err);
