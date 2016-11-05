@@ -1,6 +1,6 @@
 @import 'nib'
-@import './public/stylesheets/variable.styl'
-// @import './public/stylesheets/icon.css'
+@import './public/stylesheets/variable'
+@import './icon.css'
 // 统一浏览器默认样式
 normalize-css() 
 
@@ -12,6 +12,7 @@ body
 
 a
   color #555
+  vertical-align middle
   &:link
     text-decoration none 
   &:hover
@@ -40,24 +41,64 @@ button[disabled]
 // 通用样式
 .small  // 小号字体
   font-size .8em
+
 .hide  // 隐藏
   display none
+  
 .clearfix  // 清除浮动
   clear both
   overflow hidden
+
 .text  // 字体颜色
   &-error  
     color #c40000
   &-main
     color $main_color
+  &-muted
+    color #888
 .w-auto // 还原默认宽度
   width auto!important
-
-// 颜色
-.gray
-  color #888
+.float
+  &-l
+    float left
+  &-r
+    float right
+  
+.interval 
+  &-r
+    margin-right .5em
 
 // 组件
+// 列表
+.list
+  li
+    padding 0 .5em
+    border-bottom 1px solid #eee
+    &:last-child
+      border-bottom none
+  &-striped
+    li:nth-child(2n)
+      background-color #f9f9f9
+
+// 标签
+.label
+  display inline
+  border-radius .25em 
+  padding .2em .5em 
+  text-align center
+  &-primary
+    background-color $main_color
+    color #efefef 
+    &:hover
+      background-color darken(@background-color, 5)  
+      color #fff
+  &-default
+    background-color #e5e5e5
+    color #999
+    &:hover
+      background-color darken(@background-color, 5)  
+      color #fff
+
 // alert 提示框
 .alert
   border 1px solid #ccc

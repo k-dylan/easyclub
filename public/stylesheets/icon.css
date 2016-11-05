@@ -30,7 +30,7 @@
 .icon-profile:before {
   content: "\e926";
 }
-.icon-email:before {
+.icon-email:before { 
   content: "\e948";
 }
 .icon-reply:before {

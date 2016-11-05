@@ -86,18 +86,19 @@
     .info 
       font-size .8em
       color #999
-      .tag
+      .label
       .author
         margin-right .5em
-      .tag 
-        a
-          background-color $main_color
-          border-radius 5px 
-          padding 2px 5px
-          color #efefef
-          &:hover
-            background-color darken(@background-color, 5)  
-            color #fff
       .date
         &:before
           content: 'at: '
+
+
+// 用户首页
+.user-home
+  &-avatar
+    float left 
+    margin-right 1em
+  &-info 
+    color #555
+  

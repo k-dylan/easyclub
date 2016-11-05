@@ -20,7 +20,7 @@ block content
               h4: a(href="/topic/#{topic._id}")= topic.title
               .info
                 - if (topic.tag)
-                  span.tag: a(href="/?tag=#{topic.tag}")= topic.tag
+                a.label.label-default.interval-r(href="/?tag=#{topic.tag}")= topic.tag 
                 span.author= topic.author.username
                 span.date= topic.create_time.toLocaleDateString()
         .page

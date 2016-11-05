@@ -1,6 +1,8 @@
 const router = require('koa-router')();
 const config = require('../config');
 const validator = require('validator');
+const tools = require('../common/tools');
+
 /**
  * 用户设置
  */
@@ -168,12 +170,39 @@ router.get('/:username', async (ctx, next) => {
     return ctx.error('没有找到此用户！');
   }
 
+  let Topic = ctx.model('topic');
+  // 查询用户帖子
+  let topics = await Topic.find({
+      author_id: user._id,
+      deleted: false
+    }, null, {
+      sort: {create_time: -1},
+      limit: 5
+    });
+
+  let replys = await ctx.model('reply').find({
+    author_id: user._id
+  }, null, {
+    sort: {update_time: -1},
+    limit: 20
+  });
+
   
+  replys = tools.filterDataForKey(replys, 'topic_id', 5);
+  
+  replys = await Promise.all(replys.map(async (reply) => {
+    reply.topic = await Topic.findOneQ({
+      _id: reply.topic_id
+    });
+    return reply;
+  }));
 
   
   await ctx.render('user/home', {
     title: username + '的个人主页',
-    user: user
+    user: user,
+    topics: topics,
+    replys: replys
   })
 });
 
