@@ -101,9 +101,21 @@ describe('User', () => {
 
     it('#login', login(user));
 
-    it('#verify login', verify(user));
+    it('#user home index', (done) => {
+      request
+        .get('/user/' + user.username)
+        .expect(200, (err, res) => {
+          should.not.exist(err);
+          res.text.should.containEql('基本信息');
+          res.text.should.containEql('创建的话题');
+          res.text.should.containEql('最近回复的主题');   
+          done();       
+        })
+    });
+
 
   });
+
 
   describe('show admin login', () => {
     it('#check', (done) => {
