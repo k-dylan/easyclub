@@ -112,6 +112,16 @@ describe('User', () => {
           done();       
         })
     });
+
+    it('#user topic page', (done) => {
+      request
+        .get('/user/' + user.username + '/topic')
+        .expect(200, (err, res) => {
+          should.not.exist(err);
+          res.text.should.containEql(user.username + '创建的话题');
+          done();       
+        })
+    });
   });
 
 
