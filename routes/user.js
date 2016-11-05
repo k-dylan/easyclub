@@ -21,13 +21,17 @@ router.get('/setting', checkLogin, async (ctx, next) => {
  * 修改用户信息
  */
 router.post('/', checkLogin, async (ctx, next) => {
-  let body = ctx.request.body;
+  let body = tools.trimObjectValue(ctx.request.body);
 
   let User = ctx.model('user');
 
   let user = await User.findOneQ({
     username: ctx.state.current_user.username
   });
+  
+  if(!validator.isEmail(body.email)){
+    return ctx.error('email格式不正确，请检查后重试！');
+  }
 
   user.email = body.email;
   user.home = body.home;
@@ -47,8 +51,9 @@ router.post('/', checkLogin, async (ctx, next) => {
  * 修改密码
  */
 router.post('/setpass', checkLogin, async (ctx, next) => {
-  let oldpass = ctx.request.body.oldpass;
-  let newpass = ctx.request.body.newpass;
+  let body = tools.trimObjectValue(ctx.request.body);
+  let oldpass = body.oldpass;
+  let newpass = body.newpass;
 
   if(!oldpass || !newpass) {
     return ctx.error('请求参数不完整！');
@@ -89,8 +94,11 @@ router.get('/register', async (ctx, next) => {
  * 接收注册信息
  */
 router.post('/register', async (ctx, next) => {
-  let body = ctx.request.body;
-  
+  let body = tools.trimObjectValue(ctx.request.body);
+  if(!validator.isEmail(body.email)) {
+    return ctx.error('email格式不正确，请检查后重试！');
+  }
+
   if(!body.username || !body.password || !body.email)
     return ctx.error('您请求的参数不完整!');
   
@@ -135,7 +143,7 @@ router.get('/login', async (ctx, next) => {
  * 登录处理
  */
 router.post('/login', async (ctx, next) => {
-  let body = ctx.request.body;
+  let body = tools.trimObjectValue(ctx.request.body);
   let User = ctx.model('user');
   let user = await User.check_password(body.username, body.password);
   

@@ -12,6 +12,8 @@ const shouldError = support.shouldError;
 describe('User', () => {
 
   var user = support.createUser();
+  user.home = 'http://k-dylan.github.io';
+  user.github = 'https://github.com/k-dylan/';
 
   describe('register and login test user', () => {
 
@@ -31,10 +33,21 @@ describe('User', () => {
         .ajax('post','/user/register')
         .send({
           username: user.username,
-          password: user.password,
-          email: ''
+          password: '',
+          email: user.email
         })
         .expect(200, shouldError('您请求的参数不完整!', done));
+    })
+
+    it('#should error when email was error', (done) => {
+      request
+        .ajax('post','/user/register')
+        .send({
+          username: user.username,
+          password: user.password,
+          email: 'asdfasf'
+        })
+        .expect(200, shouldError('email格式不正确，请检查后重试！', done));
     })
 
     it('#register', (done) => {
@@ -122,7 +135,6 @@ describe('User', () => {
 
   describe('setting user', () => {
     it('#setting page', (done) => {
-      console.log('-------');
       request
         .get('/user/setting')
         .expect(200, (err, res) => {
@@ -130,6 +142,18 @@ describe('User', () => {
           res.text.should.containEql(user.email);
           done();
         })
+    });
+
+    it('#show error for error email', (done) => {
+      let email = user.email;
+      user.email = 'kdylanqq.com';
+      request
+        .ajax('post', '/user')
+        .send(user)
+        .expect(200, shouldError('email格式不正确，请检查后重试！', () => {
+          user.email = email;
+          done();
+        }))
     })
 
     it('#setting signature', (done) => {

@@ -4,6 +4,8 @@ const router = require('koa-router')();
 const config = require('../config');
 const markdown = require('markdown-it');
 const Promise = require('promise');
+const tools = require('../common/tools');
+const validator = require('validator');
 
 /**
  * 发表主题页面
@@ -19,7 +21,8 @@ router.get('/create', check_login_middle, async (ctx, next) => {
  * 发表主题
  */
 router.post('/', check_login_middle, async (ctx, next) => {
-  let body = ctx.request.body;
+  let body = tools.trimObjectValue(ctx.request.body);
+  
   if(!body.title || !body.tag || !body.content)
     return ctx.error('您请求的参数不完整！');
   
@@ -108,11 +111,13 @@ router.get('/:topic_id', async (ctx, next) => {
 router.post('/:topic_id/reply', check_login_middle, async (ctx, next) => {
 
   let topic_id = ctx.params.topic_id;
-  if(topic_id.length !== 24) {
+  if(!validator.isMongoId(topic_id)) {
     return ctx.error('您请求的参数有误，请检查后重试！');
   }
 
-  let content = ctx.request.body.content;
+  let body = tools.trimObjectValue(ctx.request.body);
+
+  let content = body.content;
 
   if(!content) {
     return ctx.error('您请求的参数有误，请检查后重试！');

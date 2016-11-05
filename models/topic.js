@@ -4,6 +4,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
+const validator = require('validator');
 
 
 var TopicSchema = new Schema({
@@ -26,9 +27,9 @@ TopicSchema.index({author_id: 1, create_time: -1});
 /**
  * 回复主题
  */
-TopicSchema.statics.reply = async function (topic_id,reply_id) {
+TopicSchema.statics.reply = async function (topic_id, reply_id) {
 
-  if(topic_id.length != 24) 
+  if(!validator.isMongoId(topic_id + '') || !validator.isMongoId(reply_id + '')) 
     return false;
 
   let result = await this.updateQ({
@@ -48,7 +49,7 @@ TopicSchema.statics.reply = async function (topic_id,reply_id) {
  * 并更新浏览数
  */
 TopicSchema.statics.get_topic = async function (topic_id) {
-  if(topic_id.length != 24) 
+  if(!validator.isMongoId(topic_id + '')) 
     return false;
   let result = await this.findByIdAndUpdateQ(topic_id, {
     '$inc': {'visit_count': 1}

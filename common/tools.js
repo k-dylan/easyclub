@@ -2,6 +2,9 @@
  * 通用工具库
  */
 
+
+const validator = require('validator');
+
 /**
  * 过滤查询结果中某个字段相同的数据
  * Callback:
@@ -26,3 +29,16 @@ exports.filterDataForKey = function (data, key,count) {
   return arr;
 }
 
+/**
+ * 去除对象所以属性值的前后空格
+ * 主要用户接收post数据的处理
+ * @param {Object} obj 要处理的对象
+ * @returns 处理过的对象
+ */
+exports.trimObjectValue = function (obj) {
+  let temp = {};
+  for(let v in obj) {
+    temp[v] = validator.trim(obj[v]);
+  }
+  return temp;
+}

@@ -15,6 +15,7 @@ router.get('/', async function (ctx, next) {
   let Topic = ctx.model('topic');
   // 组合查询对象
   let query = {deleted: false};
+
   if(current_tag != 'all')
     query.tag = current_tag;
   // 计算分页数据
@@ -25,7 +26,6 @@ router.get('/', async function (ctx, next) {
   let all_page_num = Math.ceil(count / config.pageSize);
   
   let page = Page.get(current_page, all_page_num, config.showPageNum);
-  
 
   let topics = await Topic.find(query)
     .sort({
