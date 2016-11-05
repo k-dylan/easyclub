@@ -1,0 +1,26 @@
+extends ../layout
+
+
+block content
+  .wp-right
+    include ../sidebar/user_info
+  .wp-left
+    .panel
+      .panel-hd  <span class="icon-list"></span> #{user.username}创建的话题
+      .panel-bd
+        ul.list.list-striped
+          each topic in topics
+            li
+              a.label.label-default.small.interval-r(href="/?tag=" + topic.tag)= topic.tag
+              span.float-r.text-muted= topic.create_time.toLocaleDateString()
+              a(href='/topic/' + topic._id)= topic.title
+        .page
+          ul
+            li: a(href=page.start < page.current ? "?page=#{page.current - 1}" : 'javascript:;') 上一页
+            - for (var i = page.start; i <= page.end; i++)
+              - if (page.current == i)
+                li: span= i
+              - else
+                li: a(href="?page=#{i}")= i
+            li: a(href= page.end > page.current ? "?page=#{page.current + 1}" : 'javascript:;') 下一页
+            

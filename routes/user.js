@@ -2,6 +2,7 @@ const router = require('koa-router')();
 const config = require('../config');
 const validator = require('validator');
 const tools = require('../common/tools');
+const page = require('../common/page');
 
 /**
  * 用户设置
@@ -213,6 +214,50 @@ router.get('/:username', async (ctx, next) => {
     replys: replys
   })
 });
+
+/**
+ * 用户话题页
+ */
+router.get('/:username/topic', async (ctx, next) => {
+  let username = ctx.params.username;
+
+  let user = await ctx.model('user').findOneQ({
+    username: username
+  });
+
+  if(!user) {
+    return ctx.error('这个用户不存在，请重试！');
+  }
+
+  let current_page = +ctx.query.page || 1;
+  let query = {
+    author_id: user._id
+  }
+  let Topic = ctx.model('topic');
+  
+  // 计算分页数据
+  let start_item_num = (current_page - 1) * config.pageSize;
+  
+  // 查询总条数
+  let count = await Topic.countQ(query); 
+  let all_page_num = Math.ceil(count / config.pageSize);
+  
+  let pages = page.get(current_page, all_page_num, config.showPageNum);
+
+  let topics = await Topic.find(query, null, {
+    sort: '-create_time',
+    skip: start_item_num,
+    limit: config.pageSize
+  });
+
+
+  await ctx.render('user/topic', {
+    title: `${username} 发表的话题`,
+    topics: topics,
+    user: user,
+    page: pages
+  })
+})
 
 async function checkLogin (ctx, next) {
   if(!ctx.state.current_user) {
