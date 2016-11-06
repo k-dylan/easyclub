@@ -41,21 +41,21 @@ UserSchema.statics.check_password = async function (username, password) {
 /**
  * 增加减少用户文章数量
  */
-UserSchema.statics.update_topic_count = async function (user_id, num) {
-  let result = await this.update({_id: user_id}, {'$inc': {
-    'topic_count': num
-  }});
-  return result;
+UserSchema.statics.updateTopicCount = async function (userId, num) {
+  let user = await this.findOneQ({_id: userId});
+  user.topic_count += num;
+  user.save();
+  return user;
 }
 
 /**
  * 增加减少用户回复数量
  */
-UserSchema.statics.update_reply_count = async function (user_id, num) {
-  let result = await this.update({_id: user_id}, {'$inc': {
-    'reply_count': num
-  }});
-  return result;
+UserSchema.statics.updateReplyCount = async function (userId, num) {
+  let user = await this.findOneQ({_id: userId});
+  user.reply_count += num;
+  user.save();
+  return user;
 }
 
 

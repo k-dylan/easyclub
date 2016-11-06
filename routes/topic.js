@@ -42,7 +42,9 @@ router.post('/', check_login_middle, async (ctx, next) => {
   if(result) {
     // 更新用户主题数
     let User = ctx.model('user');
-    let res = await User.update_topic_count(user_id, 1);
+    let user = await User.updateTopicCount(user_id, 1);
+    // 更新session
+    ctx.session.user = user;
     ctx.success({
       topic_id: result._id
     });
@@ -138,8 +140,8 @@ router.post('/:topic_id/reply', check_login_middle, async (ctx, next) => {
   if(result) {
     // 更新回复数
     let User = ctx.model('user');
-    await User.update_reply_count(user_id, 1);
-    
+    let user = await User.updateReplyCount(user_id, 1);
+    ctx.session.user = user;
     // 更新主题
     let Topic = ctx.model('topic');
     let res = await Topic.reply(topic_id, result._id);

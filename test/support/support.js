@@ -75,7 +75,7 @@ var createAndsaveTopic = exports.createAndSaveTopic = async (user) => {
   let topic = new Topic(createTopic());
   topic.author_id = user._id;
   // 更新用户主题数量
-  await User.update_topic_count(user._id, 1);
+  await User.updateTopicCount(user._id, 1);
   
   return await topic.save();
 }

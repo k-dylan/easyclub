@@ -74,7 +74,6 @@ router.post('/setpass', checkLogin, async (ctx, next) => {
     return ctx.error('保存失败，请检查后重试！');
   }
   // 重新登录
-  ctx.session.username = null;
   ctx.session.user = null;
   ctx.success('修改成功，请重新登录！');
 
@@ -151,7 +150,6 @@ router.post('/login', async (ctx, next) => {
     return ctx.error('没有此用户或密码错误！');
   }
   // 用户名密码正确
-  ctx.session.username = user.username;
   ctx.session.user = user.toObject();
   // 判断是否是管理员帐号
   if(config.admins.indexOf(user.username) != -1) {
@@ -163,7 +161,6 @@ router.post('/login', async (ctx, next) => {
  * 退出登录
  */
 router.get('/logout', (ctx, next) => {
-  ctx.session.username = null;
   ctx.session.user = null;
   ctx.redirect('/');
 })
