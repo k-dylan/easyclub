@@ -46,8 +46,13 @@ button[disabled]
   display none
   
 .clearfix  // 清除浮动
-  clear both
-  overflow hidden
+  zoom 1
+  &:after 
+    display block
+    content ''
+    clear both
+    visibility hidden
+    height 0 
 
 .text  // 字体颜色
   &-error  
@@ -229,6 +234,7 @@ button[disabled]
   padding 10px 
   &-left
     margin-right 310px
+    overflow hidden
   &-right
     float right
     width 300px
