@@ -23,15 +23,5 @@ block content
                 a.label.label-default.interval-r(href="/?tag=#{topic.tag}")= topic.tag 
                 span.author= topic.author.username
                 span.date= topic.create_time.toLocaleDateString()
-        .page
-          ul
-            li: a(href=page.start < page.current ? "/?tag=#{current_tag}&page=#{page.current - 1}" : 'javascript:;') 上一页
-            - for (var i = page.start; i <= page.end; i++)
-              - if (page.current == i)
-                li: span= i
-              - else
-                li: a(href="/?tag=#{current_tag}&page=#{i}")= i
-            li: a(href= page.end > page.current ? "/?tag=#{current_tag}&page=#{page.current + 1}" : 'javascript:;') 下一页
-            
-              
-                  
+        - var pageBaseUrl = `/?tag=${current_tag}`;
+        include ./includes/page

@@ -18,21 +18,13 @@ router.get('/', async function (ctx, next) {
 
   if(current_tag != 'all')
     query.tag = current_tag;
-  // 计算分页数据
-  let start_item_num = (current_page - 1) * config.pageSize;
-  
-  // 查询总条数
-  let count = await Topic.countQ(query); 
-  let all_page_num = Math.ceil(count / config.pageSize);
-  
-  let page = Page.get(current_page, all_page_num, config.showPageNum);
+  // 查询数据
+  let result = await Topic.getTopicForPage(query, null, {
+    sort: '-last_reply_at'
+  }, current_page);
 
-  let topics = await Topic.find(query)
-    .sort({
-      last_reply_at: -1
-    }).skip(start_item_num)
-    .limit(config.pageSize).execQ();
-  
+  let topics = result.data;
+
   //  读取用户信息
   let User = ctx.model("user");
   
@@ -49,7 +41,7 @@ router.get('/', async function (ctx, next) {
     topics: topics,
     tags: config.tags,
     current_tag: current_tag,
-    page: page
+    page: result.page
   }); 
 })
 module.exports = router;

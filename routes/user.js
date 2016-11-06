@@ -2,7 +2,6 @@ const router = require('koa-router')();
 const config = require('../config');
 const validator = require('validator');
 const tools = require('../common/tools');
-const page = require('../common/page');
 
 /**
  * 用户设置
@@ -234,28 +233,17 @@ router.get('/:username/topic', async (ctx, next) => {
     author_id: user._id
   }
   let Topic = ctx.model('topic');
-  
-  // 计算分页数据
-  let start_item_num = (current_page - 1) * config.pageSize;
-  
-  // 查询总条数
-  let count = await Topic.countQ(query); 
-  let all_page_num = Math.ceil(count / config.pageSize);
-  
-  let pages = page.get(current_page, all_page_num, config.showPageNum);
 
-  let topics = await Topic.find(query, null, {
-    sort: '-create_time',
-    skip: start_item_num,
-    limit: config.pageSize
-  });
+  let result = await Topic.getTopicForPage(query, null, {
+      sort: '-create_time'
+    },current_page, config.pageSize, config.showPageNum);
 
 
   await ctx.render('user/topic', {
     title: `${username} 发表的话题`,
-    topics: topics,
+    topics: result.data,
     user: user,
-    page: pages
+    page: result.page
   })
 })
 

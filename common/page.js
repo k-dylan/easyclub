@@ -1,21 +1,25 @@
 
 /**
  * 计算页码
- * - current_page 当前页码
- * - all_page 总页数
- * - show_page_size 显示页码数
+ * - currentPage 当前页码
+ * - allPage 总页数
+ * - showPageSize 显示页码数
  */
-exports.get = function (current_page, all_page, show_page_size) {
-  let step = Math.floor(show_page_size / 2);
-  
-  let start_page = current_page - step <= 0
-      ? 1 : current_page - step;
-  let end_page = start_page + show_page_size > all_page
-      ? all_page : start_page + show_page_size;
-      
+exports.get = function (currentPage, allPage, showPageSize) {
+  let step = Math.floor(showPageSize / 2);
+
+  let startPage = currentPage - step;
+  if(startPage <= step) 
+    startPage = 1;
+  else if (startPage + showPageSize > allPage)
+    startPage = allPage - showPageSize + 1;
+
+  let endPage = startPage + showPageSize - 1 > allPage
+      ? allPage : startPage + showPageSize - 1;
+
   return {
-    current: current_page,
-    start: start_page,
-    end: end_page
+    current: currentPage,
+    start: startPage,
+    end: endPage
   }
 }
