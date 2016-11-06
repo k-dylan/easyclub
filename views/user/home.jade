@@ -28,19 +28,25 @@ block content
       .panel-hd <span class="icon-list"></span> 创建的话题
       .panel-bd
         ul.list.list-striped
-          each topic in topics
-            li
-              a.label.label-default.small.interval-r(href="/?tag=" + topic.tag)= topic.tag
-              span.float-r.text-muted= topic.create_time.toLocaleDateString()
-              a(href='/topic/' + topic._id)= topic.title
-          li.more: a(href='/user/'+ user.username + '/topic') 更多……
+          if topics.length
+            each topic in topics
+              li
+                a.label.label-default.small.interval-r(href="/?tag=" + topic.tag)= topic.tag
+                span.float-r.text-muted= topic.create_time.toLocaleDateString()
+                a(href='/topic/' + topic._id)= topic.title
+            li.more: a(href='/user/'+ user.username + '/topic') 更多……
+          else 
+            li.more '无主题……'
     .panel
       .panel-hd <span class="icon-reply"></span> 最近回复的主题
       .panel-bd
         ul.list.list-striped
-          each reply in replys
-            li
-              a.label.label-default.small.interval-r(href="/?tag=" + reply.topic.tag)= reply.topic.tag
-              span.float-r.text-muted= reply.create_time.toLocaleDateString()
-              a(href='/topic/' + reply.topic_id + '#' + reply._id)= reply.topic.title
-          li.more: a(href='/user/'+ user.username + '/reply') 更多……
+          if replys.length
+            each reply in replys
+              li
+                a.label.label-default.small.interval-r(href="/?tag=" + reply.topic.tag)= reply.topic.tag
+                span.float-r.text-muted= reply.create_time.toLocaleDateString()
+                a(href='/topic/' + reply.topic_id + '#' + reply._id)= reply.topic.title
+            li.more: a(href='/user/'+ user.username + '/reply') 更多……
+          else 
+            li.more 还没有回复过主题

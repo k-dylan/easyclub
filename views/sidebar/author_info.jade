@@ -1,7 +1,7 @@
 - if (topic.author)
 - var author = topic.author
   .panel
-    .panel-hd 作者信息
+    .panel-hd <span class="icon-profile"></span> 作者信息
     .panel-bd.user-info
       .photo: a(href='/user/#{author.username}')
         img(src=author.avatar || '/images/photo.png', alt=author.username, width="90" height="90")

@@ -32,7 +32,7 @@ block content
                   
     - if (current_user)
       .panel.reply
-        .panel-hd 添加回复
+        .panel-hd <span class="icon-reply"><span> 添加回复
         .panel-bd
           .alert.alert-error.hide#alert
           form(action="/topic/#{topic._id}/reply" method="post")
