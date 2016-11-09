@@ -3,8 +3,7 @@ extends ../layout
 
 block content
   .wp-right
-    include ../sidebar/user_info
-    +user_info(user, '个人信息')
+    != partial('./sidebar/user_info', {user : user})
   .wp-left
     include ./mixin
     block panel

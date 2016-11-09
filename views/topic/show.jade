@@ -5,8 +5,7 @@ block css
 
 block content
   .wp-right
-    include ../sidebar/user_info
-    +user_info(topic.author, '作者信息')
+    != partial('./sidebar/user_info', {user : current_user, title: '作者信息'})
     include ../sidebar/user_topic_list
   .wp-left
     .panel.content
