@@ -3,6 +3,7 @@ extends ../layout
 block content
   .wp-right
     include ../sidebar/user_info
+    +user_info(current_user, '个人信息')
     include ../sidebar/create_topic
   .wp-left
     .panel

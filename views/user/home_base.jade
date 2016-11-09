@@ -4,6 +4,7 @@ extends ../layout
 block content
   .wp-right
     include ../sidebar/user_info
+    +user_info(user, '个人信息')
   .wp-left
     include ./mixin
     block panel

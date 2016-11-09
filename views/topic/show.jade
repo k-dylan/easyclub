@@ -5,7 +5,8 @@ block css
 
 block content
   .wp-right
-    include ../sidebar/author_info
+    include ../sidebar/user_info
+    +user_info(topic.author, '作者信息')
     include ../sidebar/user_topic_list
   .wp-left
     .panel.content
