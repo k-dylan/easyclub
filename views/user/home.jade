@@ -1,52 +1,41 @@
-extends ../layout
+extends ./home_base
 
-block content
-  .wp-right
-    include ../sidebar/user_info
-  .wp-left
-    .panel
-      .panel-hd: <span class="icon-profile"></span> 基本信息
-      .panel-bd.user-home.clearfix
-        .user-home-avatar: img(src=user.avatar || '/images/photo.png' width="100")
-        ul.user-home-info 
-          li
-            span.icon-user 
-            span= user.username
-          if user.home
-            li 
-              span.icon-home 
-              a(href=user.home target="_blank")= user.home
-          li
-            span.icon-email 
-            span= user.email
-          if user.github
-            li 
-              span.icon-github 
-              a(href=user.github target="_blank")= user.github
+block panel
+  .panel
+    .panel-hd: <span class="icon-profile"></span> 基本信息
+    .panel-bd.user-home.clearfix
+      .user-home-avatar: img(src=user.avatar || '/images/photo.png' width="100")
+      ul.user-home-info 
+        li
+          span.icon-user 
+          span= user.username
+        if user.home
+          li 
+            span.icon-home 
+            a(href=user.home target="_blank")= user.home
+        li
+          span.icon-email 
+          span= user.email
+        if user.github
+          li 
+            span.icon-github 
+            a(href=user.github target="_blank")= user.github
 
-    .panel
-      .panel-hd <span class="icon-list"></span> 创建的话题
-      .panel-bd
-        ul.list.list-striped
-          if topics.length
-            each topic in topics
-              li
-                a.label.label-default.small.interval-r(href="/?tag=" + topic.tag)= topic.tag
-                span.float-r.text-muted= topic.create_time.toLocaleDateString()
-                a(href='/topic/' + topic._id)= topic.title
-            li.more: a(href='/user/'+ user.username + '/topic') 更多……
-          else 
-            li.more '无主题……'
-    .panel
-      .panel-hd <span class="icon-reply"></span> 最近回复的主题
-      .panel-bd
-        ul.list.list-striped
-          if replys.length
-            each reply in replys
-              li
-                a.label.label-default.small.interval-r(href="/?tag=" + reply.topic.tag)= reply.topic.tag
-                span.float-r.text-muted= reply.create_time.toLocaleDateString()
-                a(href='/topic/' + reply.topic_id + '#' + reply._id)= reply.topic.title
-            li.more: a(href='/user/'+ user.username + '/reply') 更多……
-          else 
-            li.more 还没有回复过主题
+  .panel
+    .panel-hd <span class="icon-list"></span> 创建的话题
+    .panel-bd
+      ul.list.list-striped
+        if topics.length
+          +topic_list(topics)
+          li.more: a(href='/user/'+ user.username + '/topic') 更多……
+        else 
+          li.more '无主题……'
+  .panel
+    .panel-hd <span class="icon-reply"></span> 最近的回复
+    .panel-bd
+      ul.list.list-striped
+        if replys.length
+          +reply_list(replys)
+          li.more: a(href='/user/'+ user.username + '/reply') 更多……
+        else 
+          li.more 还没有回复过主题

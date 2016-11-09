@@ -2,6 +2,8 @@ const router = require('koa-router')();
 const config = require('../config');
 const validator = require('validator');
 const tools = require('../common/tools');
+const markdown = require('markdown-it');
+
 
 /**
  * 用户设置
@@ -189,11 +191,8 @@ router.get('/:username', async (ctx, next) => {
     author_id: user._id
   }, null, {
     sort: {update_time: -1},
-    limit: 20
+    limit: 5
   });
-
-  
-  replys = tools.filterDataForKey(replys, 'topic_id', 5);
   
   replys = await Promise.all(replys.map(async (reply) => {
     reply.topic = await Topic.findOneQ({
@@ -207,9 +206,50 @@ router.get('/:username', async (ctx, next) => {
     title: username + '的个人主页',
     user: user,
     topics: topics,
-    replys: replys
+    replys: replys,
+    md: new markdown()
   })
 });
+
+router.get('/:username/reply', async (ctx, next) => {
+  let username = validator.trim(ctx.params.username);
+  let User = ctx.model('user');
+  let user = await User.findOneQ({
+    username: username
+  });
+  if(!user) {
+    return ctx.error('没有找到此用户！');
+  }
+
+  let currentPage = +ctx.query.page || 1;
+
+  let Topic = ctx.model('topic');
+  let result = await ctx.model('reply').getReplyForPage({
+    author_id: user._id
+  }, null,  {
+    sort: '-update_time'
+  }, currentPage, config.pageSize, config.showPageNum);
+
+  let replys = result.data;
+
+  
+  replys = await Promise.all(replys.map(async (reply) => {
+    reply.topic = await Topic.findOneQ({
+      _id: reply.topic_id
+    });
+    return reply;
+  }));
+
+  
+  await ctx.render('user/replys', {
+    title: username + '的个人主页',
+    user: user,
+    replys: replys,
+    page: result.page,
+    md: new markdown()
+  })
+});
+
 
 /**
  * 用户话题页
@@ -236,7 +276,7 @@ router.get('/:username/topic', async (ctx, next) => {
     },current_page, config.pageSize, config.showPageNum);
 
 
-  await ctx.render('user/topic', {
+  await ctx.render('user/topics', {
     title: `${username} 发表的话题`,
     topics: result.data,
     user: user,

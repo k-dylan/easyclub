@@ -5,7 +5,7 @@
     .panel-bd.user-info
       .photo: a(href='/user/#{current_user.username}')
         img(src=current_user.avatar || '/images/photo.png', alt=current_user.username, width="90" height="90")
-      .info 
+      .info.clearfix
         h3 
           a(href="/user/#{current_user.username}")= current_user.username
           - if(current_user.isAdmin)
@@ -14,5 +14,5 @@
           a(href="/user/#{current_user.username}/topic")= current_user.topic_count
         p 回复：
           a(href="/user/#{current_user.username}/reply")= current_user.reply_count
-      p.clearfix= current_user.signature
+      p= current_user.signature
         

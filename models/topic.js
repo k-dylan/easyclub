@@ -71,27 +71,28 @@ TopicSchema.statics.get_topic = async function (topic_id) {
  * @param {any} showPageNum 需要在页面上显示的页码数量
  * @returns
  */
-TopicSchema.statics.getTopicForPage = async function (query, field, options, current_page, pageSize, showPageNum) {
-  pageSize = pageSize || config.pageSize;
-  showPageNum = showPageNum || config.showPageNum;
+page.addFindPageForQuery(TopicSchema, 'getTopicForPage');
+// TopicSchema.statics.getTopicForPage = async function (query, field, options, current_page, pageSize, showPageNum) {
+//   pageSize = pageSize || config.pageSize;
+//   showPageNum = showPageNum || config.showPageNum;
 
-  let start_item_num = (current_page - 1) * pageSize;
-  // 查询总条数
-  let count = await this.countQ(query); 
-  let all_page_num = Math.ceil(count / pageSize);
+//   let start_item_num = (current_page - 1) * pageSize;
+//   // 查询总条数
+//   let count = await this.countQ(query); 
+//   let all_page_num = Math.ceil(count / pageSize);
   
-  let pages = page.get(current_page, all_page_num, showPageNum);
+//   let pages = page.get(current_page, all_page_num, showPageNum);
 
-  options = Object.assign(options, {
-      skip: start_item_num,
-      limit: pageSize
-    });
+//   options = Object.assign(options, {
+//       skip: start_item_num,
+//       limit: pageSize
+//     });
   
-  let data =  await this.find(query, field, options);
-  return {
-    data: data,
-    page: pages
-  }
-}
+//   let data =  await this.find(query, field, options);
+//   return {
+//     data: data,
+//     page: pages
+//   }
+// }
 
 module.exports = TopicSchema;
