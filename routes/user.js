@@ -3,7 +3,7 @@ const config = require('../config');
 const validator = require('validator');
 const tools = require('../common/tools');
 const markdown = require('markdown-it');
-
+const upload = require('../common/upload');
 
 /**
  * 用户设置
@@ -167,6 +167,38 @@ router.get('/logout', (ctx, next) => {
   ctx.redirect('/');
 })
 
+/**
+ * 设置头像
+ */
+router.post('/setavatar', checkLogin, async (ctx, next) => {
+  try {
+    // 保存图片
+    await upload.single('avatar')(ctx, next); 
+  }catch(e) {
+    if(e.code === 'LIMIT_FILE_SIZE') {
+      return ctx.error('您上传的图片过大，请选择小于 ' + config.upload.fileSize / 1024 / 1024 + 'MB的图片');
+    }
+    return ctx.error(e.message);
+  }
+
+  if(!ctx.req.file)
+    return ctx.error('发生错误，请检查后重试！');
+
+  let User = ctx.model('user');
+  let user = await User.findOneQ({
+    _id: ctx.session.user._id
+  });
+
+  user.avatar = ctx.req.file.filename;
+  await user.saveQ()
+
+  ctx.session.user = user.toObject();
+  ctx.redirect('/user/setting#setavatar');
+})
+
+/**
+ * 用户首页
+ */
 router.get('/:username', async (ctx, next) => {
   let username = validator.trim(ctx.params.username);
   let User = ctx.model('user');

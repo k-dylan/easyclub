@@ -3,9 +3,9 @@ extends ./home_base
 block panel
   .panel
     .panel-hd: <span class="icon-profile"></span> 基本信息
-    .panel-bd.user-home.clearfix
-      .user-home-avatar: img(src=user.avatar || '/images/photo.png' width="100")
-      ul.user-home-info 
+    .panel-bd.user-info.clearfix
+      .photo.float-l.interval-r: img(src=user.avatar_url || '/images/photo.png' width="100")
+      ul.user-info-info 
         li
           span.icon-user 
           span= user.username

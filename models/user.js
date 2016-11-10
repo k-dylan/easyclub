@@ -3,7 +3,8 @@
  */
 const mongoose = require('mongoose');
 const crypto = require('crypto');
-
+const config = require('../config');
+const path = require('path');
 var UserSchema = new mongoose.Schema({
   username: { type: String, required: true},  
   password: { type: String, required: true},
@@ -17,7 +18,15 @@ var UserSchema = new mongoose.Schema({
   create_time: { type: Date, default: Date.now }
 });
 
+UserSchema.set('toObject', { getters: true , virtuals: true});
+
 UserSchema.index({username: 1}, {unique: true});
+
+UserSchema.virtual('avatar_url').get(function () {
+  if(!this.avatar)
+    return config.default_avatar;
+  return path.join(config.upload.url, this.avatar);
+})
 
 /**
  * password写入时加密

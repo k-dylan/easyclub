@@ -47,7 +47,6 @@ app.use(convert(bodyparser));
 app.use(convert(json()));
 app.use(convert(session(app)));
 
-
 app.use(require('./middlewares/return_data'));
 
 app.use(views(VIEWSDIR, {
