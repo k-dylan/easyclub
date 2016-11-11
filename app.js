@@ -24,6 +24,8 @@ const VIEWSDIR = __dirname + '/views';
 
 app.keys = ['easyclub'];
 
+onerror(app);
+
 // logger
 app.use(convert(logger()));
 
@@ -78,14 +80,19 @@ app.use(async (ctx, next) => {
       ctx.session.user.isAdmin = true;
     }
   }
-
+  
   ctx.state.loader = loader;
   ctx.state.sitename = config.sitename;
 
 
   if(ctx.session.user) {
-    ctx.state.current_user = ctx.session.user;
+    let user = ctx.state.current_user = ctx.session.user;
+    // 判断是否是管理员帐号
+    if(config.admins.indexOf(user.username) != -1) {
+      user.isAdmin = true;
+    }
   }
+  console.log(ctx.session.user);
   
   await next();
 });

@@ -4,11 +4,12 @@ const validator = require('validator');
 const tools = require('../common/tools');
 const markdown = require('markdown-it');
 const upload = require('../common/upload');
+const sign = require('../middlewares/sign');
 
 /**
  * 用户设置
  */
-router.get('/setting', checkLogin, async (ctx, next) => {
+router.get('/setting', sign.isLogin, async (ctx, next) => {
   let User = ctx.model('user');
   let user = await User.findOneQ({
     username: ctx.state.current_user.username
@@ -22,7 +23,7 @@ router.get('/setting', checkLogin, async (ctx, next) => {
 /**
  * 修改用户信息
  */
-router.post('/', checkLogin, async (ctx, next) => {
+router.post('/', sign.isLogin, async (ctx, next) => {
   let body = tools.trimObjectValue(ctx.request.body);
 
   let User = ctx.model('user');
@@ -43,7 +44,7 @@ router.post('/', checkLogin, async (ctx, next) => {
   let result = await user.saveQ();
   
   if(result) {
-    ctx.session.user = user;
+    ctx.session.user = user.toObject();
     return ctx.success();
   } else {
     return ctx.error('请求失败');
@@ -52,7 +53,7 @@ router.post('/', checkLogin, async (ctx, next) => {
 /**
  * 修改密码
  */
-router.post('/setpass', checkLogin, async (ctx, next) => {
+router.post('/setpass', sign.isLogin, async (ctx, next) => {
   let body = tools.trimObjectValue(ctx.request.body);
   let oldpass = body.oldpass;
   let newpass = body.newpass;
@@ -153,10 +154,7 @@ router.post('/login', async (ctx, next) => {
   }
   // 用户名密码正确
   ctx.session.user = user.toObject();
-  // 判断是否是管理员帐号
-  if(config.admins.indexOf(user.username) != -1) {
-    ctx.session.user.isAdmin = true;
-  }
+  
   return ctx.success();
 });
 /**
@@ -170,10 +168,10 @@ router.get('/logout', (ctx, next) => {
 /**
  * 设置头像
  */
-router.post('/setavatar', checkLogin, async (ctx, next) => {
+router.post('/setavatar', sign.isLogin, async (ctx, next) => {
   try {
     // 保存图片
-    await upload.single('avatar')(ctx, next); 
+    await upload.single('avatar')(ctx); 
   }catch(e) {
     if(e.code === 'LIMIT_FILE_SIZE') {
       return ctx.error('您上传的图片过大，请选择小于 ' + config.upload.fileSize / 1024 / 1024 + 'MB的图片');
@@ -315,14 +313,6 @@ router.get('/:username/topic', async (ctx, next) => {
     page: result.page
   })
 })
-
-async function checkLogin (ctx, next) {
-  if(!ctx.state.current_user) {
-    return ctx.error("您还未登录，请登录后重试！");
-  } else {
-    await next();
-  }
-} 
 
 
 module.exports = router;
