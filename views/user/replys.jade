@@ -1,0 +1,12 @@
+extends ./home_base
+
+block panel
+  .panel
+    .panel-hd <span class="icon-reply"></span> #{user.username}最近的回复
+    .panel-bd
+      ul.list.list-striped
+        if replys.length
+          +reply_list(replys)
+        else 
+          li.more 还没有回复过主题
+      include ../includes/page 

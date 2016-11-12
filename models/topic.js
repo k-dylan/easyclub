@@ -19,7 +19,9 @@ var TopicSchema = new Schema({
   tag: {type: String},
   create_time: { type: Date, default: Date.now },
   update_time: { type: Date, default: Date.now },
-  deleted: {type: Boolean, default: false}
+  deleted: {type: Boolean, default: false},
+  top: {type: Boolean, default: false},   //置顶帖
+  good: {type: Boolean, default: false} // 精华帖
 });
 
 TopicSchema.index({create_time: -1});
@@ -60,38 +62,8 @@ TopicSchema.statics.get_topic = async function (topic_id) {
 
 /**
  * 根据分页获取主题
- * Callback
- * - data {Array} 查询结果
- * - page {Object} 分页信息 开始页码、结束页码
- * @param {Object} query 查询匹配对象
- * @param {String} field 要查询的字段，为null时返回所有字段
- * @param {String} options 其它属性， sort skin limit 等
- * @param {any} current_page 要查询的页码
- * @param {any} pageSize 每页显示的数据条数
- * @param {any} showPageNum 需要在页面上显示的页码数量
- * @returns
  */
-TopicSchema.statics.getTopicForPage = async function (query, field, options, current_page, pageSize, showPageNum) {
-  pageSize = pageSize || config.pageSize;
-  showPageNum = showPageNum || config.showPageNum;
+page.addFindPageForQuery(TopicSchema, 'getTopicForPage');
 
-  let start_item_num = (current_page - 1) * pageSize;
-  // 查询总条数
-  let count = await this.countQ(query); 
-  let all_page_num = Math.ceil(count / pageSize);
-  
-  let pages = page.get(current_page, all_page_num, showPageNum);
-
-  options = Object.assign(options, {
-      skip: start_item_num,
-      limit: pageSize
-    });
-  
-  let data =  await this.find(query, field, options);
-  return {
-    data: data,
-    page: pages
-  }
-}
 
 module.exports = TopicSchema;

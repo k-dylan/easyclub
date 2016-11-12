@@ -37,6 +37,12 @@ var createUser = exports.createUser = () => {
 
 
 
+/**
+ * 获取用户cookie
+ * @param {Object} user 用户对象
+ * @param {Boolean} isAdmin 是否是管理员
+ * @returns
+ */
 var getUserCookie = exports.getUserCookie = (user, isAdmin) => {
   let obj = { username: user.username };
   if(isAdmin) obj.isAdmin = true;

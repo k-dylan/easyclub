@@ -15,22 +15,15 @@
     background-color #f5f5f5
     border-radius top 5px
     padding 1em .5em
-    h2
-      margin 0
-      font-size 1.3em
     .info
       font-size .9em
       margin-top .5em
       color #555
   
-// 侧栏用户信息显示
+// 用户信息显示
 .user-info 
-  clearfix()
-  .photo
-    float left
-    border-radius 50%
-    margin-right 1em
-      
+  &-info 
+    color #555
 // 回复
 .reply
   #editor
@@ -95,10 +88,35 @@
 
 
 // 用户首页
-.user-home
-  &-avatar
-    float left 
-    margin-right 1em
-  &-info 
-    color #555
   
+.reply
+  &-content
+    padding-left 1em
+    font-size .9em
+    color #444
+
+// 用户信息设置
+// 设置头像
+.set-avatar
+  &-photo
+  &-from 
+    display inline-block
+    vertical-align bottom
+// 大头像显示
+photo
+  .& 
+  .big-&
+  .small-&
+    border-radius 5px  
+    border 1px solid #ddd
+    overflow hidden 
+  .small-&
+    border-radius 50%
+    width 90px
+  .big-&
+    width 150px
+    height 150px
+  .&
+    height 100px
+    width 100px
+

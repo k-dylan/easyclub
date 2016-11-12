@@ -2,8 +2,10 @@ extends layout
 
 block content
   .wp-right
-    include ./sidebar/user_info
-    include ./sidebar/create_topic
+    - if(current_user)
+      != partial('./sidebar/user_info', {user : current_user})
+      include ./sidebar/create_topic
+      
   .wp-left
     .panel.index
       .panel-hd 
@@ -17,9 +19,11 @@ block content
           each topic in topics
             li
               .count #{topic.reply_count} / #{topic.visit_count}
-              h4: a(href="/topic/#{topic._id}")= topic.title
+              h4
+                if topic.top 
+                  span.small.label.label-primary.interval-r 置顶
+                a(href="/topic/#{topic._id}")= topic.title
               .info
-                - if (topic.tag)
                 a.label.label-default.interval-r(href="/?tag=#{topic.tag}")= topic.tag 
                 span.author= topic.author.username
                 span.date= topic.create_time.toLocaleDateString()

@@ -2,7 +2,7 @@ extends ../layout
 
 block content
   .wp-right
-    include ../sidebar/user_info
+    != partial('./sidebar/user_info', {user : current_user})
     include ../sidebar/create_topic
   .wp-left
     .panel
@@ -28,6 +28,14 @@ block content
           .form-group
             label.control-label
             button.btn.btn-primary(type="submit" id="btn") 保存设置
+    .panel#setavatar
+      .panel-hd 设置头像
+      .panel-bd.set-avatar
+        .big-photo.set-avatar-photo.interval-r: img(src=user.avatar_url || '/images/photo.png' alt=user.username width=150)
+        form.set-avatar-from(action="/user/setavatar" enctype="multipart/form-data" method="post")
+          input(type="file" name="avatar")
+          button.btn.btn-primary(type="submit") 上传头像
+
     .panel
       .panel-hd 修改密码
       .panel-bd 

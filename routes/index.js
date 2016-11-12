@@ -20,7 +20,7 @@ router.get('/', async function (ctx, next) {
     query.tag = current_tag;
   // 查询数据
   let result = await Topic.getTopicForPage(query, null, {
-    sort: '-last_reply_at'
+    sort: '-top -last_reply_at'
   }, current_page);
 
   let topics = result.data;
@@ -44,4 +44,7 @@ router.get('/', async function (ctx, next) {
     page: result.page
   }); 
 })
+
+
+
 module.exports = router;

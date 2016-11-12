@@ -8,7 +8,7 @@ normalize-css()
 body 
   background-color #f0f0f0
   margin 0
-  font 14px/2 "Helvetica Neue",Helvetica,Arial,"Microsoft Yahei",sans-serif
+  font 14px/2 "Helvetica Neue", Helvetica, Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif
 
 a
   color #555
@@ -17,7 +17,8 @@ a
     text-decoration none 
   &:hover
     color $main_color
-
+img
+  vertical-align middle
 ul 
   list-style none
   margin 0
@@ -61,6 +62,14 @@ button[disabled]
     color $main_color
   &-muted
     color #888
+  //  默认文字样式
+  &-normal
+    font-style normal
+    font-weight normal
+  // 垂直居中
+  &-middle
+    vertical-align middle
+    
 .w-auto // 还原默认宽度
   width auto!important
 .float
@@ -91,6 +100,7 @@ button[disabled]
   border-radius .25em 
   padding .2em .5em 
   text-align center
+  font-weight normal
   &-primary
     background-color $main_color
     color #efefef 
@@ -103,6 +113,7 @@ button[disabled]
     &:hover
       background-color darken(@background-color, 5)  
       color #fff
+  
 
 // alert 提示框
 .alert
@@ -224,7 +235,16 @@ button[disabled]
     &[disabled] 
       background-color desaturate(@background-color, 60%)
       border-color desaturate(@border-color, 60%)
-
+  &-danger 
+    background-color #d9534f
+    border-color #d9534f
+    color #fff
+    &:hover
+      background-color darken(@background-color, 10)
+      color @color
+    &[disabled] 
+      background-color desaturate(@background-color, 60%)
+      border-color desaturate(@border-color, 60%)
 
   
 // 框架布局

@@ -20,7 +20,11 @@ const user = require('./routes/user');
 const topic = require('./routes/topic');
 
 
+const VIEWSDIR = __dirname + '/views';
+
 app.keys = ['easyclub'];
+
+onerror(app);
 
 // logger
 app.use(convert(logger()));
@@ -35,7 +39,7 @@ if(config.debug) {
   });
   server.watch([
     __dirname + '/public',
-    __dirname + '/views'
+    VIEWSDIR
   ]);
 };
 
@@ -45,10 +49,9 @@ app.use(convert(bodyparser));
 app.use(convert(json()));
 app.use(convert(session(app)));
 
-
 app.use(require('./middlewares/return_data'));
 
-app.use(views(__dirname + '/views', {
+app.use(views(VIEWSDIR, {
   extension: 'jade'
 }));
 
@@ -77,20 +80,23 @@ app.use(async (ctx, next) => {
       ctx.session.user.isAdmin = true;
     }
   }
+  
+  ctx.state.loader = loader;
+  ctx.state.sitename = config.sitename;
 
-  ctx.state = {   
-    loader: loader,   
-    sitename: config.sitename,
-  };
 
   if(ctx.session.user) {
-    ctx.state.current_user = ctx.session.user;
+    let user = ctx.state.current_user = ctx.session.user;
+    // 判断是否是管理员帐号
+    if(config.admins.indexOf(user.username) != -1) {
+      user.isAdmin = true;
+    }
   }
   
   await next();
 });
 
-
+app.use(require('./middlewares/jade_partial')(VIEWSDIR));
 
 router.use('/', index.routes(), index.allowedMethods());
 router.use('/user', user.routes(), user.allowedMethods());

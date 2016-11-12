@@ -108,7 +108,7 @@ describe('User', () => {
           should.not.exist(err);
           res.text.should.containEql('基本信息');
           res.text.should.containEql('创建的话题');
-          res.text.should.containEql('最近回复的主题');   
+          res.text.should.containEql('最近的回复');   
           done();       
         })
     });
@@ -119,6 +119,16 @@ describe('User', () => {
         .expect(200, (err, res) => {
           should.not.exist(err);
           res.text.should.containEql(user.username + '创建的话题');
+          done();       
+        })
+    });
+
+    it('#user reply page', (done) => {
+      request
+        .get('/user/' + user.username + '/reply')
+        .expect(200, (err, res) => {
+          should.not.exist(err);
+          res.text.should.containEql(user.username + '最近的回复');
           done();       
         })
     });

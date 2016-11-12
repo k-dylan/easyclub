@@ -2,11 +2,14 @@ const router = require('koa-router')();
 const config = require('../config');
 const validator = require('validator');
 const tools = require('../common/tools');
+const markdown = require('markdown-it');
+const upload = require('../common/upload');
+const sign = require('../middlewares/sign');
 
 /**
  * 用户设置
  */
-router.get('/setting', checkLogin, async (ctx, next) => {
+router.get('/setting', sign.isLogin, async (ctx, next) => {
   let User = ctx.model('user');
   let user = await User.findOneQ({
     username: ctx.state.current_user.username
@@ -20,7 +23,7 @@ router.get('/setting', checkLogin, async (ctx, next) => {
 /**
  * 修改用户信息
  */
-router.post('/', checkLogin, async (ctx, next) => {
+router.post('/', sign.isLogin, async (ctx, next) => {
   let body = tools.trimObjectValue(ctx.request.body);
 
   let User = ctx.model('user');
@@ -41,7 +44,7 @@ router.post('/', checkLogin, async (ctx, next) => {
   let result = await user.saveQ();
   
   if(result) {
-    ctx.session.user = user;
+    ctx.session.user = user.toObject();
     return ctx.success();
   } else {
     return ctx.error('请求失败');
@@ -50,7 +53,7 @@ router.post('/', checkLogin, async (ctx, next) => {
 /**
  * 修改密码
  */
-router.post('/setpass', checkLogin, async (ctx, next) => {
+router.post('/setpass', sign.isLogin, async (ctx, next) => {
   let body = tools.trimObjectValue(ctx.request.body);
   let oldpass = body.oldpass;
   let newpass = body.newpass;
@@ -151,10 +154,7 @@ router.post('/login', async (ctx, next) => {
   }
   // 用户名密码正确
   ctx.session.user = user.toObject();
-  // 判断是否是管理员帐号
-  if(config.admins.indexOf(user.username) != -1) {
-    ctx.session.user.isAdmin = true;
-  }
+  
   return ctx.success();
 });
 /**
@@ -165,6 +165,38 @@ router.get('/logout', (ctx, next) => {
   ctx.redirect('/');
 })
 
+/**
+ * 设置头像
+ */
+router.post('/setavatar', sign.isLogin, async (ctx, next) => {
+  try {
+    // 保存图片
+    await upload.single('avatar')(ctx); 
+  }catch(e) {
+    if(e.code === 'LIMIT_FILE_SIZE') {
+      return ctx.error('您上传的图片过大，请选择小于 ' + config.upload.fileSize / 1024 / 1024 + 'MB的图片');
+    }
+    return ctx.error(e.message);
+  }
+
+  if(!ctx.req.file)
+    return ctx.error('发生错误，请检查后重试！');
+
+  let User = ctx.model('user');
+  let user = await User.findOneQ({
+    _id: ctx.session.user._id
+  });
+
+  user.avatar = ctx.req.file.filename;
+  await user.saveQ()
+
+  ctx.session.user = user.toObject();
+  ctx.redirect('/user/setting#setavatar');
+})
+
+/**
+ * 用户首页
+ */
 router.get('/:username', async (ctx, next) => {
   let username = validator.trim(ctx.params.username);
   let User = ctx.model('user');
@@ -189,11 +221,8 @@ router.get('/:username', async (ctx, next) => {
     author_id: user._id
   }, null, {
     sort: {update_time: -1},
-    limit: 20
+    limit: 5
   });
-
-  
-  replys = tools.filterDataForKey(replys, 'topic_id', 5);
   
   replys = await Promise.all(replys.map(async (reply) => {
     reply.topic = await Topic.findOneQ({
@@ -207,9 +236,50 @@ router.get('/:username', async (ctx, next) => {
     title: username + '的个人主页',
     user: user,
     topics: topics,
-    replys: replys
+    replys: replys,
+    md: new markdown()
   })
 });
+
+router.get('/:username/reply', async (ctx, next) => {
+  let username = validator.trim(ctx.params.username);
+  let User = ctx.model('user');
+  let user = await User.findOneQ({
+    username: username
+  });
+  if(!user) {
+    return ctx.error('没有找到此用户！');
+  }
+
+  let currentPage = +ctx.query.page || 1;
+
+  let Topic = ctx.model('topic');
+  let result = await ctx.model('reply').getReplyForPage({
+    author_id: user._id
+  }, null,  {
+    sort: '-update_time'
+  }, currentPage, config.pageSize, config.showPageNum);
+
+  let replys = result.data;
+
+  
+  replys = await Promise.all(replys.map(async (reply) => {
+    reply.topic = await Topic.findOneQ({
+      _id: reply.topic_id
+    });
+    return reply;
+  }));
+
+  
+  await ctx.render('user/replys', {
+    title: username + '的个人主页',
+    user: user,
+    replys: replys,
+    page: result.page,
+    md: new markdown()
+  })
+});
+
 
 /**
  * 用户话题页
@@ -236,21 +306,13 @@ router.get('/:username/topic', async (ctx, next) => {
     },current_page, config.pageSize, config.showPageNum);
 
 
-  await ctx.render('user/topic', {
+  await ctx.render('user/topics', {
     title: `${username} 发表的话题`,
     topics: result.data,
     user: user,
     page: result.page
   })
 })
-
-async function checkLogin (ctx, next) {
-  if(!ctx.state.current_user) {
-    return ctx.error("您还未登录，请登录后重试！");
-  } else {
-    await next();
-  }
-} 
 
 
 module.exports = router;

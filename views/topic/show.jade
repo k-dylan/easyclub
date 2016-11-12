@@ -5,13 +5,20 @@ block css
 
 block content
   .wp-right
-    include ../sidebar/author_info
+    != partial('./sidebar/user_info', {user : topic.author, title: '作者信息'})
     include ../sidebar/user_topic_list
   .wp-left
     .panel.content
       .content-hd
-        h2= topic.title 
-        .info by: <a href="/user/#{username_id}" class="author">#{username}</a> • at: 
+        h2
+          if topic.top 
+            span.small.label.label-primary.interval-r 置顶
+          span.text-middle= topic.title 
+        if current_user && current_user.isAdmin
+          .float-r 
+            a.btn.btn-primary.interval-r#top(href="/topic/#{topic._id}/top")= topic.top ? '取消置顶' : '置顶'
+            a.btn.btn-danger#del(href="javascript:void(0);") 删除
+        .info <a href="/user/#{topic.author.username}" class="author">#{topic.author.username}</a> 发布于 
           span.date= topic.create_time.toLocaleDateString()
           
       .panel-bd
@@ -54,6 +61,37 @@ block script
         autofocus: false
       });
       editor.render(); 
+      // 置顶
+      $('#top').click(function (e) {
+        e.preventDefault();
+        var _this = this;
+        $.get(this.href, function (result) {
+          if(result.status) {
+            return alert(result.message);
+          }
+          if(result.top) {
+            $(_this).text('取消置顶');
+          } else {
+            $(_this).text('置顶');
+          }
+        })
+      })
+
+      // 删除帖子
+      $('#del').click(function (e) {
+        e.preventDefault();
+        if (!confirm('确定要删除此话题吗？')) {
+          return false;
+        }
+
+        $.get('/topic/#{topic._id}/delete', function (result) {
+          if(result.status) {
+            alert(result.message);
+          } else {
+            location.href = '/';
+          }
+        })
+      });
       
       var $btn = $('.btn');
       var $alert = $('#alert');

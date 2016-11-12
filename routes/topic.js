@@ -6,11 +6,12 @@ const markdown = require('markdown-it');
 const Promise = require('promise');
 const tools = require('../common/tools');
 const validator = require('validator');
+const sign = require('../middlewares/sign');
 
 /**
  * 发表主题页面
  */
-router.get('/create', check_login_middle, async (ctx, next) => {
+router.get('/create', sign.isLogin, async (ctx, next) => {
   await ctx.render('topic/create', {
     title: '发表话题',
     tags: config.tags
@@ -20,7 +21,7 @@ router.get('/create', check_login_middle, async (ctx, next) => {
 /**
  * 发表主题
  */
-router.post('/', check_login_middle, async (ctx, next) => {
+router.post('/', sign.isLogin, async (ctx, next) => {
   let body = tools.trimObjectValue(ctx.request.body);
   
   if(!body.title || !body.tag || !body.content)
@@ -62,7 +63,7 @@ router.get('/:topic_id', async (ctx, next) => {
   let topic = await Topic.get_topic(topic_id);
   
   if(!topic || topic.deleted) {
-    return ctx.error('您要查看的文章已删除！',{
+    return ctx.error('您要查看的文章不存在或已删除！',{
       jump: '-1'
     });
   }
@@ -110,7 +111,7 @@ router.get('/:topic_id', async (ctx, next) => {
 /**
  * 回复主题
  */
-router.post('/:topic_id/reply', check_login_middle, async (ctx, next) => {
+router.post('/:topic_id/reply', sign.isLogin, async (ctx, next) => {
 
   let topic_id = ctx.params.topic_id;
   if(!validator.isMongoId(topic_id)) {
@@ -157,16 +158,57 @@ router.post('/:topic_id/reply', check_login_middle, async (ctx, next) => {
   }
 });
 
+/**
+ * 置顶帖子
+ */
+router.get('/:topic_id/top', sign.isAdmin, async (ctx, next) => {
 
+  let topic_id = ctx.params.topic_id;
+  if(!validator.isMongoId(topic_id)) {
+    return ctx.error('您请求的参数有误，请检查后重试！');
+  }
 
-async function check_login_middle (ctx, next) {
-  // 验证是否登录
-  if(!ctx.state.current_user) {
-    return ctx.error('请先登录!',{
-      jump: '/user/login'
-    });
-  } 
-  await next();
-} 
+  let Topic = ctx.model('topic');
+  let topic = await Topic.findOneQ({
+    _id: topic_id
+  });
+
+  topic.top = !topic.top;
+  await topic.saveQ();
+
+  ctx.success('操作成功', {
+    top: topic.top
+  });
+});
+
+/**
+ * 删除帖子
+ */
+router.get('/:topic_id/delete', sign.isAdmin, async (ctx, next) => {
+  let topic_id = ctx.params.topic_id;
+  if(!validator.isMongoId(topic_id)) {
+    return ctx.error('您请求的参数有误，请检查后重试！');
+  }
+
+  let Topic = ctx.model('topic');
+  let topic = await Topic.findOneQ({
+    _id: topic_id
+  });
+
+  if(!topic || topic.deleted) {
+    return ctx.error('此话题不存在或已被删除！');
+  }
+
+  topic.deleted = true;
+  await topic.saveQ();
+
+  // 用户话题数减 1
+  let user = await ctx.model('user').updateTopicCount(topic.author_id, -1);
+  if(ctx.state.current_user && ctx.state.current_user._id.toString() === user._id.toString()){
+    ctx.session.user = user.toObject();
+  }
+
+  return ctx.success('操作成功！话题已被删除');
+})
 
 module.exports = router;

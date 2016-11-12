@@ -33,10 +33,12 @@ function data (ctx,status) {
 }
 
 module.exports = async function (ctx, next) {
-  // 成功
-  ctx.success = data(ctx, 0);
-  // 失败
-  ctx.error = data(ctx, 1);
+  if(!ctx.success)
+    // 成功
+    ctx.success = data(ctx, 0);
+  if(!ctx.error)
+    // 失败
+    ctx.error = data(ctx, 1);
 
   await next();
 }
