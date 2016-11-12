@@ -92,7 +92,6 @@ app.use(async (ctx, next) => {
       user.isAdmin = true;
     }
   }
-  console.log(ctx.session.user);
   
   await next();
 });

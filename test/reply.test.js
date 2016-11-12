@@ -41,7 +41,7 @@ describe('Reply ', () => {
         .expect(200, (err, res) => {
           should.not.exist(err);
           res.text.should.containEql('错误');
-          res.text.should.containEql('请先登录!');
+          res.text.should.containEql('您还未登录，请登录后重试！');
           done();
         });
     });

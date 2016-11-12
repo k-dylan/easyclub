@@ -19,7 +19,9 @@ var TopicSchema = new Schema({
   tag: {type: String},
   create_time: { type: Date, default: Date.now },
   update_time: { type: Date, default: Date.now },
-  deleted: {type: Boolean, default: false}
+  deleted: {type: Boolean, default: false},
+  top: {type: Boolean, default: false},   //置顶帖
+  good: {type: Boolean, default: false} // 精华帖
 });
 
 TopicSchema.index({create_time: -1});
