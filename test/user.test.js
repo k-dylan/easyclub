@@ -118,7 +118,7 @@ describe('User', () => {
         .get('/user/' + user.username + '/topic')
         .expect(200, (err, res) => {
           should.not.exist(err);
-          res.text.should.containEql(user.username + '创建的话题');
+          res.text.should.containEql(user.username + ' 创建的话题');
           done();       
         })
     });
@@ -128,7 +128,7 @@ describe('User', () => {
         .get('/user/' + user.username + '/reply')
         .expect(200, (err, res) => {
           should.not.exist(err);
-          res.text.should.containEql(user.username + '最近的回复');
+          res.text.should.containEql(user.username + ' 最近的回复');
           done();       
         })
     });

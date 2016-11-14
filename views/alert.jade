@@ -6,7 +6,7 @@ block content
     .panel-bd
       p= message
       - if(jump)
-        a.jump(href=jump) 页面将在<span id="second"></span>秒后跳转
+        a.jump(href="javascript: history.go(#{jump})") 页面将在<span id="second"></span>秒后跳转
       
 block script
   - if(jump)

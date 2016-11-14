@@ -150,15 +150,39 @@ describe('Topic', () => {
         });
     });
 
-    it('#show error for wrong topic_id', (done) => {
+    it('#show deleted topic when user', (done) => {
       request
         .get('/topic/' + topic._id)
+        .set('Cookie', cookie)
         .expect(200, (err, res) => {
           should.not.exist(err);
           res.text.should.containEql('错误');
           res.text.should.containEql('您要查看的文章不存在或已删除！');
           done();
-        })
+        });
+    });
+
+    it('#show deleted topic when no login', (done) => {
+      request
+        .get('/topic/' + topic._id)
+        .set('Cookie', '')
+        .expect(200, (err, res) => {
+          should.not.exist(err);
+          res.text.should.containEql('错误');
+          res.text.should.containEql('您要查看的文章不存在或已删除！');
+          done();
+        });
+    });
+
+    it('#show deleted topic when admin', (done) => {
+      request
+        .get('/topic/' + topic._id)
+        .set('Cookie', support.getUserCookie(user, true))
+        .expect(200, (err, res) => {
+          should.not.exist(err);
+          res.text.should.containEql(topic.title);
+          done();
+        });
     });
   });
 })

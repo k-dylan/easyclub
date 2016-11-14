@@ -241,6 +241,9 @@ router.get('/:username', async (ctx, next) => {
   })
 });
 
+/**
+ * 用户回复页
+ */
 router.get('/:username/reply', async (ctx, next) => {
   let username = validator.trim(ctx.params.username);
   let User = ctx.model('user');
@@ -270,7 +273,6 @@ router.get('/:username/reply', async (ctx, next) => {
     return reply;
   }));
 
-  
   await ctx.render('user/replys', {
     title: username + '的个人主页',
     user: user,

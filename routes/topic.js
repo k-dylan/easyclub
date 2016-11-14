@@ -62,7 +62,8 @@ router.get('/:topic_id', async (ctx, next) => {
   
   let topic = await Topic.get_topic(topic_id);
   
-  if(!topic || topic.deleted) {
+  let isAdmin = ctx.state.current_user && ctx.state.current_user.isAdmin;
+  if(!topic || (!isAdmin && topic.deleted)) {
     return ctx.error('您要查看的文章不存在或已删除！',{
       jump: '-1'
     });
