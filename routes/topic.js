@@ -45,7 +45,7 @@ router.post('/', sign.isLogin, async (ctx, next) => {
     let User = ctx.model('user');
     let user = await User.updateTopicCount(user_id, 1);
     // 更新session
-    ctx.session.user = user;
+    ctx.session.user = user.toObject();
     ctx.success({
       topic_id: result._id
     });
@@ -62,7 +62,8 @@ router.get('/:topic_id', async (ctx, next) => {
   
   let topic = await Topic.get_topic(topic_id);
   
-  if(!topic || topic.deleted) {
+  let isAdmin = ctx.state.current_user && ctx.state.current_user.isAdmin;
+  if(!topic || (!isAdmin && topic.deleted)) {
     return ctx.error('您要查看的文章不存在或已删除！',{
       jump: '-1'
     });
@@ -142,7 +143,7 @@ router.post('/:topic_id/reply', sign.isLogin, async (ctx, next) => {
     // 更新回复数
     let User = ctx.model('user');
     let user = await User.updateReplyCount(user_id, 1);
-    ctx.session.user = user;
+    ctx.session.user = user.toObject();
     // 更新主题
     let Topic = ctx.model('topic');
     let res = await Topic.reply(topic_id, result._id);
@@ -182,7 +183,7 @@ router.get('/:topic_id/top', sign.isAdmin, async (ctx, next) => {
 });
 
 /**
- * 删除帖子
+ * 删除/恢复帖子
  */
 router.get('/:topic_id/delete', sign.isAdmin, async (ctx, next) => {
   let topic_id = ctx.params.topic_id;
@@ -195,20 +196,28 @@ router.get('/:topic_id/delete', sign.isAdmin, async (ctx, next) => {
     _id: topic_id
   });
 
-  if(!topic || topic.deleted) {
-    return ctx.error('此话题不存在或已被删除！');
+  if(!topic) {
+    return ctx.error('此话题不存在！');
   }
 
-  topic.deleted = true;
+  topic.deleted = !topic.deleted;
   await topic.saveQ();
 
   // 用户话题数减 1
-  let user = await ctx.model('user').updateTopicCount(topic.author_id, -1);
+  let count = topic.deleted ? -1 : 1;
+  let user = await ctx.model('user').updateTopicCount(topic.author_id, count);
   if(ctx.state.current_user && ctx.state.current_user._id.toString() === user._id.toString()){
     ctx.session.user = user.toObject();
   }
-
-  return ctx.success('操作成功！话题已被删除');
+  if(topic.deleted)
+    return ctx.success('操作成功！话题已被删除', {
+      deleted: true
+    });
+  else 
+    return ctx.success('操作成功！话题已被恢复', {
+      deleted: false
+    })
 })
+
 
 module.exports = router;

@@ -1,0 +1,5 @@
+mixin label (topic)
+  if topic.top 
+    span.small.label.label-primary.interval-r 置顶
+  else 
+    a.small.label.label-default.interval-r(href="/?tag=#{topic.tag}")= topic.tag 

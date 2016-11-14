@@ -2,8 +2,8 @@ extends ./home_base
 
 block panel    
   .panel
-    .panel-hd  <span class="icon-list"></span> #{user.username}创建的话题
-    .panel-bd
+    .panel-hd  <span class="icon-list"></span> #{user.username} 创建的话题
+    .panel-bd.list-bd
       ul.list.list-striped
         +topic_list(topics)
       include ../includes/page

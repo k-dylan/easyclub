@@ -1,0 +1,28 @@
+include ./label
+
+mixin topic(topic)
+  span.float-r.text-muted= getTimeAgo(topic.create_time)
+  h4 
+    +label(topic) 
+    a(href='/topic/' + topic._id)= topic.title
+
+mixin reply(reply) 
+  if reply.topic.deleted && !(current_user && current_user.isAdmin)
+    .text-delete.text-muted 信息被删除或无权限查看
+  else 
+    .topic-title(class= reply.topic.deleted && current_user && current_user.isAdmin && 'text-delete')
+      - topic = reply.topic
+      span.float-r.text-muted= getTimeAgo(topic.create_time)
+      h4
+        +label(topic)
+        a(href='/topic/' + topic._id + '#' + reply._id)= topic.title
+    .reply-content!= md.render(reply.content)
+
+mixin reply_list(replys)
+  each reply in replys
+    li: +reply(reply)
+
+mixin topic_list(topics) 
+  each topic in topics
+    li: +topic(topic)
+  

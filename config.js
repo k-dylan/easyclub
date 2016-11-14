@@ -13,7 +13,7 @@ const config = {
   // 论坛管理员，username
   admins: ['dylan'],
   // 每页主题数量
-  pageSize: 5, 
+  pageSize: 20, 
   // 显示页码数量
   showPageNum: 5,
   // 数据库连接

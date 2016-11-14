@@ -17,12 +17,13 @@ block content
         if current_user && current_user.isAdmin
           .float-r 
             a.btn.btn-primary.interval-r#top(href="/topic/#{topic._id}/top")= topic.top ? '取消置顶' : '置顶'
-            a.btn.btn-danger#del(href="javascript:void(0);") 删除
+            a.btn.btn-danger#del(href="javascript:void(0);")= topic.deleted ? '恢复' : '删除'
+
         .info <a href="/user/#{topic.author.username}" class="author">#{topic.author.username}</a> 发布于 
-          span.date= topic.create_time.toLocaleDateString()
+          span.date= getTimeAgo(topic.create_time)
           
-      .panel-bd
-        p.content!= md.render(topic.content)
+      .panel-bd.markdown-body
+        != md.render(topic.content)
     - if(replys.length)
       .panel
         .panel-hd #{replys.length}回复
@@ -30,11 +31,14 @@ block content
           ul.reply-list
             each reply in replys
               li
+                a.photo-round.float-l.interval-r(href="/user/" + reply.author.username)
+                  img(src=reply.author.avatar_url, alt=reply.author.username width="60" height="60")
                 a.href(id=reply._id)
                 h5
                   a(href="/user/#{reply.author._id}" target="_blank")= reply.author.username 
-                  span.date= " • at: " + reply.create_time.toLocaleDateString()
-                p!= md.render(reply.content)
+                  span.date= " • at: " + getTimeAgo(reply.create_time)
+                .markdown-body
+                  != md.render(reply.content)
                  
                   
     - if (current_user)
@@ -80,18 +84,21 @@ block script
       // 删除帖子
       $('#del').click(function (e) {
         e.preventDefault();
-        if (!confirm('确定要删除此话题吗？')) {
+        if (!confirm('确定要'+ $(this).text() +'此话题吗？')) {
           return false;
         }
 
         $.get('/topic/#{topic._id}/delete', function (result) {
           if(result.status) {
             alert(result.message);
-          } else {
+          } else if(result.deleted){
             location.href = '/';
+          } else {
+            location.reload();
           }
         })
       });
+      
       
       var $btn = $('.btn');
       var $alert = $('#alert');

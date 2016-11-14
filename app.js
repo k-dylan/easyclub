@@ -18,7 +18,7 @@ const config = require('./config');
 const index = require('./routes/index');
 const user = require('./routes/user');
 const topic = require('./routes/topic');
-
+const tools = require('./common/tools');
 
 const VIEWSDIR = __dirname + '/views';
 
@@ -80,10 +80,10 @@ app.use(async (ctx, next) => {
       ctx.session.user.isAdmin = true;
     }
   }
-  
+  // 处理时间函数 
+  ctx.state.getTimeAgo = tools.getTimeAgo;
   ctx.state.loader = loader;
   ctx.state.sitename = config.sitename;
-
 
   if(ctx.session.user) {
     let user = ctx.state.current_user = ctx.session.user;
