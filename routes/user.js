@@ -299,7 +299,8 @@ router.get('/:username/topic', async (ctx, next) => {
 
   let current_page = +ctx.query.page || 1;
   let query = {
-    author_id: user._id
+    author_id: user._id,
+    deleted: false
   }
   let Topic = ctx.model('topic');
 

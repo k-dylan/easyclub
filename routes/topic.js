@@ -183,7 +183,7 @@ router.get('/:topic_id/top', sign.isAdmin, async (ctx, next) => {
 });
 
 /**
- * 删除帖子
+ * 删除/恢复帖子
  */
 router.get('/:topic_id/delete', sign.isAdmin, async (ctx, next) => {
   let topic_id = ctx.params.topic_id;
@@ -196,20 +196,28 @@ router.get('/:topic_id/delete', sign.isAdmin, async (ctx, next) => {
     _id: topic_id
   });
 
-  if(!topic || topic.deleted) {
-    return ctx.error('此话题不存在或已被删除！');
+  if(!topic) {
+    return ctx.error('此话题不存在！');
   }
 
-  topic.deleted = true;
+  topic.deleted = !topic.deleted;
   await topic.saveQ();
 
   // 用户话题数减 1
-  let user = await ctx.model('user').updateTopicCount(topic.author_id, -1);
+  let count = topic.deleted ? -1 : 1;
+  let user = await ctx.model('user').updateTopicCount(topic.author_id, count);
   if(ctx.state.current_user && ctx.state.current_user._id.toString() === user._id.toString()){
     ctx.session.user = user.toObject();
   }
-
-  return ctx.success('操作成功！话题已被删除');
+  if(topic.deleted)
+    return ctx.success('操作成功！话题已被删除', {
+      deleted: true
+    });
+  else 
+    return ctx.success('操作成功！话题已被恢复', {
+      deleted: false
+    })
 })
+
 
 module.exports = router;

@@ -18,6 +18,7 @@ block content
           .float-r 
             a.btn.btn-primary.interval-r#top(href="/topic/#{topic._id}/top")= topic.top ? '取消置顶' : '置顶'
             a.btn.btn-danger#del(href="javascript:void(0);")= topic.deleted ? '恢复' : '删除'
+
         .info <a href="/user/#{topic.author.username}" class="author">#{topic.author.username}</a> 发布于 
           span.date= getTimeAgo(topic.create_time)
           
@@ -83,18 +84,21 @@ block script
       // 删除帖子
       $('#del').click(function (e) {
         e.preventDefault();
-        if (!confirm('确定要删除此话题吗？')) {
+        if (!confirm('确定要'+ $(this).text() +'此话题吗？')) {
           return false;
         }
 
         $.get('/topic/#{topic._id}/delete', function (result) {
           if(result.status) {
             alert(result.message);
-          } else {
+          } else if(result.deleted){
             location.href = '/';
+          } else {
+            location.reload();
           }
         })
       });
+      
       
       var $btn = $('.btn');
       var $alert = $('#alert');
