@@ -1,6 +1,7 @@
 @import 'nib'
 @import './public/stylesheets/variable'
 @import './icon.css'
+@import './markdown.css'
 // 统一浏览器默认样式
 normalize-css() 
 
@@ -45,7 +46,7 @@ button[disabled]
 
 .hide  // 隐藏
   display none
-  
+
 .clearfix  // 清除浮动
   zoom 1
   &:after 
@@ -83,16 +84,6 @@ button[disabled]
     margin-right .5em
 
 // 组件
-// 列表
-.list
-  li
-    padding 0 .5em
-    border-bottom 1px solid #eee
-    &:last-child
-      border-bottom none
-  &-striped
-    li:nth-child(2n)
-      background-color #f9f9f9
 
 // 标签
 .label
@@ -162,7 +153,23 @@ button[disabled]
       background-color #2196f3
       border-color @border-color
 
- 
+// 列表
+.list
+  // list容器
+  &-bd 
+    padding 0 0 .5em 0
+  li
+    padding-top .5em
+    padding-bottom .5em
+    border-bottom 1px solid #eee
+    &:last-child
+      border-bottom none
+  &-striped
+    li
+      padding-left 1em
+      padding-right 1em
+      &:nth-child(2n)
+        background-color #f9f9f9
 // page 分页
 .page
   margin-top 1em

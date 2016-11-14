@@ -1,9 +1,32 @@
 @import 'nib'
 @import './public/stylesheets/variable.styl'
 
+
+// 头像显示
+.photo
+  height 100px
+  width 100px
+  border 1px solid #ddd
+  border-radius 5px
+  overflow hidden
+  &-round
+    border-radius 5px  
+    border @border
+    overflow hidden 
+    border-radius 50%
+  &-big
+    width 150px
+    height 150px
+  
+
 // topic
-// 发表话题页面
 .topic 
+  &-item
+    height 50px
+    padding .5em 1em
+    .photo-round
+      width @height
+      height @height
   #tag
     margin-right 1em
   #title
@@ -37,6 +60,7 @@
     li
       border-bottom 1px solid #eee
       margin-bottom .5em
+      padding-bottom .5em
       position relative
       &:last-child
         border-bottom none
@@ -68,23 +92,6 @@
   .panel-bd
     padding 0 0 1em 0
     min-height 500px
-  .list
-    li
-      padding .5em 1em
-      border-bottom 1px solid #eee
-    .count 
-      float right
-      font-size .9em
-      color #999
-    .info 
-      font-size .8em
-      color #999
-      .label
-      .author
-        margin-right .5em
-      .date
-        &:before
-          content: 'at: '
 
 
 // 用户首页
@@ -102,21 +109,3 @@
   &-from 
     display inline-block
     vertical-align bottom
-// 大头像显示
-photo
-  .& 
-  .big-&
-  .small-&
-    border-radius 5px  
-    border 1px solid #ddd
-    overflow hidden 
-  .small-&
-    border-radius 50%
-    width 90px
-  .big-&
-    width 150px
-    height 150px
-  .&
-    height 100px
-    width 100px
-

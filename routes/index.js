@@ -32,6 +32,10 @@ router.get('/', async function (ctx, next) {
     topic.author = await User.findOneQ({
       _id: topic.author_id
     });
+    if(topic.last_reply) {
+      topic.reply = await ctx.model('reply').findById(topic.last_reply);
+      topic.reply.author = await ctx.model('user').findById(topic.reply.author_id,'username');
+    }
     return topic;
   }));
   

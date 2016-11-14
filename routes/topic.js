@@ -45,7 +45,7 @@ router.post('/', sign.isLogin, async (ctx, next) => {
     let User = ctx.model('user');
     let user = await User.updateTopicCount(user_id, 1);
     // 更新session
-    ctx.session.user = user;
+    ctx.session.user = user.toObject();
     ctx.success({
       topic_id: result._id
     });
@@ -142,7 +142,7 @@ router.post('/:topic_id/reply', sign.isLogin, async (ctx, next) => {
     // 更新回复数
     let User = ctx.model('user');
     let user = await User.updateReplyCount(user_id, 1);
-    ctx.session.user = user;
+    ctx.session.user = user.toObject();
     // 更新主题
     let Topic = ctx.model('topic');
     let res = await Topic.reply(topic_id, result._id);

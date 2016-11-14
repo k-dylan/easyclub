@@ -1,0 +1,26 @@
+include ./label
+
+mixin topic(topic)
+  span.float-r.text-muted= getTimeAgo(topic.create_time)
+  h4 
+    +label(topic) 
+    a(href='/topic/' + topic._id)= topic.title
+
+
+mixin reply(reply) 
+  .topic-title
+    - topic = reply.topic
+    span.float-r.text-muted= getTimeAgo(topic.create_time)
+    h4
+      +label(topic)
+      a(href='/topic/' + topic._id + '#' + reply._id)= topic.title
+  .reply-content!= md.render(reply.content)
+
+mixin reply_list(replys)
+  each reply in replys
+    li: +reply(reply)
+
+mixin topic_list(topics) 
+  each topic in topics
+    li: +topic(topic)
+  

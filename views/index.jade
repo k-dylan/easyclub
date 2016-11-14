@@ -15,17 +15,18 @@ block content
             a(href="/?tag=#{tag}" class= current_tag === tag ? 'active': '')= tag
              
       .panel-bd
-        ul.list
+        ul.list.list-striped
+          include ./mixin/label
           each topic in topics
-            li
-              .count #{topic.reply_count} / #{topic.visit_count}
-              h4
-                if topic.top 
-                  span.small.label.label-primary.interval-r 置顶
-                a(href="/topic/#{topic._id}")= topic.title
-              .info
-                a.label.label-default.interval-r(href="/?tag=#{topic.tag}")= topic.tag 
-                span.author= topic.author.username
-                span.date= topic.create_time.toLocaleDateString()
+            li.topic-item
+              a.photo-round.float-l.interval-r(href="/user/" + topic.author.username): img(src=topic.author.avatar_url, alt=topic.author.username width="50" height="50")
+              .float-r.text-muted #{topic.reply_count} / #{topic.visit_count}
+              h4.topic-title
+                +label(topic)
+                a(href="/topic/#{topic._id}" title=topic.title)= topic.title
+              if topic.reply 
+                span.small 最后由 #{topic.reply.author.username} 回复于 #{getTimeAgo(topic.last_reply_at)} 
+              else
+                span.small 由 #{topic.author.username} 发表于 #{getTimeAgo(topic.create_time)}
         - var pageBaseUrl = `/?tag=${current_tag}`;
         include ./includes/page
