@@ -19,8 +19,10 @@ block content
             a.btn.btn-primary.interval-r#top(href="/topic/#{topic._id}/top")= topic.top ? '取消置顶' : '置顶'
             a.btn.btn-danger#del(href="javascript:void(0);")= topic.deleted ? '恢复' : '删除'
 
-        .info <a href="/user/#{topic.author.username}" class="author">#{topic.author.username}</a> 发布于 
-          span.date= getTimeAgo(topic.create_time)
+        .info
+          a.interval-r(href="/?tag=" + topic.tag) <span class="icon icon-tag"></span> #{topic.tag}
+          a.interval-r.author(href="/user/" + topic.author.username) <span class="icon icon-user"></span> #{topic.author.username}
+          a  <span class="icon icon-calendar"></span> #{topic.create_time.toLocaleDateString()}
           
       .panel-bd.markdown-body
         != md.render(topic.content)
