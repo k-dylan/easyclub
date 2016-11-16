@@ -10,7 +10,7 @@ mixin reply(reply)
   if reply.topic.deleted && !(current_user && current_user.isAdmin)
     .text-delete.text-muted 信息被删除或无权限查看
   else 
-    .topic-title(class= reply.topic.deleted && current_user && current_user.isAdmin && 'text-delete')
+    .topic-title(class= reply.topic.deleted && current_user && current_user.isAdmin && 'topic-deleted')
       - topic = reply.topic
       span.float-r.text-muted= getTimeAgo(topic.create_time)
       h4
