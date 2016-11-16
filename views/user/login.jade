@@ -1,30 +1,23 @@
 extends ../layout
-
+include ../mixin/form-group
 block content
   .wp-left
     .panel
       .panel-hd 用户登录
       .panel-bd.register
         form.form.form-horizontal(action="/user/login" method="POST")
-          .form-group
-            label.control-label(for="username") 用户名：
-            input#username.form-control(type="text" name="username" )
-          .form-group
-            label.control-label(for="password") 密　码：
-            input#password.form-control(type="password" name="password" )
-          #error.error
-          .form-group
-            label.control-label
-            button.btn(type="submit") 登录
-            
+          #passAlert.alert.alert-error.hide
+          +form-group('text', '用户名', 'username', null, true)
+          +form-group('password', '密　码', 'password', null, true)
+          +form-btn('primary','submit', 'btn', '登录')
             
 block script
   script.
     $(function () {
       var username = $('#username');
       var password = $('#password');
-      var error = $('#error');
-      var btn = $('.btn');
+      var error = $('#passAlert');
+      var btn = $('#btn');
       $('form').submit(function (event) {
         event.preventDefault();
         var user = $.trim(username.val());

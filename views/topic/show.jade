@@ -22,8 +22,9 @@ block content
         .info
           a.interval-r(href="/?tag=" + topic.tag) <span class="icon icon-tag"></span> #{topic.tag}
           a.interval-r.author(href="/user/" + topic.author.username) <span class="icon icon-user"></span> #{topic.author.username}
-          a  <span class="icon icon-calendar"></span> #{topic.create_time.toLocaleDateString()}
-          
+          a.interval-r <span class="icon icon-calendar"></span> #{topic.create_time.toLocaleDateString()}
+          if current_user && (current_user.username == topic.author.username || current_user.isAdmin)
+            a(href="/topic/" + topic._id + '/edit') <span class="icon icon-edit"></span> 编辑
       .panel-bd.markdown-body
         != md.render(topic.content)
     - if(replys.length)

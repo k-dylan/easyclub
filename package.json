@@ -5,9 +5,9 @@
   "private": true,
   "scripts": {
     "start": "./node_modules/.bin/nodemon --harmony-async-await bin/www",
-    "koa": "./node_modules/.bin/runkoa bin/www",
+    "koa": "node --harmony-async-await bin/www",
     "pm2": "pm2 start bin/run ",
-    "test": "mocha --compilers js:babel-core/register"
+    "test": "make test"
   },
   "dependencies": {
     "co": "^4.6.0",
