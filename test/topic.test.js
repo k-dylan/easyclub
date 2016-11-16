@@ -30,12 +30,11 @@ describe('Topic', () => {
   });
 
   describe('Create Topic', () => {
-    it('#show error when no login', async (done) => {
-      await Promise.all([
+    it('#show error when no login', async () => {
+      return await Promise.all([
         notLogin('post', '/topic'),
         notLogin('get', '/topic/create')
       ]);
-      done();
     });
 
     it('#show create topic page', (done) => {
@@ -193,7 +192,6 @@ function notLogin (method, url) {
       .set('Cookie', '')
       .expect(200, (err, res) => {
         if(err) reject(err);
-
         res.text.should.containEql('您还未登录，请登录后重试！');
         resolve();
       });

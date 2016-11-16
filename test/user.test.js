@@ -149,16 +149,13 @@ describe('User', () => {
   })
 
   describe('show error when not login', () => {
-    it('#request', async (done) => {
-
+    it('#request', async () => {
       let arr = [
         verifyNotLogin('get', '/user/setting'),
         verifyNotLogin('post', '/user'),
         verifyNotLogin('post', '/user/setpass')
       ]
-      await Promise.all(arr);
-      
-      done();
+      return await Promise.all(arr);
     })
   })
 
@@ -255,10 +252,9 @@ describe('User', () => {
   })
 
   describe('delete test user', () => {
-    it('#delete the user', async (done) => {
+    it('#delete the user', async () => {
       let data = await support.removeUser(user);
       data.result.ok.should.equal(1);
-      done();
     });
   });
 });

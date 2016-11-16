@@ -183,9 +183,7 @@ router.post('/setavatar', sign.isLogin, async (ctx, next) => {
     return ctx.error('发生错误，请检查后重试！');
 
   let User = ctx.model('user');
-  let user = await User.findOneQ({
-    _id: ctx.session.user._id
-  });
+  let user = await User.findById(ctx.session.user._id);
 
   user.avatar = ctx.req.file.filename;
   await user.saveQ()
@@ -208,26 +206,24 @@ router.get('/:username', async (ctx, next) => {
   }
 
   let Topic = ctx.model('topic');
-  // 查询用户帖子
-  let topics = await Topic.find({
-      author_id: user._id,
-      deleted: false
-    }, null, {
-      sort: {create_time: -1},
-      limit: 5
-    });
-
-  let replys = await ctx.model('reply').find({
-    author_id: user._id
-  }, null, {
-    sort: {update_time: -1},
+  // 查询参数
+  let options = {
+    sort: '-create_time',
     limit: 5
-  });
+  }
+  let query = {
+    author_id: user._id,
+    deleted: false
+  }
+  let [topics, replys] = await Promise.all([
+    // 查询用户帖子    
+    Topic.find(query, null, options),
+    // 查询用户回复内容
+    ctx.model('reply').find(query, null, options)
+  ]);
   
   replys = await Promise.all(replys.map(async (reply) => {
-    reply.topic = await Topic.findOneQ({
-      _id: reply.topic_id
-    });
+    reply.topic = await Topic.findById(reply.topic_id);
     return reply;
   }));
 
@@ -242,7 +238,7 @@ router.get('/:username', async (ctx, next) => {
 });
 
 /**
- * 用户回复页
+ * 用户回复内容列表页
  */
 router.get('/:username/reply', async (ctx, next) => {
   let username = validator.trim(ctx.params.username);
@@ -258,18 +254,16 @@ router.get('/:username/reply', async (ctx, next) => {
 
   let Topic = ctx.model('topic');
   let result = await ctx.model('reply').getReplyForPage({
-    author_id: user._id
+    author_id: user._id,
+    deleted: false
   }, null,  {
     sort: '-update_time'
   }, currentPage, config.pageSize, config.showPageNum);
 
   let replys = result.data;
-
   
   replys = await Promise.all(replys.map(async (reply) => {
-    reply.topic = await Topic.findOneQ({
-      _id: reply.topic_id
-    });
+    reply.topic = await Topic.findById(reply.topic_id);
     return reply;
   }));
 
@@ -307,7 +301,6 @@ router.get('/:username/topic', async (ctx, next) => {
   let result = await Topic.getTopicForPage(query, null, {
       sort: '-create_time'
     },current_page, config.pageSize, config.showPageNum);
-
 
   await ctx.render('user/topics', {
     title: `${username} 发表的话题`,

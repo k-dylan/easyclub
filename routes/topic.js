@@ -76,30 +76,26 @@ router.get('/:topic_id', async (ctx, next) => {
   let replys = await Reply.findQ({
     topic_id: topic_id,
     deleted: false
-  },'' ,{sort: 'create_time'});
+  },null ,{sort: 'create_time'});
 
   // 读取回复的用户
   let User = ctx.model('user');
   
   replys = await Promise.all(replys.map( async (reply) => {
-    reply.author = await User.findOneQ({
-      _id: reply.author_id
-    });
+    reply.author = await User.findById(reply.author_id, 'username avatar');
     return reply;
   }));
 
-  // 读取主题作者
-  topic.author = await User.findOneQ({
-    _id: topic.author_id
-  });
-
-  // 读取作者其它主题
-  topic.author_topic_list = await Topic.find({
-    author_id: topic.author
-  }).sort({
-    create_time: -1
-  }).limit(10).select('title').execQ();
-
+  [topic.author, topic.author_topic_list] = await Promise.all([
+    User.findById(topic.author_id),  // 读取主题作者
+    Topic.find({                    //  读取作者其它主题
+      author_id: topic.author_id,
+      deleted: false
+    }, 'title', {
+      sort: '-create_time',
+      limit: 10
+    })
+  ]);
 
   await ctx.render('topic/show', {
     title: topic.title,
@@ -140,13 +136,14 @@ router.post('/:topic_id/reply', sign.isLogin, async (ctx, next) => {
   let result = await reply.saveQ();
 
   if(result) {
-    // 更新回复数
-    let User = ctx.model('user');
-    let user = await User.updateReplyCount(user_id, 1);
+    let [user, res] = await Promise.all([
+      // 更新用户回复数
+      ctx.model('user').updateReplyCount(user_id, 1),
+      // 更新主题最后回复
+      ctx.model('topic').reply(topic_id, result._id)
+    ]);
+    // 更新用户session
     ctx.session.user = user.toObject();
-    // 更新主题
-    let Topic = ctx.model('topic');
-    let res = await Topic.reply(topic_id, result._id);
 
     if(res.ok) {
       return ctx.success({
@@ -170,9 +167,7 @@ router.get('/:topic_id/top', sign.isAdmin, async (ctx, next) => {
   }
 
   let Topic = ctx.model('topic');
-  let topic = await Topic.findOneQ({
-    _id: topic_id
-  });
+  let topic = await Topic.findById(topic_id);
 
   topic.top = !topic.top;
   await topic.saveQ();
@@ -192,9 +187,7 @@ router.get('/:topic_id/delete', sign.isAdmin, async (ctx, next) => {
   }
 
   let Topic = ctx.model('topic');
-  let topic = await Topic.findOneQ({
-    _id: topic_id
-  });
+  let topic = await Topic.findById(topic_id);
 
   if(!topic) {
     return ctx.error('此话题不存在！');
@@ -206,6 +199,7 @@ router.get('/:topic_id/delete', sign.isAdmin, async (ctx, next) => {
   // 用户话题数减 1
   let count = topic.deleted ? -1 : 1;
   let user = await ctx.model('user').updateTopicCount(topic.author_id, count);
+  // 如果被删除帖子的用户是正在登录的用户，则更新该用户的session数据
   if(ctx.state.current_user && ctx.state.current_user._id.toString() === user._id.toString()){
     ctx.session.user = user.toObject();
   }

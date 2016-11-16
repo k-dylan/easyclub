@@ -27,18 +27,16 @@ router.get('/', async function (ctx, next) {
 
   //  读取用户信息
   let User = ctx.model("user");
-  
+  let Reply = ctx.model('reply');
+
   topics = await Promise.all(topics.map( async (topic) => {
-    topic.author = await User.findOneQ({
-      _id: topic.author_id
-    });
+    topic.author = await User.findById(topic.author_id, 'username avatar');
     if(topic.last_reply) {
-      topic.reply = await ctx.model('reply').findById(topic.last_reply);
-      topic.reply.author = await ctx.model('user').findById(topic.reply.author_id,'username');
+      topic.reply = await Reply.findById(topic.last_reply, 'author_id');
+      topic.reply.author = await User.findById(topic.reply.author_id, 'username');
     }
     return topic;
   }));
-  
 
   await ctx.render('index', {
     title: '首页',
@@ -48,7 +46,5 @@ router.get('/', async function (ctx, next) {
     page: result.page
   }); 
 })
-
-
 
 module.exports = router;
