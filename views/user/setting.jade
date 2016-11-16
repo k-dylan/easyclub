@@ -1,5 +1,7 @@
 extends ../layout
 
+include ../mixin/form-group
+
 block content
   .wp-right
     != partial('./sidebar/user_info', {user : current_user})
@@ -10,24 +12,13 @@ block content
       .panel-bd 
         #alert.alert.hide
         form#info.form.form-horizontal(action="/user" method="post") 
-          .form-group
-            label.control-label(for="username") 用户名：
-            input.form-control(type="text" id="username" name="usernmae" value=user.username disabled)
-          .form-group
-            label.control-label(for="email") 邮　箱：
-            input.form-control(type="email" name="email" id="email" value=user.email)
-          .form-group
-            label.control-label(for="home") 个人主页：
-            input.form-control(type="text" name="home" id="home" value=user.home)
-          .form-group
-            label.control-label(for="github") GitHub：
-            input.form-control(type="text" name="github" id="github" value=user.github)
-          .form-group
-            label.control-label(for="signature") 个人签名：
-            textarea.form-control(name="signature" id="signature")= user.signature
-          .form-group
-            label.control-label
-            button.btn.btn-primary(type="submit" id="btn") 保存设置
+          +form-group('text','用户名','username', user.username , false, true)
+          +form-group('text','邮　箱','email', user.email)
+          +form-group('text','个人主页','home', user.home)
+          +form-group('text','GitHub','github', user.github)
+          +form-group('textarea','个人签名','signature', user.signature)
+          +form-btn('primary', 'submit', 'btn', '保存设置')
+          
     .panel#setavatar
       .panel-hd 设置头像
       .panel-bd.set-avatar
@@ -41,23 +32,10 @@ block content
       .panel-bd 
         #passAlert.alert.hide
         form#setpass.form.form-horizontal(action="/user/setpass" method="post")
-          .form-group
-            label.control-label(for="oldpass") 当前密码：
-            input.form-control(type="password" id="oldpass" name="oldpass")
-            span.control-help.text-error  *
-          .form-group
-            label.control-label(for="newpass") 新密码：
-            input.form-control(type="password" id="newpass" name="newpass")
-            span.control-help.text-error  *
-          .form-group
-            label.control-label(for="newpass2") 重复密码：
-            input.form-control(type="password" id="newpass2" name="newpass2")
-            span.control-help.text-error  *
-          .form-group
-            label.control-label
-            button.btn.btn-primary(type="submit" id="passbtn") 修改密码
-            
-
+          +form-group('password','当前密码','oldpass', null , true)
+          +form-group('password','新密码','newpass', null , true)
+          +form-group('password','重复密码','newpass2', null , true)
+          +form-btn('primary', 'submit', 'passbtn', '修改密码')
 
 block script
   script.
@@ -145,11 +123,7 @@ block script
             }
           }
         });
-
-
       })
-
-
     });
     /**
      *  显示错误提醒
