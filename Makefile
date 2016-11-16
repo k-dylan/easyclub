@@ -4,7 +4,8 @@ install:
 	@npm install
 
 test: 
-	@mocha --compilers js:babel-core/register \
+	@./node_modules/mocha/bin/mocha \
+		--harmony-async-await \
 		$(TESTS)
 
 

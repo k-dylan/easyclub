@@ -4,7 +4,7 @@ EasyClub
 
 INSTALL
 ----
-1. 安装`mongodb`和`node`(>=v5.5.0)
+1. 安装`mongodb`和`node`(>=v7.1.0)
 2. clone 该仓库到本地
 3. 修改 `config.js` 中的配置选项
 4. 运行 `npm install` 安装依赖包
