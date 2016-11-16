@@ -9,12 +9,14 @@ const shouldError = support.shouldError;
 
 describe('Topic', () => {
   let user = {};
+  let user2 = {};
   let cookie = '';
   let topic = {};
   let topic2 = {};
 
   before(async () => {
     user = await support.createAndSaveUser();
+    user2 = await support.createAndSaveUser();
     cookie = support.getUserCookie(user);
     topic = support.createTopic();
     topic2 = await support.createAndSaveTopic(user);
@@ -24,6 +26,7 @@ describe('Topic', () => {
   after(async () => {
     await Promise.all([
       support.removeUser(user),
+      support.removeUser(user2),
       support.removeTopic(topic),
       support.removeTopic(topic2)
     ]);
@@ -99,6 +102,97 @@ describe('Topic', () => {
           done();
         })
     });
+  });
+
+  describe('update topic', () => {
+    it('#show error page when not author', (done) => {
+      request
+        .get('/topic/' + topic._id + '/edit')
+        .set('Cookie', support.getUserCookie(user2))
+        .expect(200, (err, res) => {
+          should.not.exist(err);
+          res.text.should.containEql('您没有权限编辑此话题！');
+          done();
+        })
+    });
+    it('#show update page when author', (done) => {
+      request
+        .get('/topic/' + topic._id + '/edit')
+        .set('Cookie', cookie)
+        .expect(200, (err, res) => {
+          should.not.exist(err);
+          res.text.should.containEql(topic.title);
+          res.text.should.containEql(topic.content);
+          done();
+        })
+    });
+
+    it('#show update page when admin', (done) => {
+      request
+        .get('/topic/' + topic._id + '/edit')
+        .set('Cookie', support.getUserCookie(user2, true))
+        .expect(200, (err, res) => {
+          should.not.exist(err);
+          res.text.should.containEql(topic.title);
+          res.text.should.containEql(topic.content);
+          done();
+        })
+    });
+
+    it('#update error when not author ', (done) => {
+      request
+        .ajax('post','/topic/' + topic._id + '/edit')
+        .set('Cookie', support.getUserCookie(user2))
+        .expect(200, shouldError('您没有权限编辑此话题！', done))
+    });
+
+    it('#should error when no title ', (done) => {
+      request
+        .ajax('post','/topic/' + topic._id + '/edit')
+        .set('Cookie', cookie)
+        .send({
+          title: '',
+          content: topic.content,
+          tag: topic.tag  
+        })
+        .expect(200, shouldError('您请求的参数不完整！', done))
+    })
+
+    it('#update topic for author ', (done) => {
+      request
+        .ajax('post','/topic/' + topic._id + '/edit')
+        .set('Cookie', cookie)
+        .send({
+          title: topic.title + 'update',
+          content: topic.content,
+          tag: topic.tag  
+        })
+        .expect(200, (err, res) => {
+          should.not.exist(err);
+          res.body.status.should.equal(0);
+          res.body.topic_id.should.equal(topic._id);
+          topic.title = topic.title + 'update';
+          done();
+        })
+    })
+
+    it('#update topic for admin ', (done) => {
+      request
+        .ajax('post','/topic/' + topic._id + '/edit')
+        .set('Cookie', support.getUserCookie(user2, true))
+        .send({
+          title: topic.title + 'admin',
+          content: topic.content,
+          tag: topic.tag  
+        })
+        .expect(200, (err, res) => {
+          should.not.exist(err);
+          res.body.status.should.equal(0);
+          res.body.topic_id.should.equal(topic._id);
+          topic.title = topic.title + 'admin';
+          done();
+        })
+    })
   });
 
   describe('topic of management', () => {

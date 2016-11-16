@@ -23,6 +23,7 @@ function data (ctx,status) {
     else if(typeof msg == 'string') 
       obj.message = msg;
     
+    obj.title = '提示';
     obj.status = status;
     if(ctx.headers['x-requested-with'] === 'XMLHttpRequest') {
       return ctx.body = obj;

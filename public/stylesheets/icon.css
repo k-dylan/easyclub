@@ -26,6 +26,7 @@
 
 .icon-edit:before {
   content: "\e900";
+  font-weight: bold;
 }
 .icon-home:before {
   content: "\e904";

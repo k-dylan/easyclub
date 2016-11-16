@@ -12,11 +12,64 @@ const sign = require('../middlewares/sign');
  * 发表主题页面
  */
 router.get('/create', sign.isLogin, async (ctx, next) => {
-  await ctx.render('topic/create', {
+  await ctx.render('topic/edit', {
     title: '发表话题',
     tags: config.tags
   });
 });
+
+/**
+ * 编辑主题页面
+ */
+router.get('/:topic_id/edit', sign.isLogin, async (ctx, next) => {
+  let topic_id = ctx.params.topic_id;
+  if(!validator.isMongoId(topic_id)) return ctx.error('您请求的参数有误，请重试！');
+
+  let topic = await ctx.model('topic').findById(topic_id);
+
+  if(!topic || topic.deleted) return ctx.error('您要编辑的话题不存在或已删除！');
+
+  if(!(ctx.session.user.isAdmin || ctx.session.user._id.toString() === topic.author_id.toString()))
+    return ctx.error('您没有权限编辑此话题！');
+
+  await ctx.render('topic/edit', {
+    title: '编辑话题',
+    tags: config.tags,
+    topic: topic
+  })
+});
+
+/**
+ * 更新主题
+ */
+router.post('/:topic_id/edit', sign.isLogin, async (ctx, next) => {
+  let topic_id = ctx.params.topic_id;
+  if(!validator.isMongoId(topic_id)) return ctx.error('您请求的参数有误，请重试！');
+  
+  let topic = await ctx.model('topic').findById(topic_id);
+  if(!topic || topic.deleted) return ctx.error('您要编辑的话题不存在或已删除！');
+ 
+  if(!(ctx.session.user.isAdmin || ctx.session.user._id.toString() === topic.author_id.toString()))
+    return ctx.error('您没有权限编辑此话题！');
+  
+  let body = tools.trimObjectValue(ctx.request.body);
+  if(!body.title || !body.tag || !body.content)
+    return ctx.error('您请求的参数不完整！');
+  
+  topic.title = body.title;
+  topic.tag = body.tag;
+  topic.content = body.content;
+  topic.update_time = Date.now();
+
+  let result = await topic.saveQ();
+  if(result) {
+    return ctx.success({
+      topic_id: result._id
+    });
+  } else {
+    return ctx.error("出现错误，保存失败！");
+  }
+})
 
 /**
  * 发表主题
@@ -29,7 +82,7 @@ router.post('/', sign.isLogin, async (ctx, next) => {
   
   let user_id = ctx.state.current_user._id;
   let Topic = ctx.model('topic');
-  
+
   // 添加文章
   let topic = new Topic({
     title: body.title,
