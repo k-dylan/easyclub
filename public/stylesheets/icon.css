@@ -25,7 +25,7 @@
 }
 
 .icon-edit:before {
-  content: "\e900";
+  content: "\e901"; 
   font-weight: bold;
 }
 .icon-home:before {
@@ -60,4 +60,10 @@
 }
 .icon-users:before {
   content: "\e974";
+}
+.icon-image:before {
+  content: "\e910";
+}
+.icon-key:before {
+  content: "\e98f"; 
 }

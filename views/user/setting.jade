@@ -8,7 +8,7 @@ block content
     include ../sidebar/create_topic
   .wp-left
     .panel
-      .panel-hd 用户中心
+      .panel-hd <span class="icon-profile"></span> 用户中心
       .panel-bd 
         #alert.alert.hide
         form#info.form.form-horizontal(action="/user" method="post") 
@@ -20,7 +20,7 @@ block content
           +form-btn('primary', 'submit', 'btn', '保存设置')
           
     .panel#setavatar
-      .panel-hd 设置头像
+      .panel-hd <span class="icon-image"></span> 设置头像
       .panel-bd.set-avatar
         .photo.photo-big.set-avatar-photo.interval-r: img(src=user.avatar_url || '/images/photo.png' alt=user.username width=150)
         form.set-avatar-from(action="/user/setavatar" enctype="multipart/form-data" method="post")
@@ -28,7 +28,7 @@ block content
           button.btn.btn-primary(type="submit") 上传头像
 
     .panel
-      .panel-hd 修改密码
+      .panel-hd <span class="icon-key"></span> 修改密码
       .panel-bd 
         #passAlert.alert.hide
         form#setpass.form.form-horizontal(action="/user/setpass" method="post")
