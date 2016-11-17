@@ -5,6 +5,7 @@ block content
     - if(current_user)
       != partial('./sidebar/user_info', {user : current_user})
       include ./sidebar/create_topic
+    include ./sidebar/score-rank
       
   .wp-left
     .panel.index
@@ -21,7 +22,7 @@ block content
             li.topic-item
               a.photo-round.float-l.interval-r(href="/user/" + topic.author.username): img(src=topic.author.avatar_url, alt=topic.author.username width="50" height="50")
               .float-r.text-muted #{topic.reply_count} / #{topic.visit_count}
-              h4.topic-title
+              .topic-title
                 +label(topic)
                 a(href="/topic/#{topic._id}" title=topic.title)= topic.title
               if topic.reply 

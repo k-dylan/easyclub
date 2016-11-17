@@ -14,6 +14,11 @@ const config = {
   admins: ['dylan'],
   // 每页主题数量
   pageSize: 20, 
+  // 积分设置
+  score: {
+    topic: 5, // 发表一个主题
+    reply: 1  // 一个回复
+  },
   // 显示页码数量
   showPageNum: 5,
   // 数据库连接

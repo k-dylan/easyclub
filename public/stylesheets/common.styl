@@ -7,24 +7,27 @@ normalize-css()
 
 // 基本样式
 body 
-  background-color #f0f0f0
+  background-color $bg_color
   margin 0
+  color $text_color
   font 14px/2 "Helvetica Neue", Helvetica, Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif
 
 a
-  color #555
+  color $link_color
   vertical-align middle
   &:link
     text-decoration none 
   &:hover
     color $main_color
+  
 img
-  vertical-align middle
-ul 
+  vertical-align top
+ul
+ol 
   list-style none
   margin 0
   padding-left 0
-  
+
 h1
 h2
 h3
@@ -32,7 +35,6 @@ h4
 h5
 h6 
 p
-  margin 0
   margin 0
 
 // input 禁用状态鼠标形状
@@ -75,12 +77,13 @@ button[disabled]
     
 .w-auto // 还原默认宽度
   width auto!important
+// 浮动
 .float
   &-l
     float left
   &-r
     float right
-  
+// 间隔
 .interval 
   &-r
     margin-right .5em
@@ -137,6 +140,7 @@ button[disabled]
     line-height @height
     font-size 1.1em
     padding-left 1em
+    color darken($main_color, 20)
   &-bd
     padding 1em
     border-radius bottom 5px
@@ -152,7 +156,7 @@ button[disabled]
     box-shadow 0px 1px 1px 0px rgba(@border-color,.3)
     .panel-hd 
       color #fff
-      background-color #2196f3
+      background-color @border-color
       border-color @border-color
 
 // 列表
@@ -160,6 +164,9 @@ button[disabled]
   // list容器
   &-bd 
     padding 0 0 .5em 0
+    li
+      padding-left 1em
+      padding-right 1em
   li
     padding-top .5em
     padding-bottom .5em
@@ -167,10 +174,7 @@ button[disabled]
     &:last-child
       border-bottom none
   &-striped
-    li
-      padding-left 1em
-      padding-right 1em
-      &:nth-child(2n)
+    li:nth-child(2n)
         background-color #f9f9f9
 // page 分页
 .page
@@ -180,10 +184,12 @@ button[disabled]
     display inline-block
     border 1px solid #ddd
     border-right none
+    color #555
     &>a 
     &>span
       display block
       padding 0 .5em
+      color @color
     &>span
       color $main_color
     &:first-child
@@ -226,34 +232,31 @@ button[disabled]
         width 300px
 
 // btn 按钮
+btn-style($color, $text_color = #fff) 
+  background-color $color
+  border-color $color
+  color $text_color
+  &:hover
+    background-color darken(@background-color, 10)
+    color @color
+  &[disabled] 
+    background-color desaturate(@background-color, 60%)
+    border-color desaturate(@border-color, 60%)
 .btn 
   border 1px solid #ddd
   border-radius 4px
   padding 3px 12px
   background-color #fff
   display inline-block
+  color #fff
+  &:visited
+    color @color
   &:hover
     background-color #ddd
   &-primary
-    background-color #08c
-    border-color #08c
-    color #fff
-    &:hover
-      background-color darken(@background-color, 10)
-      color @color
-    &[disabled] 
-      background-color desaturate(@background-color, 60%)
-      border-color desaturate(@border-color, 60%)
+    btn-style($main_color)
   &-danger 
-    background-color #d9534f
-    border-color #d9534f
-    color #fff
-    &:hover
-      background-color darken(@background-color, 10)
-      color @color
-    &[disabled] 
-      background-color desaturate(@background-color, 60%)
-      border-color desaturate(@border-color, 60%)
+    btn-style(#d9534f)
 
   
 // 框架布局
@@ -279,12 +282,11 @@ button[disabled]
       margin-right auto
 
 
-
 //  顶部
 #header
-  background-color #444
+  background-color $header_bg
   height 50px  
-  color #fff
+  color #eee
   .wp
     padding-top 0
     padding-bottom 0
@@ -307,7 +309,7 @@ button[disabled]
           color $main_color
       &:after 
         content '|'
-        color darken(@color, 20)
+        color darken(@color, 30)
         padding 0 .5em
       &:last-child:after
         display none

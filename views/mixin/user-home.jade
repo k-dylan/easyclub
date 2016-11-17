@@ -2,7 +2,7 @@ include ./label
 
 mixin topic(topic)
   span.float-r.text-muted= getTimeAgo(topic.create_time)
-  h4 
+  div
     +label(topic) 
     a(href='/topic/' + topic._id)= topic.title
 
@@ -13,7 +13,7 @@ mixin reply(reply)
     .topic-title(class= reply.topic.deleted && current_user && current_user.isAdmin && 'topic-deleted')
       - topic = reply.topic
       span.float-r.text-muted= getTimeAgo(topic.create_time)
-      h4
+      div
         +label(topic)
         a(href='/topic/' + topic._id + '#' + reply._id)= topic.title
     .reply-content!= md.render(reply.content)

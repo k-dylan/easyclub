@@ -1,0 +1,11 @@
+.panel
+  .panel-hd <span class="icon-users"></span> 会员积分榜
+  .panel-bd.list-bd.clearfix
+    ol.list.score-list
+      each user in scoreRank
+        li
+          span.float-r= user.score
+          a.photo.float-l.interval-r(href="/user/" + user.username)
+            img(src=user.avatar_url alt=user.username width="30" height="30")
+          a(href="/user/" + user.username)= user.username
+          
