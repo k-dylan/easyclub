@@ -55,3 +55,9 @@
 .icon-github:before {
   content: "\eab0";
 }
+.icon-undo:before {
+  content: "\e969";
+}
+.icon-users:before {
+  content: "\e974";
+}

@@ -3,6 +3,7 @@
  */
 const should = require('should');
 const support = require('./support/support');
+const config = require('../config');
 
 const request = support.request;
 const shouldError = support.shouldError;
@@ -90,14 +91,14 @@ describe('Reply ', () => {
   })
 
 
-  describe('Check the user data', () => {
-    it('#should the reply_count is right', (done) => {
+  describe('Check the user score', () => {
+    it('#should the score is right', (done) => {
       request
         .get('/')
         .set('Cookie', replyCookie)
         .expect(200, (err, res) => {
           should.not.exist(err);
-          res.text.should.containEql('<a href="/user/'+ replyUser.username +'/reply">1</a>')
+          res.text.should.containEql('积分：' + config.score.reply);
           done();
         })
     })

@@ -12,6 +12,7 @@ var UserSchema = new mongoose.Schema({
   home: {type: String},   // 个人主页
   github: {type: String},  // github
   avatar: { type: String },  // 头像
+  score: {type: Number, default: 0}, // 用户积分
   signature: {type: String, default: "无个性，不签名！"}, // 个性签名
   topic_count: { type: Number, default: 0 },
   reply_count: { type: Number, default: 0 },
@@ -53,6 +54,8 @@ UserSchema.statics.check_password = async function (username, password) {
 UserSchema.statics.updateTopicCount = async function (userId, num) {
   let user = await this.findOneQ({_id: userId});
   user.topic_count += num;
+  // 增加减少积分
+  user.score += num > 0 ? config.score.topic : -config.score.topic;
   user.save();
   return user;
 }
@@ -63,6 +66,8 @@ UserSchema.statics.updateTopicCount = async function (userId, num) {
 UserSchema.statics.updateReplyCount = async function (userId, num) {
   let user = await this.findOneQ({_id: userId});
   user.reply_count += num;
+  // 增加减少积分
+  user.score += num > 0 ? config.score.reply : -config.score.reply;
   user.save();
   return user;
 }

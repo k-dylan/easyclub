@@ -22,7 +22,7 @@ block content
     .panel#setavatar
       .panel-hd 设置头像
       .panel-bd.set-avatar
-        .big-photo.set-avatar-photo.interval-r: img(src=user.avatar_url || '/images/photo.png' alt=user.username width=150)
+        .photo.photo-big.set-avatar-photo.interval-r: img(src=user.avatar_url || '/images/photo.png' alt=user.username width=150)
         form.set-avatar-from(action="/user/setavatar" enctype="multipart/form-data" method="post")
           input(type="file" name="avatar")
           button.btn.btn-primary(type="submit") 上传头像
@@ -133,13 +133,13 @@ block script
         id = $(id);
 
       if(type == 'error') {
-          id.removeClass('alert-success')
-                .addClass('alert-error')
-                .text(message).show();
+        id.removeClass('alert-success')
+          .addClass('alert-error')
+          .text(message).show();
       } else {
-          id.removeClass('alert-error')
-                .addClass('alert-success')
-                .text(message).show();
+        id.removeClass('alert-error')
+          .addClass('alert-success')
+          .text(message).show();
       }
     }
 

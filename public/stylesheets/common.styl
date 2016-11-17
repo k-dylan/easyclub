@@ -19,12 +19,13 @@ a
   &:hover
     color $main_color
 img
-  vertical-align middle
-ul 
+  vertical-align top
+ul
+ol 
   list-style none
   margin 0
   padding-left 0
-  
+
 h1
 h2
 h3
@@ -32,7 +33,6 @@ h4
 h5
 h6 
 p
-  margin 0
   margin 0
 
 // input 禁用状态鼠标形状
@@ -160,6 +160,9 @@ button[disabled]
   // list容器
   &-bd 
     padding 0 0 .5em 0
+    li
+      padding-left 1em
+      padding-right 1em
   li
     padding-top .5em
     padding-bottom .5em
@@ -167,10 +170,7 @@ button[disabled]
     &:last-child
       border-bottom none
   &-striped
-    li
-      padding-left 1em
-      padding-right 1em
-      &:nth-child(2n)
+    li:nth-child(2n)
         background-color #f9f9f9
 // page 分页
 .page

@@ -5,6 +5,7 @@ block content
     - if(current_user)
       != partial('./sidebar/user_info', {user : current_user})
       include ./sidebar/create_topic
+    include ./sidebar/score-rank
       
   .wp-left
     .panel.index

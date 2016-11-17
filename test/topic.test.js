@@ -3,6 +3,7 @@
  */
 const should = require('should');
 const support = require('./support/support');
+const config = require('../config');
 
 const request = support.request;
 const shouldError = support.shouldError;
@@ -99,6 +100,8 @@ describe('Topic', () => {
           res.text.should.containEql(topic2.title);
           // 显示作者主题数量
           res.text.should.containEql('<a href="/user/'+ user.username +'/topic">2</a>');
+          // 显示作者积分
+          res.text.should.containEql('积分：' + config.score.topic * 2);
           done();
         })
     });
