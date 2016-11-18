@@ -2,27 +2,27 @@ extends ./home_base
 
 block panel
   .panel
-    .panel-hd <span class="icon-profile"></span> 基本信息
+    .panel-hd <span class="ico-profile"></span> 基本信息
     .panel-bd.user-info.clearfix
       .photo.float-l.interval-r: img(src=user.avatar_url || '/images/photo.png' width="100")
       ul.user-info-info 
         li
-          span.icon-user 
+          span.ico-user 
           span= user.username
         if user.home
           li 
-            span.icon-home 
+            span.ico-home 
             a(href=user.home target="_blank")= user.home
         li
-          span.icon-email 
+          span.ico-email 
           span= user.email
         if user.github
           li 
-            span.icon-github 
+            span.ico-github 
             a(href=user.github target="_blank")= user.github
 
   .panel
-    .panel-hd <span class="icon-list"></span> 创建的话题
+    .panel-hd <span class="ico-list"></span> 创建的话题
     .panel-bd.list-bd
       ul.list.list-striped
         if topics.length
@@ -31,7 +31,7 @@ block panel
         else 
           li.more '还没有发表过主题'
   .panel
-    .panel-hd <span class="icon-reply"></span> 最近的回复
+    .panel-hd <span class="ico-reply"></span> 最近的回复
     .panel-bd.list-bd
       ul.list.list-striped
         if replys.length

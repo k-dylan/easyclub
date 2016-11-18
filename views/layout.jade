@@ -5,7 +5,7 @@ html(lang="zh_CN")
     meta(http-equiv="X-UA-Compatible" content="IE=edge")
     meta(name="viewport" content="width=device-width, initial-scale=1")
     title= title + ' - ' + sitename
-    != loader('/stylesheets/min/common.min.css').css('/stylesheets/common.styl').css('/stylesheets/index.styl').css('/javascripts/lib/editor/editor.css').done(null,null,false)
+    != Loader('/public/stylesheets/common.min.css').css('/public/stylesheets/common.styl').css('/public/stylesheets/icon.css').css('/public/stylesheets/markdown.css').css('/public/stylesheets/index.styl').css('/public/javascripts/lib/editor/editor.css').done(assets,'', !isDebug)
     block css
   body
     header#header
@@ -26,6 +26,6 @@ html(lang="zh_CN")
         p EasyClub - 基于nodejs的轻量级论坛程序
         p author: dylan 
           a(href="https://github.com/k-dylan/easyclub/" target="_blank") 源码地址
-    script(src="/javascripts/lib/jquery.min.js")
+    script(src="/public/javascripts/lib/jquery.min.js")
     block script
   

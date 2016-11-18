@@ -6,7 +6,7 @@
   "scripts": {
     "start": "./node_modules/.bin/nodemon --harmony-async-await bin/www",
     "koa": "node --harmony-async-await bin/www",
-    "pm2": "pm2 start bin/run ",
+    "pm2": "NODE_ENV=production pm2 --node-args='--harmony-async-await' start bin/www ",
     "test": "make test"
   },
   "dependencies": {
@@ -23,9 +23,10 @@
     "koa-onerror": "^1.2.1",
     "koa-router": "^7.0.0",
     "koa-session": "^3.3.1",
-    "koa-static": "^2.0.0",
+    "koa-static2": "^0.1.8",
     "koa-views": "^5.0.1",
     "loader": "^2.1.1",
+    "loader-builder": "^2.4.1",
     "markdown-it": "^6.0.5",
     "mkdirp": "^0.5.1",
     "validator": "^6.1.0"

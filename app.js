@@ -22,6 +22,7 @@ const tools = require('./common/tools');
 
 const VIEWSDIR = __dirname + '/views';
 
+let assets = {};
 app.keys = ['easyclub'];
 
 onerror(app);
@@ -32,7 +33,7 @@ app.use(convert(logger()));
 
 // 本地调试状态
 if(config.debug) {
-  app.use(require('./middlewares/stylus')(__dirname + '/public'));
+  app.use(require('./middlewares/stylus')(__dirname));
   const livereload = require('livereload');
   let server = livereload.createServer({
     exts: ['jade','styl'] 
@@ -41,10 +42,17 @@ if(config.debug) {
     __dirname + '/public',
     VIEWSDIR
   ]);
-};
+} else {
+  try {
+    assets = require('./assets.json');
+  } catch (e) {
+    console.error('请先执行 make build 生成assets.json文件')
+    throw e;
+  }
+}
 
 // middlewares
-app.use(convert(require('koa-static')(__dirname + '/public')));
+app.use(convert(require('koa-static2')("/public",__dirname + '/public')));
 app.use(convert(bodyparser));
 app.use(convert(json()));
 app.use(convert(session(app)));
@@ -80,10 +88,15 @@ app.use(async (ctx, next) => {
       ctx.session.user.isAdmin = true;
     }
   }
-  // 处理时间函数 
-  ctx.state.getTimeAgo = tools.getTimeAgo;
-  ctx.state.loader = loader;
-  ctx.state.sitename = config.sitename;
+  // 添加模板变量
+  ctx.state = Object.assign(ctx.state, {
+    getTimeAgo : tools.getTimeAgo,
+    Loader : loader,
+    sitename: config.sitename,
+    assets: assets,
+    isDebug: config.debug
+  })
+
 
   if(ctx.session.user) {
     let user = ctx.state.current_user = ctx.session.user;

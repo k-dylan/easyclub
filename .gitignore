@@ -2,3 +2,4 @@ node_modules/
 typings/
 public/upload/
 .DS_Store
+assets.json

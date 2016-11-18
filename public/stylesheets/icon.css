@@ -1,5 +1,5 @@
 @font-face {
-  font-family: 'icomoon';
+  font-family: 'icomoonFont';
   src:  url('fonts/icomoon.eot?medi24');
   src:  url('fonts/icomoon.eot?medi24#iefix') format('embedded-opentype'),
     url('fonts/icomoon.ttf?medi24') format('truetype'),
@@ -9,9 +9,9 @@
   font-style: normal;
 }
 
-[class^="icon-"], [class*=" icon-"] {
+[class^="ico-"], [class*=" ico-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'icomoon' !important;
+  font-family: 'icomoonFont' !important;
   speak: none;
   font-style: normal;
   font-weight: normal;
@@ -24,46 +24,46 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-edit:before {
+.ico-edit:before {
   content: "\e901"; 
   font-weight: bold;
 }
-.icon-home:before {
+.ico-home:before {
   content: "\e904";
 }
-.icon-profile:before {
+.ico-profile:before {
   content: "\e926";
 }
-.icon-tag:before {
+.ico-tag:before {
   content: "\e938";
 }
-.icon-email:before {
+.ico-email:before {
   content: "\e948";
 }
-.icon-calendar:before {
+.ico-calendar:before {
   content: "\e956";
 }
-.icon-reply:before {
+.ico-reply:before {
   content: "\e971";
 }
-.icon-user:before {
+.ico-user:before {
   content: "\e978";
 }
-.icon-list:before {
+.ico-list:before {
   content: "\e9ba";
 }
-.icon-github:before {
+.ico-github:before {
   content: "\eab0";
 }
-.icon-undo:before {
+.ico-undo:before {
   content: "\e969";
 }
-.icon-users:before {
+.ico-users:before {
   content: "\e974";
 }
-.icon-image:before {
+.ico-image:before {
   content: "\e910";
 }
-.icon-key:before {
+.ico-key:before {
   content: "\e98f"; 
 }
