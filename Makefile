@@ -10,7 +10,7 @@ test:
 		$(TESTS)
 
 build: 
-	@./node_modules/loader-builder/bin/builder ./views .
+	@./bin/build ./views .
 
 
 
