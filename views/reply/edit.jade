@@ -1,0 +1,20 @@
+extends ../layout
+
+block content
+ .wp-right
+    include ../sidebar/markdown
+  .wp-left
+    .panel
+      .panel-hd <span class="ico-edit"></span> 编辑回复
+      .panel-bd
+        form(action="/reply/#{reply._id}/edit" method="post")
+          textarea#editor(name="content" placeholder="回复支持 Markdown 语法, 请注意标记代码")= reply.content
+          button.btn.btn-primary(type="submit") 提交
+
+block script
+  include ../includes/editor
+  script.
+    $(function () {
+      var editor = new Editor();
+      editor.render();
+    });

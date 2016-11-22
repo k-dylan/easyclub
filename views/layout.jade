@@ -14,7 +14,8 @@ html(lang="zh_CN")
         a.logo(href="/") <b>Easy</b> Club 
         ul.nav-user#navUser
           - if (current_user)
-            li 欢迎你：#{current_user.username}
+            li 欢迎你：
+             a(href="/user/" + current_user.username)= current_user.username
             li: a(href="/topic/create") 发表话题
             li: a(href="/user/setting") 设置
             li: a(href="/user/logout") 退出

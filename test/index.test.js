@@ -39,7 +39,7 @@ describe('Index', () => {
       .set('Cookie', userCookie)
       .expect(200, (err, res) => {
         should.not.exist(err);
-        res.text.should.containEql('欢迎你：' + user.username);
+        res.text.should.containEql(`欢迎你：<a href="/user/${user.username}">${user.username}</a>`);
         done();
       })
   })

@@ -34,11 +34,15 @@ block content
           ul.reply-list
             each reply in replys
               li
+                a.href(id=reply._id)              
                 a.photo-round.float-l.interval-r(href="/user/" + reply.author.username)
                   img(src=reply.author.avatar_url, alt=reply.author.username width="60" height="60")
-                a.href(id=reply._id)
-                h5
-                  a(href="/user/#{reply.author._id}" target="_blank")= reply.author.username 
+                .user-action
+                  if current_user && (current_user.isAdmin || current_user.username === reply.author.username)
+                    a.interval-r.del-reply-btn(href="/reply/#{reply._id}/delete" title="删除回复"): span.ico-trash
+                    a(href="/reply/#{reply._id}/edit"  title="编辑回复"): span.ico-edit
+                .user-info.small
+                  a(href="/user/#{reply.author.username}" target="_blank")= reply.author.username 
                   span.date= " • at: " + getTimeAgo(reply.create_time)
                 .markdown-body
                   != md.render(reply.content)
@@ -90,7 +94,6 @@ block script
         if (!confirm('确定要'+ $(this).text() +'此话题吗？')) {
           return false;
         }
-
         $.get('/topic/#{topic._id}/delete', function (result) {
           if(result.status) {
             alert(result.message);
@@ -101,6 +104,21 @@ block script
           }
         })
       });
+
+      // 删除回复
+      $('.del-reply-btn').click(function (e) {
+        e.preventDefault();
+        if(!confirm('确定要删除此回复吗？')) {
+          return false;
+        }
+        $.get(this.href, function (result) {
+          if(result.status) {
+            alert(result.message);
+          } else {
+            location.reload();
+          }
+        })
+      })
       
       
       var $btn = $('.btn');

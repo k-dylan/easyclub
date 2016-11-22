@@ -87,9 +87,7 @@ describe('Reply ', () => {
           done();
         })
     });
-
-  })
-
+  });
 
   describe('Check the user score', () => {
     it('#should the score is right', (done) => {
@@ -104,5 +102,94 @@ describe('Reply ', () => {
     })
   })
 
+  describe('edit the reply', () => {
+    it('#show error when not author', done => {
+      request
+        .get(`/reply/${reply._id}/edit`)
+        .set('Cookie', support.getUserCookie(authorUser))
+        .expect(200, (err, res) => {
+          should.not.exist(err);
+          res.text.should.containEql('您没有权限执行此操作！');
+          done();
+        })
+    })
+    it('#show error when not login', done => {
+      request
+        .get(`/reply/${reply._id}/edit`)
+        .set('Cookie', '')
+        .expect(200, (err, res) => {
+          should.not.exist(err);
+          res.text.should.containEql('您还未登录，请登录后重试！');
+          done();
+        })
+    })
+
+    it('#show edit page', done => {
+      request
+        .get(`/reply/${reply._id}/edit`)
+        .set('Cookie', replyCookie)
+        .expect(200, (err, res) => {
+          should.not.exist(err);
+          res.text.should.containEql(reply.content);
+          done();
+        })
+    })
+
+    it('#show error when not exist content', done => {
+      request
+        .ajax('post',`/reply/${reply._id}/edit`)
+        .set('Cookie', replyCookie)
+        .send({
+          content: ''
+        })
+        .expect(200, shouldError('您请求的参数有误，请检查后重试！', done))
+    })
+
+    it('#edit the reply', done => {
+      request
+        .ajax('post',`/reply/${reply._id}/edit`)
+        .set('Cookie', replyCookie)
+        .send({
+          content: '这是修改后的内容'
+        })
+        .expect(302, (err, res) => {
+          should.not.exist(err);
+          reply.content = '这是修改后的内容';
+          done();
+        })
+    })
+
+    it('#show the reply', (done) => {
+      request
+        .get('/topic/' + topic._id)
+        .expect(200, (err, res) => {
+          should.not.exist(err);
+          res.text.should.containEql(reply.content);
+          res.text.should.containEql(replyUser.username);
+          done();
+        })
+    });
+  })
+
+  describe('delete the reply', () => {
+    it('#show error when not author', done => {
+      request
+        .ajax('get',`/reply/${reply._id}/delete`)
+        .set('Cookie', support.getUserCookie(authorUser))
+        .expect(200, shouldError('您没有权限执行此操作！', done));
+    });
+
+    it('#delete the reply', done => {
+      request
+        .ajax('get',`/reply/${reply._id}/delete`)
+        .set('Cookie', replyCookie)
+        .expect(200, (err,res) => {
+          should.not.exist(err);
+          res.body.status.should.equal(0);
+          res.body.message.should.equal('删除成功！');
+          done();
+        });
+    })
+  })
 
 })

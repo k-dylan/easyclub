@@ -26,7 +26,6 @@
 
 .ico-edit:before {
   content: "\e901"; 
-  font-weight: bold;
 }
 .ico-home:before {
   content: "\e904";
@@ -69,4 +68,10 @@
 }
 .ico-bars:before {
   content: "\f0c9"; 
+}
+.ico-trash:before {
+  content: "\f014";
+}
+.ico-up:before {
+  content: "\f087";
 }

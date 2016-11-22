@@ -18,6 +18,7 @@ const config = require('./config');
 const index = require('./routes/index');
 const user = require('./routes/user');
 const topic = require('./routes/topic');
+const reply = require('./routes/reply');
 const tools = require('./common/tools');
 
 const VIEWSDIR = __dirname + '/views';
@@ -114,7 +115,7 @@ app.use(require('./middlewares/jade_partial')(VIEWSDIR));
 router.use('/', index.routes(), index.allowedMethods());
 router.use('/user', user.routes(), user.allowedMethods());
 router.use('/topic', topic.routes(), topic.allowedMethods());
-
+router.use('/reply', reply.routes(), topic.allowedMethods());
 app.use(router.routes(), router.allowedMethods());
 
 // response
