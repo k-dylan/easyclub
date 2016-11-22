@@ -67,3 +67,6 @@
 .ico-key:before {
   content: "\e98f"; 
 }
+.ico-bars:before {
+  content: "\f0c9"; 
+}

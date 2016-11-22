@@ -285,6 +285,7 @@ btn-style($color, $text_color = #fff)
   background-color $header_bg
   height 50px  
   color #eee
+  box-shadow 0 1px 2px 1px rgba($header_bg, .5)
   .wp
     padding-top 0
     padding-bottom 0
@@ -294,11 +295,27 @@ btn-style($color, $text_color = #fff)
     color #fff
     b
       color $main_color
-    
-  .user-nav
+// 导航菜单
+.nav
+  &-btn 
+    display none
+  @media screen and (max-width:700px)
+    &-btn
+      display block
+      float right
+      color #fff
+      background-color darken($header_bg, 20)
+      border-color #666
+      line-height 1
+      padding 5px 8px
+      margin 10px 0 auto 5px  
+      font-size 1.3em
+      &:hover 
+        background-color $header_bg
+  &-user
     float right
     margin 0
-    line-height @height
+    line-height 50px
     li
       display inline-block
       a
@@ -307,10 +324,26 @@ btn-style($color, $text_color = #fff)
           color $main_color
       &:after 
         content '|'
-        color darken(@color, 30)
+        color darken($main_color, 30)
         padding 0 .5em
       &:last-child:after
         display none
+  @media screen and (max-width:700px)
+    &-user
+      display none
+      position absolute
+      top 50px
+      left 0
+      width 100%
+      background-color $header_bg
+      li 
+        display block
+        text-align center
+        border-bottom 1px solid lighten($header_bg, 10)
+        &:after 
+          display none
+        &>a 
+          display block
 // 底部
 #footer
   margin-top 1em
