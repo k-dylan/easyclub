@@ -32,12 +32,10 @@ const config = {
   default_avatar: '/images/photo.png', // 默认头像
   upload: {
     path: path.join(__dirname, 'public/upload/'),
-    url: '/upload',
+    url: '/public/upload',
     extnames: ['jpeg', 'jpg', 'gif', 'png'],
     fileSize: 1024 * 1024
   }
-  
 }
-
 
 module.exports = config;

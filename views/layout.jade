@@ -3,17 +3,19 @@ html(lang="zh_CN")
   head
     meta(charset="utf-8")
     meta(http-equiv="X-UA-Compatible" content="IE=edge")
-    meta(name="viewport" content="width=device-width, initial-scale=1")
+    meta(name="viewport" content="width=device-width,initial-scale=1,user-scalable=no")
     title= title + ' - ' + sitename
-    != loader('/stylesheets/min/common.min.css').css('/stylesheets/common.styl').css('/stylesheets/index.styl').css('/javascripts/lib/editor/editor.css').done(null,null,false)
+    != Loader('/public/stylesheets/common.min.css').css('/public/stylesheets/common.styl').css('/public/stylesheets/icon.css').css('/public/stylesheets/markdown.css').css('/public/stylesheets/index.styl').css('/public/javascripts/lib/editor/editor.css').done(assets,'', !isDebug)
     block css
   body
     header#header
       .wp
+        button.btn.nav-btn#navBtn: span.ico-bars
         a.logo(href="/") <b>Easy</b> Club 
-        ul.user-nav
+        ul.nav-user#navUser
           - if (current_user)
             li 欢迎你：#{current_user.username}
+            li: a(href="/topic/create") 发表话题
             li: a(href="/user/setting") 设置
             li: a(href="/user/logout") 退出
           - else
@@ -26,6 +28,12 @@ html(lang="zh_CN")
         p EasyClub - 基于nodejs的轻量级论坛程序
         p author: dylan 
           a(href="https://github.com/k-dylan/easyclub/" target="_blank") 源码地址
-    script(src="/javascripts/lib/jquery.min.js")
+    script(src="/public/javascripts/lib/jquery.min.js")
+    script.
+      $(function () {
+        $('#navBtn').click(function () {
+          $('#navUser').slideToggle(200);
+        })
+      });
     block script
   

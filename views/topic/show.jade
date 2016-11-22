@@ -20,11 +20,11 @@ block content
             a.btn.btn-danger#del(href="javascript:void(0);")= topic.deleted ? '恢复' : '删除'
 
         .info
-          a.interval-r(href="/?tag=" + topic.tag) <span class="icon icon-tag"></span> #{topic.tag}
-          a.interval-r.author(href="/user/" + topic.author.username) <span class="icon icon-user"></span> #{topic.author.username}
-          a.interval-r <span class="icon icon-calendar"></span> #{topic.create_time.toLocaleDateString()}
+          a.interval-r(href="/?tag=" + topic.tag) <span class="icon ico-tag"></span> #{topic.tag}
+          a.interval-r.author(href="/user/" + topic.author.username) <span class="icon ico-user"></span> #{topic.author.username}
+          a.interval-r <span class="icon ico-calendar"></span> #{topic.create_time.toLocaleDateString()}
           if current_user && (current_user.username == topic.author.username || current_user.isAdmin)
-            a(href="/topic/" + topic._id + '/edit') <span class="icon icon-edit"></span> 编辑
+            a(href="/topic/" + topic._id + '/edit') <span class="icon ico-edit"></span> 编辑
       .panel-bd.markdown-body
         != md.render(topic.content)
     - if(replys.length)
@@ -46,12 +46,12 @@ block content
                   
     - if (current_user)
       .panel.reply
-        .panel-hd <span class="icon-reply"><span> 添加回复
+        .panel-hd <span class="ico-reply"><span> 添加回复
         .panel-bd
           .alert.alert-error.hide#alert
           form(action="/topic/#{topic._id}/reply" method="post")
             textarea#editor(name="content" placeholder="回复支持 Markdown 语法, 请注意标记代码")
-            button.btn(type="submit") 回复
+            button.btn.btn-primary(type="submit") 回复
 
 
 block script

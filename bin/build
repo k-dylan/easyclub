@@ -1,0 +1,28 @@
+#!/usr/bin/env node
+'use strict';
+/**
+ * loader-builder 模块默认没有引用nib模块处理stylus，
+ * 这里修改其 transform.transormStylus方法 加载 nib模块，处理stylus文件
+ */
+
+const transform = require('loader-builder/lib/transform');
+const nib = require('nib');
+const stylus = require('stylus');
+
+/**
+ * 调用stylus模块通过nib编译stylus文件到CSS内容
+ * @param {String} input JavaScript source code
+ */ 
+transform.transformStylus = function (input) {
+  var output;
+  stylus(input).use(nib()).render(function (err, css) {
+    if (err) {
+      throw err;
+    }
+    output = css;
+  });
+  return output;
+};
+
+require('loader-builder/bin/builder');
+
