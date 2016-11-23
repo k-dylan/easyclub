@@ -13,7 +13,7 @@ block content
         div.nav
           a(href="/" class= current_tag === 'all' ? 'active': '') 全部
           each tag in tags
-            a(href="/?tag=#{tag}" class= current_tag === tag ? 'active': '')= tag
+            a(href=`/?tag=${tag}` class= current_tag === tag ? 'active': '')= tag
              
       .panel-bd
         ul.list.list-striped
@@ -24,7 +24,7 @@ block content
               .float-r.text-muted #{topic.reply_count} / #{topic.visit_count}
               .topic-title
                 +label(topic)
-                a(href="/topic/#{topic._id}" title=topic.title)= topic.title
+                a(href=`/topic/${topic._id}` title=topic.title)= topic.title
               if topic.reply 
                 span.small 最后由 #{topic.reply.author.username} 回复于 #{getTimeAgo(topic.last_reply_at)} 
               else

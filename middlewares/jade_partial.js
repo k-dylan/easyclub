@@ -3,11 +3,11 @@
  * 为jade添加 partial 局部模板方法
  */
 
-const jade = require('jade');
+const pug = require('pug');
 const path = require('path');
 
 /**
- * 为 jade 添加 partial 方法
+ * 为 pug 添加 partial 方法
  * 
  * @param {String} viewPath 模板文件根目录
  * @returns
@@ -25,13 +25,13 @@ module.exports = function (viewPath) {
       ctx.state.partial = (pathname, data) => {
         if(!pathname) return ;
 
-        if(path.extname(pathname) != '.jade') 
-          pathname += '.jade';
+        if(path.extname(pathname) != '.pug') 
+          pathname += '.pug';
         
         if(typeof data === 'object')
           data = Object.assign(data, ctx.state);
 
-        let fn = jade.compileFile(path.join(viewPath, pathname));
+        let fn = pug.compileFile(path.join(viewPath, pathname));
         return fn(data);
       }
     }

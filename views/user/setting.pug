@@ -24,8 +24,8 @@ block content
       .panel-bd.set-avatar
         .photo.photo-big.set-avatar-photo.interval-r: img(src=user.avatar_url || '/images/photo.png' alt=user.username width=150)
         form.set-avatar-from(action="/user/setavatar" enctype="multipart/form-data" method="post")
-          input(type="file" name="avatar")
-          button.btn.btn-primary(type="submit") 上传头像
+          input#avatarFile(type="file" name="avatar")
+          button#avatarBtn.btn.btn-primary(type="submit") 上传头像
 
     .panel
       .panel-hd <span class="ico-key"></span> 修改密码
@@ -68,6 +68,13 @@ block script
           }
         });
       });
+
+      $('#avatarBtn').click(function(e) {        
+        if(!$('#avatarFile')[0].files.length){
+          e.preventDefault();          
+          alert('请先选择头像!');
+        }
+      })
 
       var $newpass = $('#newpass');
       var $oldpass = $('#oldpass');

@@ -3,14 +3,13 @@
 const Koa = require('koa');
 const app = new Koa();
 const router = require('koa-router')();
-const views = require('koa-views');
+const Pug = require('koa-pug');
 const co = require('co');
 const convert = require('koa-convert');
 const json = require('koa-json');
 const onerror = require('koa-onerror');
 const bodyparser = require('koa-bodyparser')();
 const logger = require('koa-logger');
-const loader = require('loader');
 const mongoose = require('koa-mongoose');
 const session = require('koa-session');
 
@@ -60,9 +59,18 @@ app.use(convert(session(app)));
 
 app.use(require('./middlewares/return_data'));
 
-app.use(views(VIEWSDIR, {
-  extension: 'jade'
-}));
+const pug = new Pug({
+  viewPath: VIEWSDIR,
+  debug: config.debug,
+  noCache: config.debug,
+  helperPath: [
+    {
+      getTimeAgo : tools.getTimeAgo,
+      Loader : require('loader')
+    }
+  ],
+  app: app
+});
 
 // 数据库
 app.use(convert(mongoose(Object.assign({
@@ -71,7 +79,6 @@ app.use(convert(mongoose(Object.assign({
   },
   schemas: __dirname + '/models'
 }, config.mongodb))));
-
 
 app.use(async (ctx, next) => {
 
@@ -90,9 +97,7 @@ app.use(async (ctx, next) => {
     }
   }
   // 添加模板变量
-  ctx.state = Object.assign(ctx.state, {
-    getTimeAgo : tools.getTimeAgo,
-    Loader : loader,
+  pug.locals = Object.assign(pug.locals, {
     sitename: config.sitename,
     assets: assets,
     isDebug: config.debug

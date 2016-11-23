@@ -52,7 +52,7 @@ block script
         
         $btn.attr('disabled', true);
         $.ajax({
-          url: '/topic#{topic && '/' + topic._id + '/edit'}',
+          url: '/topic#{topic && "/" + topic._id + "/edit"}',
           type: 'POST',
           dataType: 'json',
           data: {
