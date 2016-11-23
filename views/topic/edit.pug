@@ -21,54 +21,55 @@ block content
 
 block script
   include ../includes/editor
-  script.
-    $(function() {
-      var editor = new Editor();
-      editor.render();
-      
-      var $title = $('#title'),
-          $tag = $('#tag'),
-          $content = $('#editor'),
-          $btn = $('.btn');
-      $('form').submit(function (event) {
-        event.preventDefault();
-        if($tag.val() == 0){
-          alert('必须选择一个板块！')
-          return;
-        }
-        var title = $.trim($title.val());
-        if(title.length == 0) {
-          alert('标题不能为空')
-          return ;
-        }
-        if(title.length < 5) {
-          alert('标题不能少于5个字符');
-          return ;
-        }
-        if($content.val().length == 0 ) {
-          alert('内容不能为空');
-          return ;
-        }
+  script
+    :uglify
+      $(function() {
+        var editor = new Editor();
+        editor.render();
         
-        $btn.attr('disabled', true);
-        $.ajax({
-          url: '/topic#{topic && "/" + topic._id + "/edit"}',
-          type: 'POST',
-          dataType: 'json',
-          data: {
-            title: title,
-            tag: $tag.val(),
-            content: $content.val()
-          },
-          complete: function () {
-            $btn.attr('disabled', false);
-          },
-          success: function (data) {
-            if(data.status != 0)
-              error.text(data.message).show();
-            else 
-              location.href = '/topic/' + data.topic_id;
+        var $title = $('#title'),
+            $tag = $('#tag'),
+            $content = $('#editor'),
+            $btn = $('.btn');
+        $('form').submit(function (event) {
+          event.preventDefault();
+          if($tag.val() == 0){
+            alert('必须选择一个板块！')
+            return;
           }
+          var title = $.trim($title.val());
+          if(title.length == 0) {
+            alert('标题不能为空')
+            return ;
+          }
+          if(title.length < 5) {
+            alert('标题不能少于5个字符');
+            return ;
+          }
+          if($content.val().length == 0 ) {
+            alert('内容不能为空');
+            return ;
+          }
+          
+          $btn.attr('disabled', true);
+          $.ajax({
+            url: '/topic#{topic && "/" + topic._id + "/edit"}',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+              title: title,
+              tag: $tag.val(),
+              content: $content.val()
+            },
+            complete: function () {
+              $btn.attr('disabled', false);
+            },
+            success: function (data) {
+              if(data.status != 0)
+                error.text(data.message).show();
+              else 
+                location.href = '/topic/' + data.topic_id;
+            }
+          });
         });
       });
-    });

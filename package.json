@@ -12,7 +12,6 @@
   "dependencies": {
     "co": "^4.6.0",
     "debug": "^2.2.0",
-    "jade": "~1.11.0",
     "koa": "^2.0.0-alpha.7",
     "koa-bodyparser": "^2.0.1",
     "koa-convert": "^1.2.0",
@@ -29,6 +28,7 @@
     "loader-builder": "^2.4.1",
     "markdown-it": "^6.0.5",
     "mkdirp": "^0.5.1",
+    "uglify-js": "^2.7.4",
     "validator": "^6.1.0"
   },
   "devDependencies": {

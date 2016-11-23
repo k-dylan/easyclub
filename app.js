@@ -1,5 +1,6 @@
 
 'use strict'
+
 const Koa = require('koa');
 const app = new Koa();
 const router = require('koa-router')();
@@ -12,6 +13,7 @@ const bodyparser = require('koa-bodyparser')();
 const logger = require('koa-logger');
 const mongoose = require('koa-mongoose');
 const session = require('koa-session');
+const UglifyJS = require('uglify-js')
 
 const config = require('./config');
 const index = require('./routes/index');
@@ -19,6 +21,7 @@ const user = require('./routes/user');
 const topic = require('./routes/topic');
 const reply = require('./routes/reply');
 const tools = require('./common/tools');
+
 
 const VIEWSDIR = __dirname + '/views';
 
@@ -71,6 +74,17 @@ const pug = new Pug({
   ],
   app: app
 });
+// 压缩行内样式
+pug.options.filters = {
+  uglify: function (text, options) {
+    if(config.debug){
+      return text;
+    } else {
+      let result = UglifyJS.minify(text, {fromString: true});
+      return result.code;
+    }
+  }
+}
 
 // 数据库
 app.use(convert(mongoose(Object.assign({

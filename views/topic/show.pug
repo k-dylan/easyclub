@@ -62,95 +62,96 @@ block script
   script(src="http://apps.bdimg.com/libs/highlight.js/9.1.0/highlight.min.js")
   include ../includes/editor
 
-  script.
-    $(function () {
-      hljs.initHighlightingOnLoad();
-      
-      var editor = new Editor({
-        el: $('#editor')[0], 
-        status: false,
-        autofocus: false
-      });
-      editor.render(); 
-      // 置顶
-      $('#top').click(function (e) {
-        e.preventDefault();
-        var _this = this;
-        $.get(this.href, function (result) {
-          if(result.status) {
-            return alert(result.message);
-          }
-          if(result.top) {
-            $(_this).text('取消置顶');
-          } else {
-            $(_this).text('置顶');
-          }
-        })
-      })
-
-      // 删除帖子
-      $('#del').click(function (e) {
-        e.preventDefault();
-        if (!confirm('确定要'+ $(this).text() +'此话题吗？')) {
-          return false;
-        }
-        $.get('/topic/#{topic._id}/delete', function (result) {
-          if(result.status) {
-            alert(result.message);
-          } else if(result.deleted){
-            location.href = '/';
-          } else {
-            location.reload();
-          }
-        })
-      });
-
-      // 删除回复
-      $('.del-reply-btn').click(function (e) {
-        e.preventDefault();
-        if(!confirm('确定要删除此回复吗？')) {
-          return false;
-        }
-        $.get(this.href, function (result) {
-          if(result.status) {
-            alert(result.message);
-          } else {
-            location.reload();
-          }
-        })
-      })
-      
-      
-      var $btn = $('.btn');
-      var $alert = $('#alert');
-      //  回复
-      $('form').submit(function (event) {
-        event.preventDefault();
-        var content = editor.codemirror.getValue();
-        if(content.length == 0 ) {
-          alert('请输入回复内容');
-          editor.codemirror.focus();
-          return ;
-        };
+  script
+    :uglify
+      $(function () {
+        hljs.initHighlightingOnLoad();
         
-        $btn.text('回复中……');
-        
-        $.ajax({
-          url: '/topic/#{topic._id}/reply',
-          data: {
-            content: content
-          },
-          type: 'POST',
-          dataType: 'json',
-          complete: function () {
-            $btn.text('回复');
-          },
-          success: function (data) {
-            if(data.status != 0)
-              $alert.text(data.message).show();
-            else 
-              history.go('/topic/' + data.topic_id + '#' + data.reply_id);
+        var editor = new Editor({
+          el: $('#editor')[0], 
+          status: false,
+          autofocus: false
+        });
+        editor.render(); 
+        // 置顶
+        $('#top').click(function (e) {
+          e.preventDefault();
+          var _this = this;
+          $.get(this.href, function (result) {
+            if(result.status) {
+              return alert(result.message);
+            }
+            if(result.top) {
+              $(_this).text('取消置顶');
+            } else {
+              $(_this).text('置顶');
+            }
+          })
+        })
+
+        // 删除帖子
+        $('#del').click(function (e) {
+          e.preventDefault();
+          if (!confirm('确定要'+ $(this).text() +'此话题吗？')) {
+            return false;
           }
+          $.get('/topic/#{topic._id}/delete', function (result) {
+            if(result.status) {
+              alert(result.message);
+            } else if(result.deleted){
+              location.href = '/';
+            } else {
+              location.reload();
+            }
+          })
+        });
+
+        // 删除回复
+        $('.del-reply-btn').click(function (e) {
+          e.preventDefault();
+          if(!confirm('确定要删除此回复吗？')) {
+            return false;
+          }
+          $.get(this.href, function (result) {
+            if(result.status) {
+              alert(result.message);
+            } else {
+              location.reload();
+            }
+          })
+        })
+        
+        
+        var $btn = $('.btn');
+        var $alert = $('#alert');
+        //  回复
+        $('form').submit(function (event) {
+          event.preventDefault();
+          var content = editor.codemirror.getValue();
+          if(content.length == 0 ) {
+            alert('请输入回复内容');
+            editor.codemirror.focus();
+            return ;
+          };
+          
+          $btn.text('回复中……');
+          
+          $.ajax({
+            url: '/topic/#{topic._id}/reply',
+            data: {
+              content: content
+            },
+            type: 'POST',
+            dataType: 'json',
+            complete: function () {
+              $btn.text('回复');
+            },
+            success: function (data) {
+              if(data.status != 0)
+                $alert.text(data.message).show();
+              else 
+                history.go('/topic/' + data.topic_id + '#' + data.reply_id);
+            }
+          })
         })
       })
-    })

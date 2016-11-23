@@ -30,11 +30,12 @@ html(lang="zh_CN")
         p author: dylan 
           a(href="https://github.com/k-dylan/easyclub/" target="_blank") 源码地址
     script(src="/public/javascripts/lib/jquery.min.js")
-    script.
-      $(function () {
-        $('#navBtn').click(function () {
-          $('#navUser').slideToggle(200);
-        })
-      });
+    script
+      :uglify
+        $(function () {
+          $('#navBtn').click(function () {
+            $('#navUser').slideToggle(200);
+          })
+        });
     block script
   

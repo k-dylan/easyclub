@@ -13,8 +13,9 @@ block content
 
 block script
   include ../includes/editor
-  script.
-    $(function () {
-      var editor = new Editor();
-      editor.render();
-    });
+  script
+    :uglify
+      $(function () {
+        var editor = new Editor();
+        editor.render();
+      });

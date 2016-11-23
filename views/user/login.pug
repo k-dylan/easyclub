@@ -12,49 +12,50 @@ block content
           +form-btn('primary','submit', 'btn', '登录')
             
 block script
-  script.
-    $(function () {
-      var username = $('#username');
-      var password = $('#password');
-      var error = $('#passAlert');
-      var btn = $('#btn');
-      $('form').submit(function (event) {
-        event.preventDefault();
-        var user = $.trim(username.val());
-        var userlen = user.length;
-        if(userlen == 0){
-          error.text('用户名不能为空').show();
-          return false;
-        }
-        var pass = $.trim(password.val());
-        var passlen = pass.length;
-        if(passlen == 0){
-          error.text('密码不能为空').show();
-          return false;          
-        }
-        
-        btn.attr('disabled', true);
-        $.ajax({
-          url: '/user/login',
-          type: 'POST',
-          dataType: 'json',
-          data:  {
-            password: pass,
-            username: user
-          },
-          complete: function () {
-            btn.attr('disabled', false);
-          },
-          success: function (data) {
-            if(data.status != 0)
-              error.text(data.message).show();
-            else 
-              location.href = '/';
+  script
+    :uglify
+      $(function () {
+        var username = $('#username');
+        var password = $('#password');
+        var error = $('#passAlert');
+        var btn = $('#btn');
+        $('form').submit(function (event) {
+          event.preventDefault();
+          var user = $.trim(username.val());
+          var userlen = user.length;
+          if(userlen == 0){
+            error.text('用户名不能为空').show();
+            return false;
           }
+          var pass = $.trim(password.val());
+          var passlen = pass.length;
+          if(passlen == 0){
+            error.text('密码不能为空').show();
+            return false;          
+          }
+          
+          btn.attr('disabled', true);
+          $.ajax({
+            url: '/user/login',
+            type: 'POST',
+            dataType: 'json',
+            data:  {
+              password: pass,
+              username: user
+            },
+            complete: function () {
+              btn.attr('disabled', false);
+            },
+            success: function (data) {
+              if(data.status != 0)
+                error.text(data.message).show();
+              else 
+                location.href = '/';
+            }
+          });
+          
         });
-        
       });
-    });
     
           
   
