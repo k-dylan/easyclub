@@ -7,7 +7,7 @@ block content
     .panel.topic
       .panel-hd= topic ? '编辑话题' :'发表话题'
       .panel-bd
-        form.form.form-horizontal(action="/topic/create" method="post")
+        form.form.form-horizontal(action= topic ? `/topic/${topic._id }/edit` : '/topic' method="post")
           .form-group
             select#tag.interval-r.form-control.w-auto(name="tag")
               option(value="0") 选择板块
@@ -53,7 +53,7 @@ block script
           
           $btn.attr('disabled', true);
           $.ajax({
-            url: '/topic#{topic && "/" + topic._id + "/edit"}',
+            url: $(this).attr('action'),
             type: 'POST',
             dataType: 'json',
             data: {

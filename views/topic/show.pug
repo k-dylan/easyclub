@@ -17,7 +17,7 @@ block content
         if current_user && current_user.isAdmin
           .float-r 
             a.btn.btn-primary.interval-r#top(href=`/topic/${topic._id}/top`)= topic.top ? '取消置顶' : '置顶'
-            a.btn.btn-danger#del(href="javascript:void(0);")= topic.deleted ? '恢复' : '删除'
+            a.btn.btn-danger#del(href=`/topic/${topic._id}/delete`)= topic.deleted ? '恢复' : '删除'
 
         .info
           a.interval-r(href="/?tag=" + topic.tag) <span class="icon ico-tag"></span> #{topic.tag}
@@ -95,7 +95,7 @@ block script
           if (!confirm('确定要'+ $(this).text() +'此话题吗？')) {
             return false;
           }
-          $.get('/topic/#{topic._id}/delete', function (result) {
+          $.get(this.href, function (result) {
             if(result.status) {
               alert(result.message);
             } else if(result.deleted){
@@ -137,7 +137,7 @@ block script
           $btn.text('回复中……');
           
           $.ajax({
-            url: '/topic/#{topic._id}/reply',
+            url: $(this).attr('action'),
             data: {
               content: content
             },
