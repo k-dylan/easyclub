@@ -87,6 +87,7 @@ pug.options.filters = {
 }
 
 // 数据库
+require('mongoose').Promise = global.Promise
 app.use(convert(mongoose(Object.assign({
   server: {
     poolSize: 5
