@@ -6,18 +6,19 @@ block content
     .panel-bd
       p= message
       - if(jump)
-        a.jump(href=`javascript: history.go(${jump})`) 页面将在<span id="second"></span>秒后跳转
+        a#jump.jump(href=jump) 页面将在<span id="second"></span>秒后跳转
       
 block script
   - if(jump)
-    script.
-      var second = 3;
-      var $second = $('#second').text(second);
-      var timeId = setInterval(function () {
-        --second;
-        if(second <= 0) {
-          history.go(`${jump}`);
-        }else {
-          $second.text(second);
-        }
-      }, 1000);
+    script
+      :uglify
+        var second = 3;
+        var $second = $('#second').text(second);
+        var timeId = setInterval(function () {
+          --second;
+          if(second <= 0) {
+            top.location.href = $('#jump').attr('href');
+          }else {
+            $second.text(second);
+          }
+        }, 1000);
