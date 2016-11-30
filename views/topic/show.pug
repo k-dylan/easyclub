@@ -16,8 +16,8 @@ block content
           span.text-middle= topic.title 
         if current_user && current_user.isAdmin
           .float-r 
-            a.btn.btn-primary.interval-r#top(href=`/topic/${topic._id}/top`)= topic.top ? '取消置顶' : '置顶'
-            a.btn.btn-danger#del(href=`/topic/${topic._id}/delete`)= topic.deleted ? '恢复' : '删除'
+            a.btn.btn-primary.interval-r#top(href=`/topic/${topic._id}/top` data-loading="提交中……")= topic.top ? '取消置顶' : '置顶'
+            a.btn.btn-danger#del(href=`/topic/${topic._id}/delete`  data-loading="提交中……")= topic.deleted ? '恢复' : '删除'
 
         .info
           a.interval-r(href="/?tag=" + topic.tag) <span class="icon ico-tag"></span> #{topic.tag}
@@ -55,7 +55,7 @@ block content
           .alert.alert-error.hide#alert
           form(action=`/topic/${topic._id}/reply` method="post")
             textarea#editor(name="content" placeholder="回复支持 Markdown 语法, 请注意标记代码")
-            button.btn.btn-primary(type="submit") 回复
+            button.btn.btn-primary(type="submit" id="replyBtn" data-loading="回复中……") 回复
 
 
 block script
@@ -73,6 +73,7 @@ block script
           autofocus: false
         });
         editor.render(); 
+
         // 置顶
         $('#top').click(function (e) {
           e.preventDefault();
@@ -121,37 +122,15 @@ block script
           })
         })
         
-        
         var $btn = $('.btn');
         var $alert = $('#alert');
-        //  回复
-        $('form').submit(function (event) {
-          event.preventDefault();
+        // 回复话题
+        $('#replyBtn').click(function (event) {
           var content = editor.codemirror.getValue();
           if(content.length == 0 ) {
             alert('请输入回复内容');
             editor.codemirror.focus();
-            return ;
+            return false;
           };
-          
-          $btn.text('回复中……');
-          
-          $.ajax({
-            url: $(this).attr('action'),
-            data: {
-              content: content
-            },
-            type: 'POST',
-            dataType: 'json',
-            complete: function () {
-              $btn.text('回复');
-            },
-            success: function (data) {
-              if(data.status != 0)
-                $alert.text(data.message).show();
-              else 
-                history.go('/topic/' + data.topic_id + '#' + data.reply_id);
-            }
-          })
         })
       })

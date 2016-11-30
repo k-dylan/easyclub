@@ -199,10 +199,7 @@ router.post('/:topic_id/reply', sign.isLogin, async (ctx, next) => {
     ctx.session.user = user.toObject();
 
     if(res.ok) {
-      return ctx.success({
-        topic_id: topic_id,
-        reply_id: result._id
-      })
+      ctx.redirect(`/topic/${topic_id}#${result._id}`);
     } else {
       return ctx.error('回复失败，请重试！');
     }
