@@ -66,13 +66,11 @@ describe('Reply ', () => {
         .ajax('post', '/topic/' + topic._id + '/reply')
         .set('Cookie', replyCookie)
         .send(reply)
-        .expect(200, (err, res) => {
+        .expect(302, (err, res) => {
           should.not.exist(err);
-          res.body.status.should.equal(0);
-          // topic._id 是ObjectId对象
-          res.body.topic_id.should.equal(topic._id.toString());
-          should.exist(res.body.reply_id);
-          reply._id = res.body.reply_id;
+          // 正则匹配获取replyid
+          let match = res.text.match(/\#(.*?)\"\>/);
+          reply._id = match[1];
           done();
         });
     });
