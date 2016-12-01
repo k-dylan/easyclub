@@ -26,6 +26,8 @@ router.get('/setting', sign.isLogin, async (ctx, next) => {
 router.post('/', sign.isLogin, async (ctx, next) => {
   let body = tools.trimObjectValue(ctx.request.body);
 
+  // todo: 检测提交数据是否正确，各字段是否存在！
+
   let User = ctx.model('user');
 
   let user = await User.findOneQ({
@@ -35,7 +37,7 @@ router.post('/', sign.isLogin, async (ctx, next) => {
   if(!validator.isEmail(body.email)){
     return ctx.error('email格式不正确，请检查后重试！');
   }
-
+  
   user.email = body.email;
   user.home = body.home;
   user.github = body.github;

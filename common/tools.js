@@ -38,7 +38,8 @@ exports.filterDataForKey = function (data, key,count) {
 exports.trimObjectValue = function (obj) {
   let temp = {};
   for(let v in obj) {
-    temp[v] = validator.trim(obj[v]);
+    if(obj[v])
+      temp[v] = validator.trim(obj[v]);
   }
   return temp;
 }
