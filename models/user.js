@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const crypto = require('crypto');
 const config = require('../config');
 const path = require('path');
+const url = require('url');
+
 var UserSchema = new mongoose.Schema({
   username: { type: String, required: true},  
   password: { type: String, required: true},
@@ -26,6 +28,8 @@ UserSchema.index({username: 1}, {unique: true});
 UserSchema.virtual('avatar_url').get(function () {
   if(!this.avatar)
     return config.default_avatar;
+  if(config.qiniu.origin && config.qiniu.origin !== 'http://your qiniu domain')
+    return url.resolve(config.qiniu.origin, this.avatar);
   return path.join(config.upload.url, this.avatar);
 })
 

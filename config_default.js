@@ -29,7 +29,18 @@ const config = {
     port: 27017,
     database: 'easyclub'
   },
-  default_avatar: '/images/photo.png', // 默认头像
+  // 七牛配置信息 
+  qiniu: {
+    bucket: 'you bucket name',
+    accessKey: 'you access key',
+    secretKey: 'you secret key',
+    origin: 'http://your qiniu domain', 
+    // 如果vps在国外，请使用 http://up.qiniug.com/ ，这是七牛的国际节点
+    // 如果在国内，此项请留空
+    // uploadURL: 'http://xxxxxxxx',
+  },
+  default_avatar: '/public/images/photo.png', // 默认头像
+  
   upload: {
     path: path.join(__dirname, 'public/upload/'),
     url: '/public/upload',
