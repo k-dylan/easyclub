@@ -4,7 +4,7 @@
   "author": "dylan",
   "private": true,
   "scripts": {
-    "start": "./node_modules/.bin/nodemon --harmony-async-await bin/www",
+    "start": "./node_modules/.bin/nodemon -i public/ --harmony-async-await bin/www",
     "koa": "node --harmony-async-await bin/www",
     "pm2": "NODE_ENV=production pm2 --node-args='--harmony-async-await' start bin/www ",
     "test": "make test"

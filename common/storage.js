@@ -21,7 +21,10 @@ if(config.qiniu.accessKey && config.qiniu.accessKey !== 'you access key') {
       let filePath = path.join(config.upload.path, options.key);
 
       stream.on('end', function () {
-        cb(null, options);
+        cb(null, {
+          key: options.key,
+          url: filePath
+        });
       })
       stream.pipe(fs.createWriteStream(filePath));
     },

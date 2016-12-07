@@ -5,7 +5,7 @@ html(lang="zh_CN")
     meta(http-equiv="X-UA-Compatible" content="IE=edge")
     meta(name="viewport" content="width=device-width,initial-scale=1,user-scalable=no")
     title= title + ' - ' + sitename
-    != Loader('/public/stylesheets/common.min.css').css('/public/stylesheets/common.styl').css('/public/stylesheets/icon.css').css('/public/stylesheets/markdown.css').css('/public/stylesheets/index.styl').css('/public/javascripts/lib/editor/editor.css').done(assets,'', !isDebug)
+    != Loader('/public/stylesheets/common.min.css').css('/public/stylesheets/common.styl').css('/public/stylesheets/icon.css').css('/public/stylesheets/markdown.css').css('/public/stylesheets/index.styl').css('/public/javascripts/lib/editor/editor.css').css('/public/javascripts/lib/webuploader/webuploader.css').done(assets,'', !isDebug)
     block css
   body
     header#header
@@ -29,7 +29,7 @@ html(lang="zh_CN")
         p EasyClub - 基于nodejs的轻量级论坛程序
         p author: dylan 
           a(href="https://github.com/k-dylan/easyclub/" target="_blank") 源码地址
-    != Loader('/public/javascripts/lib/lib.min.js').js('/public/javascripts/lib/jquery.min.js').js('/public/javascripts/jquery.loadData.js').js('/public/javascripts/main.js').done(assets,null,!isDebug)
+    != Loader('/public/javascripts/lib/lib.min.js').js('/public/javascripts/lib/jquery.min.js').js('/public/javascripts/jquery.loadData.js').js('/public/javascripts/jquery.modal.js').js('/public/javascripts/main.js').done(assets,null,!isDebug)
     script
       :uglify
         $(function () {

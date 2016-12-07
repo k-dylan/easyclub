@@ -100,7 +100,6 @@
       new loadData(this, options);
     })
   }
-
 })(window.jQuery);
 
 

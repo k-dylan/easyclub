@@ -56,8 +56,8 @@ block content
           form(action=`/topic/${topic._id}/reply` method="post")
             textarea#editor(name="content" placeholder="回复支持 Markdown 语法, 请注意标记代码")
             button.btn.btn-primary(type="submit" id="replyBtn" data-loading="回复中……") 回复
-
-
+    
+    
 block script
   script(src="http://apps.bdimg.com/libs/highlight.js/9.1.0/highlight.min.js")
   include ../includes/editor

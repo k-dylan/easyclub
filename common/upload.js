@@ -46,19 +46,12 @@ module.exports = function (req, options, field) {
         return false;
       }
       
-      file = {
-        fieldname: fieldname,
-        encoding: encoding,
-        mimetype: mimetype,
-        filename: null
-      }
-      
       fileStream.on('limit', function () {
         isError = true;
         reject(new Error('您添加的文件过大,请检查后重试!'));
       });
 
-      storage.upload(fileStream, {key: getFilename(filename) }, (err, result) => {
+      storage.upload(fileStream, {key: getFilename(fieldname,filename) }, (err, result) => {
         if(err) {
           isError = true; 
           return reject(err);
@@ -68,8 +61,14 @@ module.exports = function (req, options, field) {
           storage.delete(result.key, () => {});
           return false;
         }
-
-        file.filename = result.key;
+        file = {
+          fieldname: fieldname,
+          encoding: encoding,
+          mimetype: mimetype,
+          filename: result.key,
+          url: result.url
+        }
+      
         isSaveed = true;
         done();
       });
@@ -83,9 +82,9 @@ module.exports = function (req, options, field) {
       }
     }
 
-    function getFilename (filename) {
+    function getFilename (fieldname, filename) {
       let extname = path.extname(filename);
-      return file.fieldname + '-' + Date.now() + extname;
+      return fieldname + '-' + Date.now() + extname;
     }
 
   })
