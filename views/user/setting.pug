@@ -24,7 +24,7 @@ block content
       .panel-bd.set-avatar
         .photo.photo-big.set-avatar-photo.interval-r: img(src=user.avatar_url || '/images/photo.png' alt=user.username width=150)
         form.set-avatar-from(action="/user/setavatar" enctype="multipart/form-data" method="post")
-          input#avatarFile(type="file" name="avatar")
+          input#avatarFile(type="file" name="avatar" accept="image/*")
           button#avatarBtn.btn.btn-primary(type="submit" data-loading="上传中……") 上传头像
 
     .panel
@@ -56,12 +56,19 @@ block script
           }
         });
 
-        $('#avatarBtn').click(function(e) {        
-          if(!$('#avatarFile')[0].files.length){
+        $('#avatarBtn').click(function(e) { 
+          var files = $('#avatarFile')[0].files;
+          if(!files.length){
             e.preventDefault();         
             alert('请先选择头像!');
             return false;
           }
+          if(!/^image\/*/.test(files[0].type)){
+            e.preventDefault();
+            alert('你选择的文件必须是图片!');
+            return false;
+          }
+
         })
 
         var $newpass = $('#newpass');
