@@ -162,7 +162,7 @@ button[disabled]
   // list容器
   &-bd 
     padding 0 0 .5em 0
-    li
+    .list>li
       padding-left 1em
       padding-right 1em
   li
@@ -176,13 +176,15 @@ button[disabled]
         background-color #f9f9f9
 // page 分页
 .page
-  margin-top 1em
-  padding-left 1em
+  margin-top 15px
+  padding-left 15px
+  font-size 0
   li
     display inline-block
     border 1px solid #ddd
     border-right none
     color #555
+    font-size 14px
     &>a 
     &>span
       display block
@@ -221,10 +223,10 @@ button[disabled]
       min-height 80px
       vertical-align top
   // 水平表单
-  @media screen and (min-width:960px)
+  @media screen and (min-width:770px)
     &-horizontal 
       .control-label
-        width 200px
+        width 150px
         text-align right
       .form-control
         width 300px
@@ -365,4 +367,56 @@ btn-style($color, $text_color = #fff)
         color #d00
  
       
+// modal 
+.modal 
+  position fixed
+  z-index 9999
+  width 560px
+  top 0
+  left 50%
+  display none
+  margin-left - (@width / 2)
+  background-color #fff
+  border 1px solid #eee
+  border-radius 5px
+  opacity 0
+  transition top .3s linear, opacity .3s linear
+  &-header 
+    padding 9px 15px 
+    border-bottom 1px solid #eee
+    border-radius 5px 5px 0 0 
+    .close 
+      float right 
+      line-height 1 
+      border none 
+      background none
+      font-size 20px 
+      text-shadow 0 1px 0 #fff
+      opacity .2
+  &-body 
+    padding 10px
+    position relative
+  &.show 
+    top 100px
+    opacity 1
+  &-mask 
+    position fixed 
+    top 0
+    left 0
+    height 100%
+    width 100% 
+    z-index 9998
+    background-color #000
+    opacity 0
+    transition opacity .2s linear 
+    &.show
+      opacity .8
+  &-footer 
+    border-top 1px solid #eee
+    padding 10px
+    text-align right
+  @media screen and (max-width:420px)
+    & 
+      width 300px
+      margin-left -150px
 

@@ -1,0 +1,75 @@
+extends ../layout
+
+block content
+  .wp-right
+    include ../sidebar/markdown
+  .wp-left
+    .panel.topic
+      .panel-hd= topic ? '编辑话题' :'发表话题'
+      .panel-bd
+        form.form.form-horizontal(action= topic ? `/topic/${topic._id }/edit` : '/topic' method="post")
+          .form-group
+            select#tag.interval-r.form-control.w-auto(name="tag")
+              option(value="0") 选择板块
+              each tag in tags 
+                option(value=tag selected=topic && tag == topic.tag)= tag
+            input#title.form-control(type="text" name="title" placeholder="请输入标题" value=topic && topic.title )
+          .form-group
+            textarea#editor.form-control(name="content" placeholder="文章支持 Markdown 语法, 请注意标记代码")= topic && topic.content
+          .btn-group
+            button.btn.btn-primary(type="submit")= topic ? '保　存' : '发　布'
+
+block script
+  include ../includes/editor
+  script
+    :uglify
+      $(function() {
+        var editor = new Editor();
+        editor.render();
+        
+        var $title = $('#title'),
+            $tag = $('#tag'),
+            $content = $('#editor'),
+            $btn = $('.btn');
+        $('form').submit(function (event) {
+          event.preventDefault();
+          if($tag.val() == 0){
+            alert('必须选择一个板块！')
+            return;
+          }
+          var title = $.trim($title.val());
+          if(title.length == 0) {
+            alert('标题不能为空')
+            return ;
+          }
+          if(title.length < 5) {
+            alert('标题不能少于5个字符');
+            return ;
+          }
+          if($content.val().length == 0 ) {
+            alert('内容不能为空');
+            return ;
+          }
+          
+          $btn.attr('disabled', true);
+          $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            dataType: 'json',
+            data: {
+              title: title,
+              tag: $tag.val(),
+              content: $content.val()
+            },
+            complete: function () {
+              $btn.attr('disabled', false);
+            },
+            success: function (data) {
+              if(data.status != 0)
+                error.text(data.message).show();
+              else 
+                location.href = '/topic/' + data.topic_id;
+            }
+          });
+        });
+      });

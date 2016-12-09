@@ -2,17 +2,17 @@
 .panel
   .panel-hd <span class="ico-profile"></span> #{title || '个人信息'}
   .panel-bd.user-info.clearfix
-    .photo-round.float-l.interval-r: a(href='/user/#{user.username}')
+    .photo-round.float-l.interval-r: a(href=`/user/${user.username}`)
       img(src=user.avatar_url, alt=user.username, width="90" height="90")
     .info.clearfix
       h3 
-        a(href="/user/#{user.username}")= user.username
+        a(href=`/user/${user.username}`)= user.username
         - if(user.isAdmin)
           small.text-muted  (管理员)
       p 积分：#{user.score}
       p 话题：
-        a(href="/user/#{user.username}/topic")= user.topic_count
+        a(href=`/user/${user.username}/topic`)= user.topic_count
       //- p 回复：
-      //-   a(href="/user/#{user.username}/reply")= user.reply_count
+      //-   a(href=`/user/${user.username}/reply`)= user.reply_count
     p= user.signature
         

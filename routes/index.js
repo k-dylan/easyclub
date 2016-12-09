@@ -2,8 +2,10 @@ const router = require('koa-router')();
 const config = require('../config');
 const Promise = require('promise');
 const Page = require('../common/page');
+const sign = require('../middlewares/sign');
+const upload = require('../common/upload');
 
-router.get('/', async function (ctx, next) {
+router.get('/', async (ctx, next) => {
 
   let current_tag = config.tags.indexOf(ctx.query.tag ) > -1
       ? ctx.query.tag : 'all';
@@ -52,6 +54,27 @@ router.get('/', async function (ctx, next) {
     current_tag: current_tag,
     page: result.page
   }); 
+});
+
+router.post('upload', sign.isLogin, async (ctx) => {
+  let file;
+  try {
+    file = await upload(ctx.req, 'file')
+  } catch (e) {
+    return ctx.error(e.message);
+  }
+
+  if(file) {
+    return ctx.body = {
+      success: true,
+      url: file.url
+    };
+  } else {
+    return ctx.body = {
+      success: false,
+      msg: '上传失败!'
+    }
+  }
 })
 
 module.exports = router;

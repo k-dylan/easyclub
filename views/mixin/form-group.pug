@@ -11,7 +11,7 @@ mixin form-group(inputType, label, name, value, isRequired, isDisabled)
     if isRequired
       span.control-help.text-error  *
 
-mixin form-btn(type, btnType, id, label)
+mixin form-btn(type, btnType, id, label, attr)
   .form-group
     label.control-label
-    button.btn(type=btnType id=id class=type && "btn-#{type}")= label
+    button.btn(type=btnType id=id class=type && `btn-${type}`)&attributes(attr)= label

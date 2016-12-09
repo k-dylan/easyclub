@@ -1,24 +1,27 @@
 
 'use strict'
+
 const Koa = require('koa');
 const app = new Koa();
 const router = require('koa-router')();
-const views = require('koa-views');
+const Pug = require('koa-pug');
 const co = require('co');
 const convert = require('koa-convert');
 const json = require('koa-json');
 const onerror = require('koa-onerror');
 const bodyparser = require('koa-bodyparser')();
 const logger = require('koa-logger');
-const loader = require('loader');
 const mongoose = require('koa-mongoose');
 const session = require('koa-session');
+const UglifyJS = require('uglify-js')
 
 const config = require('./config');
 const index = require('./routes/index');
 const user = require('./routes/user');
 const topic = require('./routes/topic');
+const reply = require('./routes/reply');
 const tools = require('./common/tools');
+
 
 const VIEWSDIR = __dirname + '/views';
 
@@ -59,18 +62,38 @@ app.use(convert(session(app)));
 
 app.use(require('./middlewares/return_data'));
 
-app.use(views(VIEWSDIR, {
-  extension: 'jade'
-}));
+const pug = new Pug({
+  viewPath: VIEWSDIR,
+  debug: config.debug,
+  noCache: config.debug,
+  helperPath: [
+    {
+      getTimeAgo : tools.getTimeAgo,
+      Loader : require('loader')
+    }
+  ],
+  app: app
+});
+// 压缩行内样式
+pug.options.filters = {
+  uglify: function (text, options) {
+    if(config.debug){
+      return text;
+    } else {
+      let result = UglifyJS.minify(text, {fromString: true});
+      return result.code;
+    }
+  }
+}
 
 // 数据库
+require('mongoose').Promise = global.Promise
 app.use(convert(mongoose(Object.assign({
   server: {
     poolSize: 5
   },
   schemas: __dirname + '/models'
 }, config.mongodb))));
-
 
 app.use(async (ctx, next) => {
 
@@ -89,9 +112,7 @@ app.use(async (ctx, next) => {
     }
   }
   // 添加模板变量
-  ctx.state = Object.assign(ctx.state, {
-    getTimeAgo : tools.getTimeAgo,
-    Loader : loader,
+  pug.locals = Object.assign(pug.locals, {
     sitename: config.sitename,
     assets: assets,
     isDebug: config.debug
@@ -114,7 +135,7 @@ app.use(require('./middlewares/jade_partial')(VIEWSDIR));
 router.use('/', index.routes(), index.allowedMethods());
 router.use('/user', user.routes(), user.allowedMethods());
 router.use('/topic', topic.routes(), topic.allowedMethods());
-
+router.use('/reply', reply.routes(), topic.allowedMethods());
 app.use(router.routes(), router.allowedMethods());
 
 // response

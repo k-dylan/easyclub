@@ -1,0 +1,83 @@
+extends ../layout
+include ../mixin/form-group
+
+block content
+  .wp-left
+    .panel
+      .panel-hd 用户注册
+      .panel-bd.register
+        form.form.form-horizontal(action="/user/register" method="POST")
+          #error.alert.alert-error.hide
+          +form-group('text', '用户名', 'username', null, true)
+          +form-group('password', '密　码', 'password', null, true)
+          +form-group('email', '邮　箱', 'email', null, true)
+          +form-btn('primary', 'submit', 'btn' ,'注册')  
+            
+block script
+  script
+    :uglify
+      $(function () {
+        var username = $('#username');
+        var password = $('#password');
+        var email = $('#email');
+        var error = $('#error');
+        var btn = $('.btn');
+        $('form').submit(function (event) {
+          event.preventDefault();
+          var user = $.trim(username.val());
+          var userlen = user.length;
+          if(userlen == 0){
+            error.text('用户名不能为空').show();
+            username.focus();
+            return false;
+          }
+          if(userlen < 5){
+            error.text('用户名不能小于5个字符').show();
+            username.focus();
+            return false;          
+          }
+          var pass = $.trim(password.val());
+          var passlen = pass.length;
+          if(passlen == 0){
+            error.text('密码不能为空').show();
+            password.focus();
+            return false;          
+          }
+          if(passlen < 6){
+            error.text('密码不能小于6个字符').show();
+            password.focus();
+            return false;          
+          }
+          var emailStr = $.trim(email.val());
+          if(emailStr.length == 0){
+            error.text('邮箱不能为空').show();
+            email.focus();
+            return false;
+          }
+          btn.attr('disabled', true);
+          btn.attr('disabled', true);
+          $.ajax({
+            url: '/user/register',
+            type: 'POST',
+            dataType: 'json',
+            data:  {
+              password: pass,
+              username: user,
+              email: emailStr
+            },
+            complete: function () {
+              btn.attr('disabled', false);
+            },
+            success: function (data) {
+              if(data.status != 0)
+                error.text(data.message).show();
+              else 
+                alert('注册成功，请登录！');
+                location.href = '/user/login';
+            }
+          });
+        });
+      });
+    
+          
+  

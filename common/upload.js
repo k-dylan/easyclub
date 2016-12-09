@@ -1,42 +1,91 @@
-
 /**
- * 文件上传
+ * 接受上传数据
  */
-const multer = require('koa-multer');
+
+const Busboy = require('busboy');
 const config = require('../config');
+const storage = require('./storage');
 const path = require('path');
-const mkdirp = require('mkdirp');
 
 
-let storage = multer.diskStorage({
-  //设置上传后文件路径。
-  destination: function (req, file, cb) {
-    mkdirp(config.upload.path, function (err) {
-      cb(err, config.upload.path);
-    });
-  }, 
-  //给上传文件重命名，获取添加后缀名
-  filename: function (req, file, cb) {
-    let extname = path.extname(file.originalname);
-    cb(null, file.fieldname + '-' + Date.now() + extname);
+module.exports = function (req, options, field) {
+  if(arguments.length < 2) {
+    throw new Error('upload 参数最少为2个!');
   }
- });  
-
- function fileFilter (req, file, cb) {
-  let extname = path.extname(file.originalname).slice(1);
-  if(config.upload.extnames.indexOf(extname) != -1) {
-    cb(null, true);
-  } else {
-    cb(new Error('您上传的文件格式不正确！请检查后重试'));
+  if(typeof options === 'string') {
+    field = options;
+    options = {};
   }
- }
 
-//添加配置文件到muler对象。
-var upload = multer({
-  storage: storage,
-  fileFilter: fileFilter,
-  limits: {fileSize: config.upload.fileSize}
-});
+  options.headers = req.headers;
+  options.limits = { fileSize: config.fileSize }
+  const busboy = new Busboy(options);
 
+  return new Promise((resolve, reject) => {
+    let isLoaded = false;
+    let isSaveed = false;
+    let isError = false;
+    let isDiscard = false;
+    let file = null;
+    busboy.on('finish', () => {
+      isLoaded = true;
+      done();
+    })
+    
+    busboy.on('file', (fieldname, fileStream, filename, encoding, mimetype) => {
+      // 过滤文件格式
+      if(!/^image\/*/.test(mimetype)){
+        isError = false;
+        reject(new Error('您上传的文件格式不正确,请重试'))
+        return false;
+      }
+      // 检测上传文件字段是否正确
+      if(field !== fieldname) {
+        isDiscard = true;
+        fileStream.resume();
+        return false;
+      }
+      
+      fileStream.on('limit', function () {
+        isError = true;
+        reject(new Error('您添加的文件过大,请检查后重试!'));
+      });
 
-module.exports = upload;
+      storage.upload(fileStream, {key: getFilename(fieldname,filename) }, (err, result) => {
+        if(err) {
+          isError = true; 
+          return reject(err);
+        }
+        if(isError) {
+          // 删除已上传到的文件
+          storage.delete(result.key, () => {});
+          return false;
+        }
+        file = {
+          fieldname: fieldname,
+          encoding: encoding,
+          mimetype: mimetype,
+          filename: result.key,
+          url: result.url
+        }
+      
+        isSaveed = true;
+        done();
+      });
+    })
+
+    req.pipe(busboy);
+
+    function done () {
+      if(isLoaded && (isSaveed || isDiscard)) {
+        resolve(file);
+      }
+    }
+
+    function getFilename (fieldname, filename) {
+      let extname = path.extname(filename);
+      return fieldname + '-' + Date.now() + extname;
+    }
+
+  })
+} 

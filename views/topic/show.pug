@@ -1,0 +1,136 @@
+extends ../layout
+
+block css
+  link(rel="stylesheet", href="http://apps.bdimg.com/libs/highlight.js/9.1.0/styles/github.min.css")
+
+block content
+  .wp-right
+    != partial('./sidebar/user_info', {user : topic.author, title: '作者信息'})
+    include ../sidebar/user_topic_list
+  .wp-left
+    .panel.content
+      .content-hd
+        h2
+          if topic.top 
+            span.small.label.label-primary.interval-r 置顶
+          span.text-middle= topic.title 
+        if current_user && current_user.isAdmin
+          .float-r 
+            a.btn.btn-primary.interval-r#top(href=`/topic/${topic._id}/top` data-loading="提交中……")= topic.top ? '取消置顶' : '置顶'
+            a.btn.btn-danger#del(href=`/topic/${topic._id}/delete`  data-loading="提交中……")= topic.deleted ? '恢复' : '删除'
+
+        .info
+          a.interval-r(href="/?tag=" + topic.tag) <span class="icon ico-tag"></span> #{topic.tag}
+          a.interval-r.author(href="/user/" + topic.author.username) <span class="icon ico-user"></span> #{topic.author.username}
+          a.interval-r <span class="icon ico-calendar"></span> #{topic.create_time.toLocaleDateString()}
+          if current_user && (current_user.username == topic.author.username || current_user.isAdmin)
+            a(href="/topic/" + topic._id + '/edit') <span class="icon ico-edit"></span> 编辑
+      .panel-bd.markdown-body
+        != md.render(topic.content)
+    - if(replys.length)
+      .panel
+        .panel-hd #{replys.length}回复
+        .panel-bd 
+          ul.reply-list
+            each reply in replys
+              li
+                a.href(id=reply._id)              
+                a.photo-round.float-l.interval-r(href="/user/" + reply.author.username)
+                  img(src=reply.author.avatar_url, alt=reply.author.username width="60" height="60")
+                .user-action
+                  if current_user && (current_user.isAdmin || current_user.username === reply.author.username)
+                    a.interval-r.del-reply-btn(href=`/reply/${reply._id}/delete` title="删除回复"): span.ico-trash
+                    a(href=`/reply/${reply._id}/edit`  title="编辑回复"): span.ico-edit
+                .user-info.small
+                  a(href=`/user/${reply.author.username}` target="_blank")= reply.author.username 
+                  span.date= " • at: " + getTimeAgo(reply.create_time)
+                .markdown-body
+                  != md.render(reply.content)
+                 
+                  
+    - if (current_user)
+      .panel.reply
+        .panel-hd <span class="ico-reply"><span> 添加回复
+        .panel-bd
+          .alert.alert-error.hide#alert
+          form(action=`/topic/${topic._id}/reply` method="post")
+            textarea#editor(name="content" placeholder="回复支持 Markdown 语法, 请注意标记代码")
+            button.btn.btn-primary(type="submit" id="replyBtn" data-loading="回复中……") 回复
+    
+    
+block script
+  script(src="http://apps.bdimg.com/libs/highlight.js/9.1.0/highlight.min.js")
+  include ../includes/editor
+
+  script
+    :uglify
+      $(function () {
+        hljs.initHighlightingOnLoad();
+        
+        var editor = new Editor({
+          el: $('#editor')[0], 
+          status: false,
+          autofocus: false
+        });
+        editor.render(); 
+
+        // 置顶
+        $('#top').click(function (e) {
+          e.preventDefault();
+          var _this = this;
+          $.get(this.href, function (result) {
+            if(result.status) {
+              return alert(result.message);
+            }
+            if(result.top) {
+              $(_this).text('取消置顶');
+            } else {
+              $(_this).text('置顶');
+            }
+          })
+        })
+
+        // 删除帖子
+        $('#del').click(function (e) {
+          e.preventDefault();
+          if (!confirm('确定要'+ $(this).text() +'此话题吗？')) {
+            return false;
+          }
+          $.get(this.href, function (result) {
+            if(result.status) {
+              alert(result.message);
+            } else if(result.deleted){
+              location.href = '/';
+            } else {
+              location.reload();
+            }
+          })
+        });
+
+        // 删除回复
+        $('.del-reply-btn').click(function (e) {
+          e.preventDefault();
+          if(!confirm('确定要删除此回复吗？')) {
+            return false;
+          }
+          $.get(this.href, function (result) {
+            if(result.status) {
+              alert(result.message);
+            } else {
+              location.reload();
+            }
+          })
+        })
+        
+        var $btn = $('.btn');
+        var $alert = $('#alert');
+        // 回复话题
+        $('#replyBtn').click(function (event) {
+          var content = editor.codemirror.getValue();
+          if(content.length == 0 ) {
+            alert('请输入回复内容');
+            editor.codemirror.focus();
+            return false;
+          };
+        })
+      })
