@@ -2,17 +2,21 @@ doctype html
 html(lang="zh_CN")
   head
     meta(charset="utf-8")
+    meta(name="description" content="jsClub:js爱好者社区")
     meta(http-equiv="X-UA-Compatible" content="IE=edge")
     meta(name="viewport" content="width=device-width,initial-scale=1,user-scalable=no")
+    meta(name="author" content="kdylan")
     title= title + ' - ' + sitename
+    link(rel="shortcut icon" href="/public/images/icon.png" type="image/x-icon")
     != Loader('/public/stylesheets/common.min.css').css('/public/stylesheets/common.styl').css('/public/stylesheets/icon.css').css('/public/stylesheets/markdown.css').css('/public/stylesheets/index.styl').css('/public/javascripts/lib/editor/editor.css').css('/public/javascripts/lib/webuploader/webuploader.css').done(assets,'', !isDebug)
     block css
   body
     header#header
       .wp
         button.btn.nav-btn#navBtn: span.ico-bars
-        a.logo(href="/") <b>Easy</b> Club 
-        ul.nav-user#navUser
+        //- a.logo(href="/") <b>Js</b> Club <i>js俱乐部</i>
+        a.logo(href="/"): img(src="/public/images/logo.png", alt="jsclub" height="30")
+        ul.nav-user#navUser 
           - if (current_user)
             li 欢迎你：
              a(href="/user/" + current_user.username)= current_user.username
@@ -27,7 +31,8 @@ html(lang="zh_CN")
     footer#footer
       .wp 
         p EasyClub - 基于nodejs的轻量级论坛程序
-        p author: dylan 
+        p by: 
+          a(href="http://kdylan.me" target="_blank") kdylan 
           a(href="https://github.com/k-dylan/easyclub/" target="_blank") 源码地址
     != Loader('/public/javascripts/lib/lib.min.js').js('/public/javascripts/lib/jquery.min.js').js('/public/javascripts/jquery.loadData.js').js('/public/javascripts/jquery.modal.js').js('/public/javascripts/main.js').done(assets,null,!isDebug)
     script
