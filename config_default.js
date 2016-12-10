@@ -29,6 +29,11 @@ const config = {
     port: 27017,
     database: 'easyclub'
   },
+  // Redis配置
+  redis: {
+    host: '127.0.0.1',
+    port: 6379
+  },
   // 七牛配置信息 
   qiniu: {
     bucket: 'you bucket name',
