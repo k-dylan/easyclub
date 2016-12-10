@@ -12,7 +12,8 @@ const onerror = require('koa-onerror');
 const bodyparser = require('koa-bodyparser')();
 const logger = require('koa-logger');
 const mongoose = require('koa-mongoose');
-const session = require('koa-session');
+const session = require('koa-generic-session');
+const redisStore = require('koa-redis');
 const UglifyJS = require('uglify-js')
 
 const config = require('./config');
@@ -58,7 +59,9 @@ if(config.debug) {
 app.use(convert(require('koa-static2')("/public",__dirname + '/public')));
 app.use(convert(bodyparser));
 app.use(convert(json()));
-app.use(convert(session(app)));
+app.use(convert(session({
+  store: redisStore(config.redis)
+})));
 
 app.use(require('./middlewares/return_data'));
 
