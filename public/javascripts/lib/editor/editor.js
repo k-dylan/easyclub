@@ -7046,7 +7046,7 @@ function togglePreview(editor) {
   }
   if (/editor-preview-active/.test(preview.className)) {
     preview.className = preview.className.replace(
-      /\s*editor-preview-active\s*/g, ''
+      /\s*editor-preview-active markdown-body\s*/g, ''
     );
     toolbar.className = toolbar.className.replace(/\s*active\s*/g, '');
   } else {
@@ -7054,7 +7054,7 @@ function togglePreview(editor) {
      * give some time for the transition from editor.css to fire and the view to slide from right to left,
      * instead of just appearing.
      */
-    setTimeout(function() {preview.className += ' editor-preview-active'}, 1);
+    setTimeout(function() {preview.className += ' editor-preview-active markdown-body'}, 1);
     toolbar.className += ' active';
   }
   var text = cm.getValue();
@@ -7184,6 +7184,8 @@ Editor.markdown = function(text) {
   if (window.marked) {
     // use marked as markdown parser
     return marked(text);
+  } else if(window.markdownit) {
+    return markdownit().render(text);
   }
 };
 

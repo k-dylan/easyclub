@@ -1,15 +1,15 @@
 (function(Editor, marked, WebUploader){
     // Set default options
-    var md = marked;
+    var md = marked();
 
-    // md.set({
-    //   html:         false,        // Enable HTML tags in source
-    //   xhtmlOut:     false,        // Use '/' to close single tags (<br />)
-    //   breaks:       true,        // Convert '\n' in paragraphs into <br>
-    //   langPrefix:   'language-',  // CSS language prefix for fenced blocks
-    //   linkify:      false,        // Autoconvert URL-like text to links
-    //   typographer:  false,        // Enable smartypants and other sweet transforms
-    // });
+    md.set({
+      html:         false,        // Enable HTML tags in source
+      xhtmlOut:     false,        // Use '/' to close single tags (<br />)
+      breaks:       true,        // Convert '\n' in paragraphs into <br>
+      langPrefix:   'language-',  // CSS language prefix for fenced blocks
+      linkify:      false,        // Autoconvert URL-like text to links
+      typographer:  false,        // Enable smartypants and other sweet transforms
+    });
 
     window.markdowniter = md;
 
@@ -56,7 +56,7 @@
 
         this.$win.on('click', '[role=save]', function(){
             self.$win.find('form').submit();
-        }).on('submit', 'form', function(){
+        }).on('submit', 'form', function(e){
             var $el = $(this);
             var title = $el.find('[name=title]').val();
             var link = $el.find('[name=link]').val();
@@ -238,4 +238,4 @@
         var line = cm.lastLine();
         cm.setLine(line, cm.getLine(line) + txt);
     };
-})(window.Editor, window.marked, window.WebUploader);
+})(window.Editor, window.markdownit, window.WebUploader);
