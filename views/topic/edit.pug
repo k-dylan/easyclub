@@ -7,7 +7,7 @@ block content
     .panel.topic
       .panel-hd= topic ? '编辑话题' :'发表话题'
       .panel-bd
-        form.form.form-horizontal(action= topic ? `/topic/${topic._id }/edit` : '/topic' method="post")
+        form.form.form-horizontal#editForm(action= topic ? `/topic/${topic._id }/edit` : '/topic' method="post")
           .form-group
             select#tag.interval-r.form-control.w-auto(name="tag")
               option(value="0") 选择板块
@@ -31,7 +31,7 @@ block script
             $tag = $('#tag'),
             $content = $('#editor'),
             $btn = $('.btn');
-        $('form').submit(function (event) {
+        $('#editForm').submit(function (event) {
           event.preventDefault();
           if($tag.val() == 0){
             alert('必须选择一个板块！')
