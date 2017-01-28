@@ -17,6 +17,7 @@ html(lang="zh_CN")
         //- a.logo(href="/") <b>Js</b> Club <i>js俱乐部</i>
         a.logo(href="/"): img(src="/public/images/logo.png", alt="jsclub" height="30")
         ul.nav-user#navUser 
+          li: a(href="/") 首页
           - if (current_user)
             li 欢迎你：
              a(href="/user/" + current_user.username)= current_user.username

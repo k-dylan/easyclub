@@ -21,6 +21,7 @@ a
 img
   vertical-align top
 ul
+ol
   list-style none
   margin 0
   padding-left 0
@@ -419,3 +420,16 @@ btn-style($color, $text_color = #fff)
       width 300px
       margin-left -150px
 
+// breadcrumb 面包屑导航
+.breadcrumb 
+  overflow hidden
+  li
+    float left
+    &:before 
+      content "/"
+      padding 0 .5em
+      color #999
+    &:first-child:before 
+      display none
+.wp-breadcrumb
+  padding .5em 
