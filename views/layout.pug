@@ -16,6 +16,7 @@ html(lang="zh_CN")
         button.btn.nav-btn#navBtn: span.ico-bars
         //- a.logo(href="/") <b>Js</b> Club <i>js俱乐部</i>
         a.logo(href="/"): img(src="/public/images/logo.png", alt="jsclub" height="30")
+        include ./includes/search
         ul.nav-user#navUser 
           li: a(href="/") 首页
           - if (current_user)
@@ -43,5 +44,10 @@ html(lang="zh_CN")
             $('#navUser').slideToggle(200);
           })
         });
+        $('#searchForm').submit(function (event) {
+          event.preventDefault();
+          var query = "site:jsclub.cc+" + $('#searchQuery').val();
+          window.open("https://www.google.com.hk/?gws_rd=cr#hl=zh-CN&q=" + query);
+        })
     block script
   

@@ -3,6 +3,12 @@
 // 统一浏览器默认样式
 normalize-css() 
 
+:focus 
+  outline: -webkit-focus-ring-color auto 0px;
+  outline-color: -webkit-focus-ring-color;
+  outline-style: auto;
+  outline-width: 0px;
+
 // 基本样式
 body 
   background-color $bg_color
@@ -431,5 +437,4 @@ btn-style($color, $text_color = #fff)
       color #999
     &:first-child:before 
       display none
-.wp-breadcrumb
-  padding .5em 
+
