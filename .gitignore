@@ -1,6 +1,7 @@
 node_modules/
 typings/
 public/upload/
+.vscode
 .DS_Store
 assets.json
 config.js
