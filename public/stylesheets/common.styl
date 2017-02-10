@@ -3,6 +3,12 @@
 // 统一浏览器默认样式
 normalize-css() 
 
+:focus 
+  outline: -webkit-focus-ring-color auto 0px;
+  outline-color: -webkit-focus-ring-color;
+  outline-style: auto;
+  outline-width: 0px;
+
 // 基本样式
 body 
   background-color $bg_color
@@ -21,6 +27,7 @@ a
 img
   vertical-align top
 ul
+ol
   list-style none
   margin 0
   padding-left 0
@@ -418,4 +425,16 @@ btn-style($color, $text_color = #fff)
     & 
       width 300px
       margin-left -150px
+
+// breadcrumb 面包屑导航
+.breadcrumb 
+  overflow hidden
+  li
+    float left
+    &:before 
+      content "/"
+      padding 0 .5em
+      color #999
+    &:first-child:before 
+      display none
 

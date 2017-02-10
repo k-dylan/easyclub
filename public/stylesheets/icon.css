@@ -75,3 +75,6 @@
 .ico-up:before {
   content: "\f087";
 }
+.ico-search:before {
+  content: "\f002";
+}

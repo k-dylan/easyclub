@@ -8,6 +8,10 @@ block content
     != partial('./sidebar/user_info', {user : topic.author, title: '作者信息'})
     include ../sidebar/user_topic_list
   .wp-left
+    .wp-breadcrumb
+      ol.breadcrumb
+        li: a(href="/") <span class="ico-home"></span> 首页
+        li: a(href="/?tag=" + topic.tag) 原创
     .panel.content
       .content-hd
         h2
