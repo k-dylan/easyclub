@@ -46,7 +46,7 @@ block content
                     a.interval-r.del-reply-btn(href=`/reply/${reply._id}/delete` title="删除回复"): span.ico-trash
                     a(href=`/reply/${reply._id}/edit`  title="编辑回复"): span.ico-edit
                 .user-info.small
-                  a(href=`/user/${reply.author.username}` target="_blank")= reply.author.username 
+                  a.reply-name(href=`/user/${reply.author.username}` target="_blank")= reply.author.username 
                   span.date= " • at: " + getTimeAgo(reply.create_time)
                 .markdown-body
                   != md.render(reply.content)
@@ -71,12 +71,64 @@ block script
       $(function () {
         hljs.initHighlightingOnLoad();
         
-        var editor = new Editor({
-          el: $('#editor')[0], 
-          status: false,
-          autofocus: false
+        //- var editor = new Editor({
+        //-   el: $('#editor')[0], 
+        //-   status: false,
+        //-   autofocus: false
+        //- });
+        //- editor.render(); 
+        // 获取所有回复用户
+        var replyUsers = [];
+        $('.reply-name').each(function (k, v) {
+          var name = $(v).text().trim();
+          if(replyUsers.indexOf(name) === -1 ) {
+            replyUsers.push(name);
+          }
         });
-        editor.render(); 
+
+        // 编辑器相关
+        $('#editor').each(function(){
+          var editor = new Editor({
+            status: false
+          });
+          var $el = $(this);
+
+          editor.render(this);
+          //绑定editor
+          $(this).data('editor', editor);
+
+          var $input = $(editor.codemirror.display.input);
+
+          $input.keydown(function(event){
+            if (event.keyCode === 13 && (event.ctrlKey || event.metaKey)) {
+              event.preventDefault();
+              $el.closest('form').submit();
+            }
+          });
+
+          // at.js 配置
+          var codeMirrorGoLineUp = CodeMirror.commands.goLineUp;
+          var codeMirrorGoLineDown = CodeMirror.commands.goLineDown;
+          var codeMirrorNewlineAndIndent = CodeMirror.commands.newlineAndIndent;
+          var noop = function (){};
+          $input.atwho({
+            at: '@',
+            data: replyUsers
+          })
+          .on('shown.atwho', function () {
+            CodeMirror.commands.goLineUp = noop;  
+            CodeMirror.commands.goLineDown = noop;
+            CodeMirror.commands.newlineAndIndent = noop;
+          })
+          .on('hidden.atwho', function () {
+            CodeMirror.commands.goLineUp = codeMirrorGoLineUp;
+            CodeMirror.commands.goLineDown = codeMirrorGoLineDown;
+            CodeMirror.commands.newlineAndIndent = codeMirrorNewlineAndIndent;
+          });
+          // END at.js 配置
+
+        });
+        // END 编辑器相关
 
         // 置顶
         $('#top').click(function (e) {
