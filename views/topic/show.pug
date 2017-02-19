@@ -45,6 +45,7 @@ block content
                   if current_user && (current_user.isAdmin || current_user.username === reply.author.username)
                     a.interval-r.del-reply-btn(href=`/reply/${reply._id}/delete` title="删除回复"): span.ico-trash
                     a(href=`/reply/${reply._id}/edit`  title="编辑回复"): span.ico-edit
+                  a.interval-l.reply-user(href="#" data-user=reply.author.username title="回复"): span.ico-undo
                 .user-info.small
                   a.reply-name(href=`/user/${reply.author.username}` target="_blank")= reply.author.username 
                   span.date= " • at: " + getTimeAgo(reply.create_time)
@@ -129,6 +130,16 @@ block script
 
         });
         // END 编辑器相关
+
+        // 回复用户添加 @
+        $('.reply-user').click(function (e) {
+          e.preventDefault();
+          var user = $(this).data('user');
+          var editor = $('#editor').data('editor');
+          if(editor.codemirror.getValue().indexOf('@' + user) < 0) {
+            editor.push('@' + user + "  ");
+          }
+        });
 
         // 置顶
         $('#top').click(function (e) {
