@@ -2,13 +2,13 @@ doctype html
 html(lang="zh_CN")
   head
     meta(charset="utf-8")
-    meta(name="description" content="jsClub:js爱好者社区")
+    meta(name="description" content=config.description)
     meta(http-equiv="X-UA-Compatible" content="IE=edge")
     meta(name="viewport" content="width=device-width,initial-scale=1,user-scalable=no")
     meta(name="author" content="kdylan")
     title= title + ' - ' + sitename
     link(rel="shortcut icon" href="/public/images/icon.png" type="image/x-icon")
-    != Loader('/public/stylesheets/common.min.css').css('/public/stylesheets/common.styl').css('/public/stylesheets/icon.css').css('/public/javascripts/lib/editor/editor.css').css('/public/stylesheets/markdown.css').css('/public/javascripts/lib/webuploader/webuploader.css').css('/public/stylesheets/index.styl').done(assets,'', !isDebug)
+    != Loader('/public/stylesheets/common.min.css').css('/public/stylesheets/common.styl').css('/public/stylesheets/icon.css').css('/public/javascripts/lib/editor/editor.css').css('/public/stylesheets/markdown.css').css('/public/javascripts/lib/webuploader/webuploader.css').css('/public/stylesheets/index.styl').css('/public/stylesheets/atwho.css').done(assets,'', !isDebug)
     block css
   body
     header#header

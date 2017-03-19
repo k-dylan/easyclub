@@ -117,6 +117,7 @@ app.use(async (ctx, next) => {
   // 添加模板变量
   pug.locals = Object.assign(pug.locals, {
     sitename: config.sitename,
+    config: config,
     assets: assets,
     isDebug: config.debug
   })

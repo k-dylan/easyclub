@@ -8,6 +8,7 @@ const config = {
   debug: true,
   // 网站名称
   sitename: 'EasyClub',
+  describute: "jsClub:js爱好者社区",
   // 板块列表
   tags: ['原创', '转载', '提问', '站务'],
   // 论坛管理员，username
