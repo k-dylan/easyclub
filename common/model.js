@@ -1,5 +1,5 @@
 
-const mongoose =  require('mongoose');
+const mongoose =  require('mongoose-q')(require('mongoose'));
 const UserSchema = require('../models/user');
 const TopicSchema = require('../models/topic');
 const ReplySchema = require('../models/reply');
