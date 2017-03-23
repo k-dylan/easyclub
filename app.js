@@ -90,7 +90,7 @@ pug.options.filters = {
 
 app.use(async (ctx, next) => {
   if(!ctx.model)
-    ctx.model = require('./common/model');
+    ctx.model = require('./models');
   await next();
 })
 

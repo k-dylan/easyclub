@@ -1,5 +1,5 @@
 
-const model = require('../../common/model');
+const model = require('../../models');
 const supertest = require('supertest');
 const app = require('../../app');
 const config = require('../../config');
