@@ -11,7 +11,6 @@ const json = require('koa-json');
 const onerror = require('koa-onerror');
 const bodyparser = require('koa-bodyparser')();
 const logger = require('koa-logger');
-const mongoose = require('koa-mongoose');
 const session = require('koa-generic-session');
 const redisStore = require('koa-redis');
 const UglifyJS = require('uglify-js')
@@ -89,14 +88,11 @@ pug.options.filters = {
   }
 }
 
-// 数据库
-require('mongoose').Promise = global.Promise
-app.use(convert(mongoose(Object.assign({
-  server: {
-    poolSize: 5
-  },
-  schemas: __dirname + '/models'
-}, config.mongodb))));
+app.use(async (ctx, next) => {
+  if(!ctx.model)
+    ctx.model = require('./common/model');
+  await next();
+})
 
 app.use(async (ctx, next) => {
 
