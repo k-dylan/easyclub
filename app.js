@@ -14,7 +14,7 @@ const logger = require('koa-logger');
 const mongoose = require('koa-mongoose');
 const session = require('koa-generic-session');
 const redisStore = require('koa-redis');
-const UglifyJS = require('uglify-js')
+const UglifyJS = require('uglify-js');
 
 const config = require('./config');
 const index = require('./routes/index');
