@@ -10,7 +10,7 @@ var MessageSchema = new Schema({
   topic_id: { type:ObjectId},
   reply_id: { type: ObjectId },
   create_time: { type: Date, default: Date.now },
-  content: { type: String, required: true },
+  content: { type: String},
   is_read: { type: Boolean, default: false }
 });
 

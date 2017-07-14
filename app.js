@@ -102,8 +102,7 @@ app.use(async (ctx, next) => {
 
     let user = await ctx.model('user').findOneQ({
       username: testuser.username
-    });
-    
+    });  
     ctx.session.user = user;
     
     if(testuser.isAdmin) {
@@ -121,6 +120,15 @@ app.use(async (ctx, next) => {
 
   if(ctx.session.user) {
     let user = ctx.state.current_user = ctx.session.user;
+     // 读取at数据
+    let messages = await ctx.model('message').find({
+      master_id: user._id,
+      is_read: false
+    })     
+    if(messages){
+      user.messageLen = messages.length;
+    }
+    
     // 判断是否是管理员帐号
     if(config.admins.indexOf(user.username) != -1) {
       user.isAdmin = true;
