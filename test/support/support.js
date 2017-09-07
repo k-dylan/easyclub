@@ -1,13 +1,13 @@
 
-const db = require('../db');
+const model = require('../../models');
 const supertest = require('supertest');
 const app = require('../../app');
 const config = require('../../config');
 const should = require('should');
 
-const Topic = db.topic;
-const User = db.user;
-const Reply = db.reply;
+const Topic = model('topic');
+const User = model('user');
+const Reply = model('reply');
 
 var request = exports.request = supertest.agent(app.listen(3000));
 

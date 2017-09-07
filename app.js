@@ -11,7 +11,6 @@ const json = require('koa-json');
 const onerror = require('koa-onerror');
 const bodyparser = require('koa-bodyparser')();
 const logger = require('koa-logger');
-const mongoose = require('koa-mongoose');
 const session = require('koa-generic-session');
 const redisStore = require('koa-redis');
 const UglifyJS = require('uglify-js')
@@ -89,14 +88,11 @@ pug.options.filters = {
   }
 }
 
-// 数据库
-require('mongoose').Promise = global.Promise
-app.use(convert(mongoose(Object.assign({
-  server: {
-    poolSize: 5
-  },
-  schemas: __dirname + '/models'
-}, config.mongodb))));
+app.use(async (ctx, next) => {
+  if(!ctx.model)
+    ctx.model = require('./models');
+  await next();
+})
 
 app.use(async (ctx, next) => {
 
@@ -106,8 +102,7 @@ app.use(async (ctx, next) => {
 
     let user = await ctx.model('user').findOneQ({
       username: testuser.username
-    });
-    
+    });  
     ctx.session.user = user;
     
     if(testuser.isAdmin) {
@@ -125,6 +120,15 @@ app.use(async (ctx, next) => {
 
   if(ctx.session.user) {
     let user = ctx.state.current_user = ctx.session.user;
+     // 读取at数据
+    let messages = await ctx.model('message').find({
+      master_id: user._id,
+      is_read: false
+    })     
+    if(messages){
+      user.messageLen = messages.length;
+    }
+    
     // 判断是否是管理员帐号
     if(config.admins.indexOf(user.username) != -1) {
       user.isAdmin = true;

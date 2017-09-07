@@ -338,6 +338,23 @@ btn-style($color, $text_color = #fff)
         padding 0 .5em
       &:last-child:after
         display none
+    
+    .message
+      position relative
+      &>.sub 
+        position absolute
+        background-color #01abb3
+        color #fff
+        border-radius 50%
+        display block
+        width 1em 
+        line-height 1
+        height @width
+        right -1em
+        top -.5em
+        padding: .1em;
+        text-align center
+    
   @media screen and (max-width:700px)
     &-user
       display none
@@ -354,6 +371,7 @@ btn-style($color, $text_color = #fff)
           display none
         &>a 
           display block
+  
 // 底部
 #footer
   margin-top 1em

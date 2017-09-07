@@ -7,7 +7,7 @@ const Promise = require('promise');
 const tools = require('../common/tools');
 const validator = require('validator');
 const sign = require('../middlewares/sign');
-
+const at = require('../common/at');
 /**
  * 发表主题页面
  */
@@ -193,11 +193,12 @@ router.post('/:topic_id/reply', sign.isLogin, async (ctx, next) => {
       // 更新用户回复数
       ctx.model('user').updateReplyCount(user_id, 1),
       // 更新主题最后回复
-      ctx.model('topic').reply(topic_id, result._id)
+      ctx.model('topic').reply(topic_id, result._id),
+      at.sendMessageToUser(content, topic_id, user_id, result._id)
     ]);
     // 更新用户session
     ctx.session.user = user.toObject();
-
+    
     if(res.ok) {
       ctx.redirect(`/topic/${topic_id}#${result._id}`);
     } else {

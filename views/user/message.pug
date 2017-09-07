@@ -1,0 +1,17 @@
+extends ./home_base
+
+block panel
+  .panel
+    .panel-hd <span class="ico-reply"></span> 我的消息
+    .panel-bd.user-info.clearfix 
+      ul.list.list-striped
+        each msg in messages
+          li
+            if msg.is_read
+              span.small.label.label-default.interval-r 已读 
+            else 
+              span.small.label.label-primary.interval-r 未读 
+            a.text-main(href='/user/' + msg.author.username)= msg.author.username
+            span  在话题 
+            a.text-main(href='/user/message/' + msg.id)= msg.topic.title 
+            span= ' 中 ' + msg.content

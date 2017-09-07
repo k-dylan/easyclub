@@ -9,11 +9,11 @@ block content
     include ../sidebar/user_topic_list
   .wp-left
     .wp-breadcrumb
-      ol.breadcrumb
+      ol.breadcrumb 
         li: a(href="/") <span class="ico-home"></span> 首页
-        li: a(href="/?tag=" + topic.tag) 原创
+        li: a(href="/?tag=" + topic.tag)= topic.tag
     .panel.content
-      .content-hd
+      .content-hd 
         h2
           if topic.top 
             span.small.label.label-primary.interval-r 置顶

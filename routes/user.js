@@ -4,6 +4,7 @@ const validator = require('validator');
 const tools = require('../common/tools');
 const markdown = require('markdown-it');
 const upload = require('../common/upload');
+const Promise = require('promise');
 const sign = require('../middlewares/sign');
 
 /**
@@ -19,6 +20,48 @@ router.get('/setting', sign.isLogin, async (ctx, next) => {
     user: user
   });
 });
+/**
+ * 消息列表
+ */
+router.get('/message', sign.isLogin, async (ctx, next) => {
+  let User = ctx.model('user');
+  let user = await User.findOneQ({
+    username: ctx.state.current_user.username    
+  })
+  let messages = await ctx.model('message').find({
+    master_id: user._id
+  }, null ,{
+      sort: 'is_read -create_time',
+      limit: 10
+    });
+
+  messages = await Promise.all(messages.map( async (msg) => {
+    msg.author = await User.findById(msg.author_id, 'username avatar');
+    msg.topic = await ctx.model('topic').findById(msg.topic_id, 'title');
+    return msg;
+  }))
+
+  await ctx.render('user/message', {
+    title: '用户消息',
+    messages: messages,
+    user: user
+  })
+});
+
+/**
+ * 已读消息
+ */
+router.get('/message/:msg_id', sign.isLogin, async (ctx, next) => {
+  let msg_id = ctx.params.msg_id;
+  let Message = ctx.model('message');
+  let message = await Message.findById(msg_id);
+  if(!message) return ctx.error('没有此消息!');
+  if(!message.is_read) {
+    message.is_read = true;
+    await message.saveQ();
+  }
+  ctx.redirect('/topic/' + message.topic_id + '#' + message.reply_id);
+})
 
 /**
  * 修改用户信息
