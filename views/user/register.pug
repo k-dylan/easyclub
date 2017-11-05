@@ -55,7 +55,7 @@ block script
             return false;
           }
           btn.attr('disabled', true);
-          btn.attr('disabled', true);
+
           $.ajax({
             url: '/user/register',
             type: 'POST',
@@ -69,11 +69,15 @@ block script
               btn.attr('disabled', false);
             },
             success: function (data) {
-              if(data.status != 0)
+              if(data.status != 0) {
                 error.text(data.message).show();
-              else 
+                console.log('成功');
+                return false;
+              } else {
                 alert('注册成功，请登录！');
                 location.href = '/user/login';
+              }
+
             }
           });
         });
