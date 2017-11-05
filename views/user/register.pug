@@ -71,7 +71,6 @@ block script
             success: function (data) {
               if(data.status != 0) {
                 error.text(data.message).show();
-                console.log('成功');
                 return false;
               } else {
                 alert('注册成功，请登录！');
