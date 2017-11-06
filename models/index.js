@@ -12,10 +12,9 @@ require('mongoose').Promise = global.Promise
 let mongodb = `mongodb://${config.mongodb.host}/${config.mongodb.database}`
 if(config.mongodb.user)
   mongodb = `mongodb://${config.mongodb.user}:${config.mongodb.pass}@${config.mongodb.host}/${config.mongodb.database}`
-mongoose.connect(mongodb, {
-    server: {
-      poolSize: 10
-    }
+mongoose.connect(mongodb, { // MongoClient.connect(url, options, callback)
+    useMongoClient: true,
+    poolSize: 10
   }, (err) => {
     if(err) {
       console.error(err);

@@ -5,3 +5,8 @@ public/upload/
 .DS_Store
 assets.json
 config.js
+public/stylesheets/fonts/icomoon.*.hashed.*
+public/javascripts/lib/editor/fonts/icomoon.*.hashed.*
+public/stylesheets/common.min.*.*.css
+public/javascripts/editor.min.*.*.js
+public/javascripts/lib/lib.min.*.*.js
