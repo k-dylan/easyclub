@@ -5,8 +5,8 @@
   "private": true,
   "scripts": {
     "start": "./node_modules/.bin/nodemon -i public/  bin/www",
-    "koa": "node --harmony-async-await bin/www",
-    "pm2": "NODE_ENV=production pm2 --node-args='--harmony-async-await' start bin/www ",
+    "koa": "node bin/www",
+    "pm2": "NODE_ENV=production pm2 start bin/www ",
     "test": "make test",
     "build": "make build"
   },
