@@ -4,7 +4,7 @@ EasyClub
 
 INSTALL
 ----
-1. 安装`mongodb`,`Redis`和`node`(>=v7.1.0)
+1. 安装`mongodb`,`Redis`和`node`(>=v7.6.0)
 2. clone 该仓库到本地
 3. 复制 `config.default.js` 为 `config.js` 中的配置选项
 4. 运行 `npm install` 安装依赖包
