@@ -28,7 +28,7 @@ router.get('/', async (ctx, next) => {
     // 查询分页数据
     Topic.getTopicForPage(query, null, { sort: '-top -last_reply_at' }, current_page),
     // 排行榜数据
-    User.find({ score: { $gt: 0 } }, 'username score avatar', {
+    User.find({ score: { $gt: 0 }, deleted: false }, 'username score avatar', {
       sort: '-score',
       limit: 10
     })

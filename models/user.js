@@ -18,6 +18,7 @@ var UserSchema = new mongoose.Schema({
   signature: {type: String, default: "无个性，不签名！"}, // 个性签名
   topic_count: { type: Number, default: 0 },
   reply_count: { type: Number, default: 0 },
+  deleted: {type: Boolean, default: false},
   create_time: { type: Date, default: Date.now }
 });
 

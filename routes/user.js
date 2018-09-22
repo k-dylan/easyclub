@@ -197,6 +197,9 @@ router.post('/login', async (ctx, next) => {
   if(!user) {
     return ctx.error('没有此用户或密码错误！');
   }
+  if(user.deleted) {
+    return ctx.error('该用户已被删除！', {jump: '/'});
+  }
   // 用户名密码正确
   ctx.session.user = user.toObject();
   
@@ -245,6 +248,11 @@ router.get('/:username', async (ctx, next) => {
   });
   if(!user) {
     return ctx.error('没有找到此用户！');
+  }
+  if(user.deleted) {
+    return ctx.error('该用户已被删除', {
+      jump: '/'
+    });
   }
 
   let Topic = ctx.model('topic');
@@ -352,5 +360,34 @@ router.get('/:username/topic', async (ctx, next) => {
   })
 })
 
+/**
+ * 拉黑用户
+ */ 
+router.get('/:user_id/delete', sign.isAdmin,  async (ctx) => {
+  let user_id = ctx.params.user_id;
+  if(!validator.isMongoId(user_id)) {
+    return ctx.error('您请求的参数有误，请检查后重试！');
+  }
+  let user = await ctx.model('user').findOneQ({
+    _id: user_id
+  });
+
+  if (!user) return ctx.error('这个用户不存在，请重试！');
+
+  // 删除用户信息
+  try {
+    $result = await Promise.all([
+      ctx.model('topic').updateMany({author_id: user_id}, {$set: {deleted: true}}),
+      ctx.model('reply').updateMany({author_id: user_id}, {$set: {deleted: true}})
+    ]);
+  } catch(err) {
+    ctx.error(err.message);
+  }
+  // 删除用户
+  user.deleted = true;
+  await user.saveQ();
+
+  ctx.success('操作成功');
+})
 
 module.exports = router;

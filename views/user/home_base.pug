@@ -4,6 +4,11 @@ extends ../layout
 block content
   .wp-right
     != partial('./sidebar/user_info', {user : user})
+    if current_user && current_user.isAdmin
+      .panel
+        .panel-hd <span class="ico-user"></span> 管理用户
+        .panel-bd
+          a.btn.btn-danger.btn-block(href=`/user/${user._id}/delete` onclick="javascript: return confirm('拉黑该用户，则会删除改用户所有数据，确定要删除么');") 删除该用户
   .wp-left
     include ../mixin/user-home
     block panel
