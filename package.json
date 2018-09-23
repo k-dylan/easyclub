@@ -37,7 +37,7 @@
   },
   "devDependencies": {
     "fs-promise": "^0.5.0",
-    "livereload": "^0.4.1",
+    "livereload": "^0.7.0",
     "mocha": "^3.1.2",
     "nib": "^1.1.0",
     "nodemon": "^1.8.1",
